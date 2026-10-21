@@ -29,7 +29,7 @@ são copiados para o runtime. O clone permanece como fonte; a cópia é o que ro
 | `version` | semver | sim | Versão do pack (ex.: `1.2.0`) |
 | `requires-core` | faixa | sim | Faixa de compatibilidade com o core (ex.: `">=1 <2"`) |
 | `provides[]` | lista de paths | sim | Paths relativos à raiz do pack, instalados (copiados) no runtime — **rejeitados se colidirem com path do core** |
-| `acumulo[]` | lista de paths | não | Paths versionados no repo do pack que **NUNCA são instalados** (patterns, metrics, retros) |
+| `accumulation[]` | lista de paths | não | Paths versionados no repo do pack que **NUNCA são instalados** (patterns, metrics, retros) |
 
 ## Exemplo completo (pack fictício `acme`)
 
@@ -46,10 +46,10 @@ provides:
   - skills/rdd-acme-handbook/SKILL.md
 
 # Versionados no repo do pack, NUNCA instalados no runtime
-acumulo:
-  - acumulo/patterns/
-  - acumulo/metrics/
-  - acumulo/retros/
+accumulation:
+  - accumulation/patterns/
+  - accumulation/metrics/
+  - accumulation/retros/
 ```
 
 ## Contrato do installer
@@ -60,7 +60,7 @@ acumulo:
    `version` do `registry.yaml` + `BREAKING-CHANGES.md`). Incompatível →
    falha clara apontando `BREAKING-CHANGES.md` (o que mudou no major e como migrar).
 3. **Instalação por cópia** dos paths de `provides` a partir de `packs/<id>/`.
-   `acumulo[]` nunca é copiado.
+   `accumulation[]` nunca é copiado.
 4. **Lockfile `.rdd/sources.yaml`** — pin de commit exato por pack
    (a faixa no profile **autoriza**; o pin **garante reprodutibilidade**):
 
@@ -91,7 +91,7 @@ packs:
 
 ## Regra do acúmulo
 
-- O acúmulo (`acumulo[]`: patterns, metrics, retros) **anda no repo do pack,
+- O acúmulo (`accumulation[]`: patterns, metrics, retros) **anda no repo do pack,
   nunca no runtime** — é conhecimento de org, não config de máquina.
 - **Ponte de contribuição:** pattern do acúmulo que se revela genérico →
   generalizar e abrir **PR no core** (neutro, sem dado de cliente). O core

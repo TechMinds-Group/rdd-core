@@ -11,7 +11,7 @@ Blocos marcadores reconhecidos pelo rdd-setup (substituição idempotente):
   <!-- azure-devops --> ... <!-- /azure-devops -->   tracker do cliente
   <!-- org-pack --> ... <!-- /org-pack -->           identidade da org (pack lazy)
   <!-- projeto-padrao --> ... <!-- /projeto-padrao --> diretório de projetos
-  <!-- rdd-pack-acumulo --> ... <!-- /rdd-pack-acumulo -->  destino do acúmulo (pack ativo)
+  <!-- rdd-pack-accumulation --> ... <!-- /rdd-pack-accumulation -->  destino do acúmulo (pack ativo)
 -->
 
 <!-- azure-devops -->
@@ -62,13 +62,13 @@ Perguntas "o que fazer agora" / "próxima skill" → skill `rdd-next` (não anal
 diretorio_projetos: <caminho>
 <!-- /projeto-padrao -->
 
-<!-- rdd-pack-acumulo -->
+<!-- rdd-pack-accumulation -->
 <preenchido pelo rdd-setup a partir do client-profile>
 Destino do ACÚMULO do workflow (patterns/, metrics/, reverses/) é o
-`acumulo/` do pack ativo da organização (ex.: `packs/<pack-ativo>/acumulo/`),
+`accumulation/` do pack ativo da organização (ex.: `packs/<pack-ativo>/accumulation/`),
 resolvido via `packs:` do client-profile — IMP-111. Skills de negócio NUNCA
 gravam em ~/.config/opencode/.
-<!-- /rdd-pack-acumulo -->
+<!-- /rdd-pack-accumulation -->
 
 ## Índice de Referências — lazy loading
 CRITICAL: os arquivos abaixo NÃO são carregados automaticamente. Leia com o Read tool APENAS quando a tarefa atual exigir — nunca preventivamente. Quando lidos, trate como instruções obrigatórias que sobrescrevem defaults.
@@ -78,4 +78,4 @@ CRITICAL: os arquivos abaixo NÃO são carregados automaticamente. Leia com o Re
 - `rules/projeto-<nome>.md` — AO consultar o banco de um projeto específico via postgres MCP (regra de PROJETO — existe só em máquinas que operam esse projeto).
 - `rules/stack-templates.yaml` — Registry de boilerplates RDD por stack (.NET, React, Angular, Rust, Java). A org vem de `boilerplate_org` no client-profile. Carregado pelo rdd-stack-boilerplate antes de scaffold de novo projeto; editar para adicionar/atualizar templates e recomendar o PR no .config do workflow.
 - `rules/client-profile.md` — ANTES de qualquer operação Azure DevOps/tracker/GitHub org/deploy (org, projeto, repos, usuário, registry, DNS, canal — IMP-103/IMP-105). Gravado pelo rdd-setup; nunca versionado — template em `rules/client-profile.template.md`.
-- `packs/<pack-ativo>/acumulo/patterns/INDEX.md` (bloco `rdd-pack-acumulo` acima; pack ativo resolvido via `packs:` do client-profile) — AO levantar/desenhar/implementar feature de domínio já tratado em outro produto ou cenário recorrente (pattern library: processo/arquitetura/codigo/ui/teste/dados).
+- `packs/<pack-ativo>/accumulation/patterns/INDEX.md` (bloco `rdd-pack-accumulation` acima; pack ativo resolvido via `packs:` do client-profile) — AO levantar/desenhar/implementar feature de domínio já tratado em outro produto ou cenário recorrente (pattern library: processo/arquitetura/codigo/ui/teste/dados).

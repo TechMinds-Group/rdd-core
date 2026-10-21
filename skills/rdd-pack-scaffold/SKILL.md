@@ -29,9 +29,9 @@ perfil, instalação no runtime) só acontecem com confirmação explícita.
 ## Gera (downstream)
 
 - Esqueleto do pack em `packs/<id>/` (NOVO):
-  - `pack.yaml` (v0.1.0) — `provides[]`/`acumulo[]` derivados das respostas
+  - `pack.yaml` (v0.1.0) — `provides[]`/`accumulation[]` derivados das respostas
   - regra da org (default `rules/packs/<id>.md`) com seções-guia a preencher
-  - `acumulo/patterns/README.md`, `acumulo/metrics/README.md`, `acumulo/reverses/README.md`
+  - `accumulation/patterns/README.md`, `accumulation/metrics/README.md`, `accumulation/reverses/README.md`
   - `README.md` do pack
 - Primeiro commit no repo do pack (`git init -b main`)
 - Repo remoto privado — `gh repo create <org-github>/<repo> --private` + remote + push (só com confirmação)
@@ -42,7 +42,7 @@ perfil, instalação no runtime) só acontecem com confirmação explícita.
 
 - Paths já existentes do core — no-override vale também na criação
 - Packs de outras organizações (`packs/<outro-id>/`)
-- `acumulo/` com conteúdo real — só cria esqueleto vazio com README
+- `accumulation/` com conteúdo real — só cria esqueleto vazio com README
 - Sem confirmação explícita: não cria repo remoto, não atualiza perfil, não faz push
 
 ## Tools
@@ -70,9 +70,9 @@ perfil, instalação no runtime) só acontecem com confirmação explícita.
    - nome da regra (default `rules/packs/<id>.md`)
 2. **Valida:** unicidade do id (`packs/<id>/` livre + ausente do perfil), ausência de colisão da regra com path do core e compat da faixa `requires-core` proposta contra `registry.yaml` + `BREAKING-CHANGES.md`.
 3. **Cria o esqueleto** em `packs/<id>/`:
-   - `pack.yaml` v0.1.0: `id`, `name`, `version: 0.1.0`, `requires-core` derivado da versão local do core, `provides: [<regra da org>]`, `acumulo: [acumulo/patterns/, acumulo/metrics/, acumulo/reverses/]`
+   - `pack.yaml` v0.1.0: `id`, `name`, `version: 0.1.0`, `requires-core` derivado da versão local do core, `provides: [<regra da org>]`, `accumulation: [accumulation/patterns/, accumulation/metrics/, accumulation/reverses/]`
    - `<regra da org>` com seções-guia a preencher: identidade, infra validada, runbooks
-   - `acumulo/{patterns,metrics,reverses}/README.md` + `README.md` do pack
+   - `accumulation/{patterns,metrics,reverses}/README.md` + `README.md` do pack
 4. **Primeiro commit:** `git init -b main` + commit inicial no repo do pack (anote o SHA para o pin).
 5. **Pergunta — repo remoto:** confirmado → `gh repo create <org-github>/<repo> --private` + `git remote add` + `git push -u origin main`.
 6. **Pergunta — perfil:** confirmado → adicionar `<id>@<faixa>` em `packs:` e `<id>` → URL em `pack_repos` no `rules/client-profile.md`.

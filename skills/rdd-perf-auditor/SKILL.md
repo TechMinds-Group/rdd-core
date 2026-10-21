@@ -7,7 +7,7 @@ description: >-
   OpenCode v2: coleta via `node:sqlite` (scripts/get-perf-metrics-v2.mjs —
   requer Node ≥ 22.5). OpenCode v1: via `opencode db` (fallback —
   scripts/get-perf-metrics.ps1). Gera quality/PERF_REPORT_<timestamp>.md
-  e alimenta o `acumulo/metrics/` do pack ativo via rdd-metrics-collector.
+  e alimenta o `accumulation/metrics/` do pack ativo via rdd-metrics-collector.
   Use quando o
   usuário pedir "auditoria de performance", "latência", "tempo de
   resposta", "context bloat", "mensurar performance", "gap de performance"
@@ -80,7 +80,7 @@ no `opencode.db`.
 ## Resolução de caminhos (IMP-049)
 
 O PERF_REPORT é telemetria do **domínio do workflow** (não é documentação
-de produto nem acúmulo — nunca escrever no `acumulo/` do pack ativo nem
+de produto nem acúmulo — nunca escrever no `accumulation/` do pack ativo nem
 em repos de produto):
 
 - Destino fixo: `~/.config/opencode/quality/PERF_REPORT_<yyyy-MM-dd-hh:mm>.md`
@@ -94,14 +94,14 @@ em repos de produto):
   v1 via `opencode db`)
 - `~/.config/opencode/skills/rdd-metrics-collector/SKILL.md` — contrato do
   schema do METRICS.md do acúmulo
-- `acumulo/metrics/METRICS.md` do pack ativo (`packs:` do client-profile —
+- `accumulation/metrics/METRICS.md` do pack ativo (`packs:` do client-profile —
   IMP-061/IMP-111; se existir — alvo do hand-off de append)
 
 ## Gera (downstream)
 
 - `~/.config/opencode/quality/PERF_REPORT_<timestamp>.md` (IMP-049)
 - Bloco `## Performance do Runtime (OpenCode)` destinado ao
-  `acumulo/metrics/METRICS.md` do pack ativo — **entregue via hand-off ao
+  `accumulation/metrics/METRICS.md` do pack ativo — **entregue via hand-off ao
   `rdd-metrics-collector`**
   (a escrita do METRICS.md é do coletor; ver §Hand-off)
 
@@ -110,7 +110,7 @@ em repos de produto):
 - `opencode.db` — **nunca** (sem INSERT/UPDATE/DELETE; o script v2 abre o
   banco com `readOnly: true`, o v1 só faz SELECT via `opencode db`)
 - Logs do OpenCode
-- `acumulo/metrics/METRICS.md` diretamente (o append é responsabilidade do
+- `accumulation/metrics/METRICS.md` diretamente (o append é responsabilidade do
   `rdd-metrics-collector`)
 - Artefatos de módulo RDD (REQUIREMENTS, DATA_MODEL, TRACEABILITY, etc.)
 - Skills, agents e config do OpenCode
@@ -120,7 +120,7 @@ em repos de produto):
 - `bash` — executa o coletor via Node (v2):
   `node <skills>/rdd-perf-auditor/scripts/get-perf-metrics-v2.mjs --days <N> --out-file <temp>/perf-metrics-v2.json`;
   fallback v1: `powershell -File <skills>/rdd-perf-auditor/scripts/get-perf-metrics.ps1 -Days <N>`
-- `read` — `skills/rdd-metrics-collector/SKILL.md`, `acumulo/metrics/METRICS.md` do pack ativo
+- `read` — `skills/rdd-metrics-collector/SKILL.md`, `accumulation/metrics/METRICS.md` do pack ativo
 - `write` — gerar `~/.config/opencode/quality/PERF_REPORT_<timestamp>.md`
 - `skill` — invocar `rdd-metrics-collector` para o hand-off
 - `question` — confirmar hand-off
@@ -215,7 +215,7 @@ convertendo ms → s (1 casa decimal) nas tabelas.
 ### Passo 6 — Hand-off para rdd-metrics-collector
 
 Gere o bloco no formato do §Hand-off e invoque `rdd-metrics-collector`
-via `skill` tool pedindo o append no `acumulo/metrics/METRICS.md` do pack
+via `skill` tool pedindo o append no `accumulation/metrics/METRICS.md` do pack
 ativo. Se o coletor não
 puder ser invocado, deixe o bloco íntegro dentro do PERF_REPORT e
 instrua o usuário a invocá-lo depois.
@@ -447,9 +447,9 @@ k tokens — acima disso, a sessão provavelmente carrega contexto viciado
 
 O schema do METRICS.md é de propriedade do `rdd-metrics-collector`
 (nunca duplicá-lo nesta skill). O destino do arquivo é o
-`acumulo/metrics/` do pack ativo da organização (ex.:
-`packs/<pack-ativo>/acumulo/metrics/` — resolução via `packs:` do
-client-profile, bloco `rdd-pack-acumulo` do AGENTS.md; nunca
+`accumulation/metrics/` do pack ativo da organização (ex.:
+`packs/<pack-ativo>/accumulation/metrics/` — resolução via `packs:` do
+client-profile, bloco `rdd-pack-accumulation` do AGENTS.md; nunca
 `~/.config/opencode/` — IMP-061/IMP-111). O perf-auditor produz o bloco
 pronto e delega o append via `skill` tool:
 
@@ -464,7 +464,7 @@ pronto e delega o append via `skill` tool:
 Regras do append (a cargo do coletor):
 
 1. Se a seção `## Performance do Runtime (OpenCode)` não existe → criar
-   ao final do `acumulo/metrics/METRICS.md` do pack ativo.
+   ao final do `accumulation/metrics/METRICS.md` do pack ativo.
 2. Se existe → adicionar nova linha na tabela (histórico crescente;
    nunca reescrever linhas antigas).
 3. Preservar intactas todas as outras seções do METRICS.md.

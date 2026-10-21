@@ -1,8 +1,8 @@
 ---
 name: rdd-metrics-collector
 description: >-
-  Coleta métricas de projetos e acumula no `acumulo/metrics/METRICS.md` do
-  pack ativo da organização (ex.: `packs/<pack-ativo>/acumulo/metrics/`) para
+  Coleta métricas de projetos e acumula no `accumulation/metrics/METRICS.md` do
+  pack ativo da organização (ex.: `packs/<pack-ativo>/accumulation/metrics/`) para
   rastrear tendências de qualidade ao longo do tempo. Métricas: skills usadas,
   issues de qualidade, cobertura, duplicação, quality gate. Invocada por
   rdd-project-retrospective ou manualmente via "coletar métricas",
@@ -10,19 +10,19 @@ description: >-
 ---
 # rdd-metrics-collector — Coletor de Métricas
 
-Coleta métricas de cada projeto e acumula no `acumulo/metrics/METRICS.md`
-do pack ativo da organização (ex.: `packs/<pack-ativo>/acumulo/metrics/`) para
+Coleta métricas de cada projeto e acumula no `accumulation/metrics/METRICS.md`
+do pack ativo da organização (ex.: `packs/<pack-ativo>/accumulation/metrics/`) para
 rastrear tendências de qualidade ao longo do tempo.
 
 ## Resolução de destino (IMP-061/IMP-111)
 
-Todos os `acumulo/metrics/` referidos nesta skill são relativos ao
-**`acumulo/` do pack ativo da organização** (ex.: `packs/<pack-ativo>/acumulo/`
+Todos os `accumulation/metrics/` referidos nesta skill são relativos ao
+**`accumulation/` do pack ativo da organização** (ex.: `packs/<pack-ativo>/accumulation/`
 — resolução via `packs:` do client-profile), sinalizado pelo bloco
-`<!-- rdd-pack-acumulo -->` do AGENTS.md global:
+`<!-- rdd-pack-accumulation -->` do AGENTS.md global:
 
 1. Bloco presente (pack ativo configurado) → destino =
-   `packs/<pack-ativo>/acumulo/metrics/METRICS.md`.
+   `packs/<pack-ativo>/accumulation/metrics/METRICS.md`.
 2. Bloco ausente → pergunte ao usuário via `question` qual é o pack ativo
    (instalado em `packs/<id>/`) e sugira configurar o bloco. **Nunca** use
    `~/.config/opencode/docs/` como destino — a config do RDD é
@@ -35,11 +35,11 @@ Todos os `acumulo/metrics/` referidos nesta skill são relativos ao
 - `docs/projects/*/RETROSPECTIVE.md` — métricas do projeto
 - evals/reports/EVAL_REPORT_*.md — relatórios de eval
 - ~/.config/opencode/quality/PERF_REPORT_*.md — roll-up por feature do perf-auditor (IMP-099)
-- `packs/<pack-ativo>/acumulo/metrics/METRICS.md` — histórico anterior
+- `packs/<pack-ativo>/accumulation/metrics/METRICS.md` — histórico anterior
 
 ## Gera (downstream)
 
-- `packs/<pack-ativo>/acumulo/metrics/METRICS.md` — métricas acumuladas atualizadas
+- `packs/<pack-ativo>/accumulation/metrics/METRICS.md` — métricas acumuladas atualizadas
 
 ## Nunca edita
 
@@ -55,7 +55,7 @@ Todos os `acumulo/metrics/` referidos nesta skill são relativos ao
 ## Modo de erro
 
 `warn` — métrica indisponível entra como `N/A` na tabela; nunca bloqueia a
-coleta das demais. `acumulo/metrics/METRICS.md` inexistente → crie com o
+coleta das demais. `accumulation/metrics/METRICS.md` inexistente → crie com o
 template do Passo 5. A atualização é sempre append incremental — nunca
 reescreva ou remova linhas/seções existentes.
 
@@ -76,11 +76,11 @@ reescreva ou remova linhas/seções existentes.
 
 O `rdd-perf-auditor` produz `quality/PERF_REPORT_<timestamp>.md` com um bloco
 pronto da seção `## Performance do Runtime (OpenCode)` e delega a escrita em
-`acumulo/metrics/METRICS.md` do pack ativo a esta skill (o append é
+`accumulation/metrics/METRICS.md` do pack ativo a esta skill (o append é
 responsabilidade do coletor). Ao ser invocada para esse hand-off:
 
 1. Se a seção `## Performance do Runtime (OpenCode)` não existe em
-   `acumulo/metrics/METRICS.md` → crie-a ao final do arquivo.
+   `accumulation/metrics/METRICS.md` → crie-a ao final do arquivo.
 2. Se existe → adicione nova linha na tabela (histórico crescente; nunca
    reescreva linhas antigas).
 3. Preserve intactas todas as outras seções do METRICS.md.
@@ -91,7 +91,7 @@ responsabilidade do coletor). Ao ser invocada para esse hand-off:
 ## Outcome metrics (IMP-099)
 
 Métricas de resultado (outcome) acumuladas em
-`acumulo/metrics/METRICS.md` do pack ativo, seção
+`accumulation/metrics/METRICS.md` do pack ativo, seção
 própria `## Outcome Metrics`. Cada métrica declara **fonte** e **período**
 — métrica sem fonte declarada = não coletada (entrada `N/A (sem dados)`,
 nunca zero fingido):
@@ -138,7 +138,7 @@ automaticamente se invocado por `rdd-project-retrospective`).
 
 ### Passo 3 — Adicionar ao histórico
 
-Leia `acumulo/metrics/METRICS.md` do pack ativo (se existir) e adicione nova linha na tabela.
+Leia `accumulation/metrics/METRICS.md` do pack ativo (se existir) e adicione nova linha na tabela.
 Se não existir, crie com o template abaixo.
 
 ### Passo 4 — Calcular tendências
@@ -151,7 +151,7 @@ Compare com o projeto anterior (se existir):
 ### Passo 5 — Gerar/atualizar METRICS.md
 
 ```markdown
-# Métricas Acumuladas — <pack-ativo> (acumulo/metrics)
+# Métricas Acumuladas — <pack-ativo> (accumulation/metrics)
 
 > Atualizado automaticamente por `rdd-metrics-collector`.
 > Última atualização: DD/MM/AAAA

@@ -2,8 +2,8 @@
 name: rdd-pattern-extractor
 description: >-
   Extrai padrões reutilizáveis de retrospectivas de projetos e os
-  documenta no `acumulo/patterns/` do pack ativo da organização (ex.:
-  `packs/<pack-ativo>/acumulo/patterns/`). Acumula referências de múltiplos
+  documenta no `accumulation/patterns/` do pack ativo da organização (ex.:
+  `packs/<pack-ativo>/accumulation/patterns/`). Acumula referências de múltiplos
   projetos no mesmo padrão. Atualiza INDEX.md automaticamente. Invocada por
   rdd-project-retrospective ou manualmente via "extrair padrões",
   "pattern library", "documentar padrão".
@@ -12,8 +12,8 @@ description: >-
 
 Extrai padrões reutilizáveis de retrospectivas de projetos e os
 documenta na pattern library. Cada padrão é um documento em
-`acumulo/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo da organização
-(ex.: `packs/<pack-ativo>/acumulo/patterns/`) que acumula referências de
+`accumulation/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo da organização
+(ex.: `packs/<pack-ativo>/accumulation/patterns/`) que acumula referências de
 múltiplos projetos. Tipos de padrão: **processo | arquitetura | codigo | ui | teste | dados**.
 
 ## Fronteira com stack playbooks (evitar duplicação)
@@ -24,13 +24,13 @@ múltiplos projetos. Tipos de padrão: **processo | arquitetura | codigo | ui | 
 
 ## Resolução de destino (IMP-061/IMP-111)
 
-Todos os `acumulo/patterns/` referidos nesta skill são relativos ao
-**`acumulo/` do pack ativo da organização** (ex.: `packs/<pack-ativo>/acumulo/`
+Todos os `accumulation/patterns/` referidos nesta skill são relativos ao
+**`accumulation/` do pack ativo da organização** (ex.: `packs/<pack-ativo>/accumulation/`
 — resolução via `packs:` do client-profile), sinalizado pelo bloco
-`<!-- rdd-pack-acumulo -->` do AGENTS.md global:
+`<!-- rdd-pack-accumulation -->` do AGENTS.md global:
 
 1. Bloco presente (pack ativo configurado) → destino =
-   `packs/<pack-ativo>/acumulo/patterns/`.
+   `packs/<pack-ativo>/accumulation/patterns/`.
 2. Bloco ausente → pergunte ao usuário via `question` qual é o pack ativo
    (instalado em `packs/<id>/`) e sugira configurar o bloco. **Nunca** use
    `~/.config/opencode/docs/` como destino — a config do RDD é
@@ -41,13 +41,13 @@ Todos os `acumulo/patterns/` referidos nesta skill são relativos ao
 ## Lê (upstream)
 
 - `docs/projects/*/RETROSPECTIVE.md` — fonte de padrões
-- `acumulo/patterns/INDEX.md` do pack ativo — índice atual de padrões
-- `acumulo/patterns/<tipo>/*/PATTERN.md` — padrões existentes (para merge)
+- `accumulation/patterns/INDEX.md` do pack ativo — índice atual de padrões
+- `accumulation/patterns/<tipo>/*/PATTERN.md` — padrões existentes (para merge)
 
 ## Gera (downstream)
 
-- `acumulo/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo — novo padrão ou atualização
-- `acumulo/patterns/INDEX.md` do pack ativo — índice atualizado
+- `accumulation/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo — novo padrão ou atualização
+- `accumulation/patterns/INDEX.md` do pack ativo — índice atualizado
 
 ## Nunca edita
 
@@ -58,7 +58,7 @@ Todos os `acumulo/patterns/` referidos nesta skill são relativos ao
 
 - `read`/`glob`/`grep` — ler retrospectivas e padrões existentes
 - `write` — criar/atualizar padrões e índice
-- `question` — perguntar ao usuário (padrão muito similar a existente; destino do acúmulo quando o pack ativo não estiver configurado — bloco `rdd-pack-acumulo` ausente — IMP-061/IMP-111)
+- `question` — perguntar ao usuário (padrão muito similar a existente; destino do acúmulo quando o pack ativo não estiver configurado — bloco `rdd-pack-accumulation` ausente — IMP-061/IMP-111)
 
 ## Workflow
 
@@ -76,7 +76,7 @@ Para cada retrospectiva, extraia a seção "Padrões extraídos".
 Para cada padrão extraído:
 1. Classifique o **Tipo**: `processo | arquitetura | codigo | ui | teste | dados`
 2. Normalizar o nome (slug: `kebab-case`)
-3. Verificar se `acumulo/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo já existe
+3. Verificar se `accumulation/patterns/<tipo>/<slug>/PATTERN.md` do pack ativo já existe
 4. Se existe: adicionar novo projeto de referência
 5. Se não existe: criar novo padrão
 
@@ -144,10 +144,10 @@ Para cada padrão extraído:
 
 ### Passo 5 — Atualizar INDEX.md
 
-Gere/atualize `acumulo/patterns/INDEX.md` do pack ativo:
+Gere/atualize `accumulation/patterns/INDEX.md` do pack ativo:
 
 ```markdown
-# Pattern Library — <pack-ativo> (acumulo/patterns)
+# Pattern Library — <pack-ativo> (accumulation/patterns)
 
 > Padrões reutilizados extraídos de retrospectivas de projetos.
 > Atualizado automaticamente por `rdd-pattern-extractor`.
@@ -196,9 +196,9 @@ total na library: N
 
 `warn` — falhas parciais não abortam a execução: entram no resumo final
 como ⚠️ com orientação. Só é `strict` na escrita: sem destino resolvido
-(pack ativo não configurado — bloco `rdd-pack-acumulo` ausente — e
+(pack ativo não configurado — bloco `rdd-pack-accumulation` ausente — e
 operador não informou o pack) ou sem permissão de escrita em
-`acumulo/patterns/`, a skill termina com falha clara
+`accumulation/patterns/`, a skill termina com falha clara
 e nada é gravado.
 
 ## Casos de Borda

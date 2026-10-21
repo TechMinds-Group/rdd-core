@@ -14,8 +14,8 @@ permission:
   skill: allow
   edit: deny
   write:
-    "**/packs/<pack-ativo>/acumulo/reverses/REVERSE_REPORT_*.md": allow
-    "**/packs/<pack-ativo>/acumulo/reverses/REVERSE_STATE.md": allow
+    "**/packs/<pack-ativo>/accumulation/reverses/REVERSE_REPORT_*.md": allow
+    "**/packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md": allow
     "**/*": deny
   bash:
     "*": ask
@@ -137,16 +137,16 @@ oficiais sem sobrecarregar a sessão principal.
 - Playbooks de stack em `~/.config/opencode/skills/rdd-stack-*` para consultar comandos e padrões.
 - **Modo delta (quando fornecido pelo `rdd-doc`):** relatório de engenharia reversa anterior,
   hashes de commit antigos e (opcionalmente) listas de arquivos alterados por repo.
-- **Checkpoint de retomada (se existir):** `packs/<pack-ativo>/acumulo/reverses/REVERSE_STATE.md`
-  no `acumulo/` do pack ativo da organização (resolução via `packs:` do
+- **Checkpoint de retomada (se existir):** `packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md`
+  no `accumulation/` do pack ativo da organização (resolução via `packs:` do
   client-profile — IMP-111) — contexto anterior da análise.
 
 ## Gera (Downstream)
 
 - **Relatório Estruturado de Engenharia Reversa** — síntese estruturada retornada ao `rdd-doc`
-  E persistida em `packs/<pack-ativo>/acumulo/reverses/REVERSE_REPORT_<timestamp>.md` (com evidências
+  E persistida em `packs/<pack-ativo>/accumulation/reverses/REVERSE_REPORT_<timestamp>.md` (com evidências
   `[arquivo:linha @hash]`).
-- **Checkpoint de estado** — `packs/<pack-ativo>/acumulo/reverses/REVERSE_STATE.md` no `acumulo/`
+- **Checkpoint de estado** — `packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md` no `accumulation/`
   do pack ativo da organização (resolução via `packs:` do client-profile — IMP-111),
   atualizado por fatia/Bounded Context (ver seção própria).
 - **Escrita restrita a esses DOIS arquivos** (`write` com glob restrito no front matter;
@@ -161,7 +161,7 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
 ### Pré-passo — Modo de análise
 - Verifique se há relatório anterior + hashes antigos: se sim, ative o **modo delta**
   (Princípio 7); senão, use **modo full**. Registre a decisão para a seção 1.
-- **Retomada:** se `packs/<pack-ativo>/acumulo/reverses/REVERSE_STATE.md` existir, entre em **modo delta
+- **Retomada:** se `packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md` existir, entre em **modo delta
   natural** (Princípio 7) usando `contexts_pending` como escopo da retomada — contextos
   já analisados (com hash inalterado) são pulados.
 
@@ -214,7 +214,7 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
 ## Checkpoint por Contexto e Retomada (REVERSE_STATE.md)
 
 - **Ao final de cada fatia** (ou de cada Bounded Context varrido), atualize
-  `packs/<pack-ativo>/acumulo/reverses/REVERSE_STATE.md` no `acumulo/` do pack
+  `packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md` no `accumulation/` do pack
   ativo da organização (resolução via `packs:` do client-profile — IMP-111) com o
   JSON de estado:
 
@@ -223,11 +223,11 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
     "contexts_analyzed": ["Contexto A"],
     "contexts_pending": ["Contexto B"],
     "head_per_repo": { "repo-api": "abc1234" },
-    "report_path": "<pack-ativo>/acumulo/reverses/REVERSE_REPORT_2026-10-14-1530.md"
+    "report_path": "<pack-ativo>/accumulation/reverses/REVERSE_REPORT_2026-10-14-1530.md"
   }
   ```
 
-- **Relatório completo:** grave-o em `packs/<pack-ativo>/acumulo/reverses/REVERSE_REPORT_<timestamp>.md`, com
+- **Relatório completo:** grave-o em `packs/<pack-ativo>/accumulation/reverses/REVERSE_REPORT_<timestamp>.md`, com
   as evidências `[arquivo:linha @hash]` — é o insumo oficial das skills da camada doc
   (o `rdd-doc` e as skills subsequentes LÊEM esse arquivo; o relatório inteiro não é colado
   em prompts).

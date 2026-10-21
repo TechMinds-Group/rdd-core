@@ -130,7 +130,7 @@ CORE (público — este repo, Apache-2.0 + DCO)
  │
 PACK (privado da organização — ex.: TechMinds)
  │   provides/ → conteúdo instalável no core (via cópia)
- │   acumulo/  → patterns/metrics/retros — nunca instalado
+ │   accumulation/  → patterns/metrics/retros — nunca instalado
  │
 PROFILE (local, gitignored — rules/client-profile.md)
      declara packs: [<id>@<faixa>]

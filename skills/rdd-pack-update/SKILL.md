@@ -26,7 +26,7 @@ pack.yaml em `PACK_SCHEMA.md`; compatibilidade em `BREAKING-CHANGES.md`.
 
 ## Gera (downstream)
 
-- Instalação atualizada no runtime — cópia dos paths de `provides` (nunca `acumulo/`)
+- Instalação atualizada no runtime — cópia dos paths de `provides` (nunca `accumulation/`)
 - `.rdd/sources.yaml` atualizado (novo pin/delta quando o operador autorizar mover)
 - Relatório textual do delta (versão antiga → nova, paths adicionados/removidos/alterados).
   **Nunca persiste nada fora disso.**
@@ -34,7 +34,7 @@ pack.yaml em `PACK_SCHEMA.md`; compatibilidade em `BREAKING-CHANGES.md`.
 ## Nunca edita
 
 - Arquivos do core — só instala paths de `provides` sem colisão com path existente do core
-- `acumulo/` do pack — nunca instala nem altera
+- `accumulation/` do pack — nunca instala nem altera
 - `rules/client-profile.md` — read-only (a faixa é decisão do operador/rdd-setup)
 - Repos remotos — nunca commita nem pusha (nem no core, nem no pack)
 
@@ -70,7 +70,7 @@ pack.yaml em `PACK_SCHEMA.md`; compatibilidade em `BREAKING-CHANGES.md`.
    (transacional) e registre pendência.
 6. **Reinstale:** copie os paths de `provides` do clone para o runtime;
    atualize a seção gerada do `.gitignore` local (paths adicionados/removidos);
-   nunca toque em `acumulo/`.
+   nunca toque em `accumulation/`.
 7. **Grave o lockfile e reporte:** atualize `.rdd/sources.yaml`
    (version/commit/paths) somente se o pin mudou; apresente o delta por pack
    (versão antiga → nova, paths ±, pendências ⚠️).

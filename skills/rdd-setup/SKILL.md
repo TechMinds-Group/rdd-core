@@ -248,7 +248,7 @@ Para cada pack:
 3. **no-override:** nenhum path de `provides` pode colidir com path do core
    — colisão → NÃO instale nada deste pack e registre a pendência.
 4. **Instalação:** copie os paths de `provides` do clone para o runtime
-   (por cópia; `acumulo/` NUNCA é instalado) e gere/atualize a seção no
+   (por cópia; `accumulation/` NUNCA é instalado) e gere/atualize a seção no
    `.gitignore` local para os paths instalados.
 5. **Lockfile:** grave/atualize `.rdd/sources.yaml` com pin de commit exato
    (pack → version, commit, paths[]).
