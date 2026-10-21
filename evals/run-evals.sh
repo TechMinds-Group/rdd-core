@@ -28,8 +28,7 @@ REPO_ROOT="$(dirname "$EVALS_ROOT")"
 # pelo .gitignore — fixture invisível = CI verde validando nada. Só evals/reports/
 # é ignorado intencionalmente (operacional; ver evals/README.md).
 if git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  ghost="$(git -C "$REPO_ROOT" status --porcelain --ignored -- evals 2>/dev/null \
-    | grep '^!!' | grep -v 'evals/reports/' || true)"
+  ghost="$(git -C "$REPO_ROOT" status --porcelain --ignored -- evals 2>/dev/null | grep '^!!' | grep -v 'evals/reports/' || true)"
   if [ -n "$ghost" ]; then
     echo "ERRO: arquivos de fixture sob .gitignore (files fantasmas — IMP-122):" >&2
     echo "$ghost" >&2
