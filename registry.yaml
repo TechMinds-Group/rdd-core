@@ -600,6 +600,9 @@ skills:
   - id: rdd-pack-update
     domain: meta
     description: "Atualiza packs instalados — pull dos clones, valida requires-core e no-override, reinstala provides e move o pin do sources.yaml só sob pedido explícito"
+  - id: rdd-pack-scaffold
+    domain: meta
+    description: "Onboarding de nova organização no open core — esqueleto do pack a partir do contrato (pack.yaml v0.1.0, regra da org, acúmulo), primeiro commit, repo remoto privado, registro no perfil e instalação no runtime"
 
   # Navegação/Estado (duplo registro: subagent invocável + skill executável)
   - id: rdd-next
@@ -784,6 +787,7 @@ domains:
       - rdd-skill-evolution
       - rdd-typesafe-ai
       - rdd-pack-update
+      - rdd-pack-scaffold
 
   transversal:
     description: "Skills invocadas diretamente pelo primary, sem orquestrador fixo"
