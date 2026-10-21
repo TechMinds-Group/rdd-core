@@ -51,6 +51,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 ## Gera (downstream)
 
 - Edição em `~/.config/opencode/AGENTS.md` — bloco `<!-- projeto-padrao -->` e Índice de Referências lazy (merge, idempotente)
+- Substituição no AGENTS.md gerado: o placeholder `rules/<pack-da-organizacao>.md` (índice lazy e bloco `<!-- org-pack -->`) é trocado pelo valor "Regra da organização" do perfil (ex.: `rules/packs/<id>.md`); sem pack, a linha do índice é removida (IMP-115)
 - Edição em `~/.config/opencode/opencode.jsonc` — `permission.external_directory` + `agent.rdd-dev-backend/frontend.permission` com os paths da máquina
 - Relatório textual de validação de ambiente (não persiste arquivo)
 - Criação/atualização de `~/.config/opencode/rules/client-profile.md` — defaults do cliente (gitignored; IMP-103)

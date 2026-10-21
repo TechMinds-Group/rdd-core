@@ -505,6 +505,9 @@ done
 echo ""
 echo "TOTAL: $PASS PASS / $FAIL FAIL / $WARN WARN de $TOTAL checks $( [ $SKIPPED -gt 0 ] && echo "($SKIPPED skipped)" )"
 
+# garante dirs de saída em clones frescos (o público rdd-core não os tem) — IMP-115
+mkdir -p "$EVALS_ROOT/reports" "$EVALS_ROOT/trends"
+
 # trends.json (append via python3 real, se existir)
 HAS_PY=0
 if command -v python3 >/dev/null 2>&1; then
