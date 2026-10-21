@@ -24,6 +24,20 @@ set -u
 EVALS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$EVALS_ROOT")"
 
+# Guard anti-fantasma (IMP-122): nenhum arquivo sob evals/ pode estar capturado
+# pelo .gitignore — fixture invisível = CI verde validando nada. Só evals/reports/
+# é ignorado intencionalmente (operacional; ver evals/README.md).
+if git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  ghost="$(git -C "$REPO_ROOT" status --porcelain --ignored -- evals 2>/dev/null \
+    | grep '^!!' | grep -v 'evals/reports/' || true)"
+  if [ -n "$ghost" ]; then
+    echo "ERRO: arquivos de fixture sob .gitignore (files fantasmas — IMP-122):" >&2
+    echo "$ghost" >&2
+    echo "Corrija a regra no .gitignore (ancore na raiz com /) e adicione o arquivo." >&2
+    exit 1
+  fi
+fi
+
 SKILL=""; FIXTURE=""; MODULE=""; REGISTRY=0
 while [ $# -gt 0 ]; do
   case "$1" in
