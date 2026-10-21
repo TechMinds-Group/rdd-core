@@ -12,7 +12,9 @@ description: >-
   instala `provides`, grava `.rdd/sources.yaml`),
   delega para rdd-azure-setup e rdd-gh-setup e, quando presente na instalação
   (skill de pack opcional — IMP-105), rdd-pia-connect-setup;
-  valida o ambiente (repos clonados, mvn/ng/JDK/gh no PATH).
+  valida o ambiente conforme o **perfil de adoção** — **core-only** (só o
+  workflow: sem tracker/infra, valida só gh/git) ou **completo** (tracker
+  Azure + infra + packs + validações de stack).
   Use quando o usuário pedir "configurar o rdd", "setup do rdd",
   "primeira configuração", "onboarding do rdd" ou ao migrar de máquina.
 ---
@@ -46,7 +48,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `rules/client-profile.md` / `rules/client-profile.template.md` — perfil do cliente (IMP-103)
 - `~/.config/opencode/opencode.jsonc` — permission e agent overrides existentes
 - `~/.config/opencode/skills/rdd-azure-setup/SKILL.md` — prerequisites de Azure
-- `<raiz-de-projetos>/TM.Opencode.RDD/REPOSITORIES.md` (ou o path do bloco `<!-- repositorios -->`) — inventário de repos para validação de clones
+- `<raiz-de-projetos>/REPOSITORIES.md` (ou o path do bloco `<!-- repositorios -->`) — inventário de repos para validação de clones — OPCIONAL: só no perfil **completo**; core-only não lê nem valida
 
 ## Gera (downstream)
 
@@ -69,7 +71,8 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `glob` (detectar módulos/repos no filesystem)
 - `question` (perguntar paths e opções — 1 pergunta por bloco)
 - `edit`/`write` (editar os 2 artefatos locais)
-- `bash` (validação de ambiente: Test-Path, java -version, mvn -version, node -v)
+  rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
+- `bash` (validação de ambiente conforme o perfil de adoção: core-only valida só gh/git; completo valida Test-Path, java -version, mvn -version, node -v)
 - `skill` (delegar rdd-azure-setup / rdd-gh-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 
 ## Modo de erro
@@ -93,10 +96,28 @@ de cada um antes de prosseguir. O usuário pode **pular** qualquer passo
 opcional, mas nunca executar dois passos em paralelo.
 
 ```
-Passo 1 → Passo 2 → Passo 2b (perfil) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
-              ↓           ↓           ↓                ↓              ↓
-           [pular]     [pular]     [pular]          [pular]        [pular]
+Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
+    ↓          ↓           ↓           ↓                ↓              ↓
+ [define]   [pular]     [pular]     [pular]          [pular]        [pular]
 ```
+
+### Passo 0 — Perfil de adoção (primeira pergunta — IMP-043, agrupada com o Passo 1)
+
+Uma única `question`: **"Qual o perfil de adoção?"** com duas opções:
+
+- **Core-only** (sugerido como default quando o opencode.jsonc não tem o
+  MCP `azure-devops` habilitado e o usuário não mencionou tracker): só o
+  workflow. Sem tracker Azure, sem validações de stack de dev (mvn/ng/JDK
+  viram informativas no relatório), sem inventário de repos/REPOSITORIES.md.
+  Perfil gravado com campos de tracker/infra como
+  `<não configurado — core-only>`. **Passos pulados**: 4 (Azure), 5 (PIA) e
+  validações de stack do Passo 7 — marcados "não aplicável" no relatório.
+  **Passos mantidos**: 1, 2, 2b (apenas usuário + diretório + org_github),
+  3, 5b (gh, opcional), 6, 6b (Packs), 6c (hardening), 7.
+- **Completo** — fluxo integral (tracker Azure, infra, packs, validações).
+
+O modo é registrado no relatório final e no perfil (campo `modo` no
+client-profile) — reexecutar o wizard permite trocar.
 
 ### Passo 1 — Detectar estado atual
 
@@ -117,7 +138,7 @@ Exiba o diagnóstico antes de alterar qualquer coisa.
 ### Passo 2 — Perguntar o diretório de projetos
 
 Via `question`, uma única pergunta: "Qual o diretório padrão onde ficam
-os repos SDA (ex: `<raiz-de-projetos>`)?"
+os seus projetos (ex: `<raiz-de-projetos>`)?"
 
 - Se `<!-- projeto-padrao -->` já existe, ofereça o valor atual como default
 - Valide: se o diretório não existe no filesystem, confirme (pode ser
@@ -132,10 +153,12 @@ VERDADE do cliente para o workflow — skills de tracker (Azure DevOps,
 GitHub) leem o perfil em vez de hardcode.
 
 1. Via `question` (pergunta consolidada), colete:
-   - organização Azure DevOps e projeto padrão
+   - organização Azure DevOps e projeto padrão — em **core-only**, grave
+     `<não configurado — core-only>` e pule estes campos
    - usuário (nome + e-mail)
-   - repos padrão do setor (ex.: prefixos `POL.*`, `SDA.*`)
+   - repos padrão do setor (ex.: prefixos `PROD.*`) — em **core-only**, pule
    - diretório de projetos (se ainda não coletado no Passo 2)
+   - organização GitHub (org_github) — usada por packs e gh-setup
 2. Grave `rules/client-profile.md` preenchendo o template. O arquivo é
    gitignored — NUNCA versionar dado de cliente; se o `.gitignore` não
    contiver `rules/client-profile.md`, adicione a linha.
@@ -294,7 +317,7 @@ Próximo passo sugerido: @rdd-next no módulo em que vai trabalhar.
   parse após a edição (JSONC tolera `//` e blocos `/* */`).
 - **Diretório de projetos diferente do exemplo:** nenhum path é fixo —
   o wizard sempre usa o valor informado; o `<!-- repositorios -->` pode
-  apontar para outro clone do TM.Opencode.RDD.
+  apontar para outro clone do core (em qualquer localização).
 - **Bloco azure completo mas stale (org mudou):** o wizard não adivinha —
   peça confirmação e então delegue o re-setup.
 - **`gh` ausente ou desautenticada:** não bloqueia o setup — registre
