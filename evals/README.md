@@ -156,7 +156,7 @@ Os relatórios em `evals/reports/` são podados para manter apenas os **8 relat�
 ## Tipos de fixture (IMP-121)
 
 - **Baseline** (padrão): `output-expected/` presente — o runner valida os checks contra ele. Ausente sem marca `mode: manual` = **FAIL** (fixture quebrada — ver `.gitignore` ancorado na raiz).
-- **Rubrica manual** (`mode: manual` no criteria.yaml): checks `structural`/`semantic` executados por agente/humano contra a skill real; o runner lista como SKIPPED ("rubrica manual"). 13 fixtures marcadas em 21/10/2026. Dívida de automação: `rdd-change-request/fixture-002`, `rdd-self-publish`, `rdd-skill-eval`, `rdd-task-spec/fixture-003` têm checks parseáveis pendentes de `output-expected`; as demais são rubricas de revisão.
+- **Rubrica manual** (`mode: manual` no criteria.yaml): checks `structural`/`semantic` executados por agente/humano contra a skill real; o runner lista como SKIPPED ("rubrica manual"). 13 fixtures marcadas em 21/10/2026. Dívida de automação: `rdd-change-request/fixture-002`, `rdd-core-publish`, `rdd-skill-eval`, `rdd-task-spec/fixture-003` têm checks parseáveis pendentes de `output-expected`; as demais são rubricas de revisão.
 - **Module-mode**: qualquer fixture roda contra um módulo real via `--module <path>`.
 
 Dívida de encoding: títulos com mojibake em fixtures antigas (ex.: `rdd-change-request/fixture-002`) — corrigir ao automatizar.

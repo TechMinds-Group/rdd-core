@@ -136,7 +136,7 @@ Todo componente novo deve ser registrado em:
 ### 6. Publicar
 
 1. Registre a melhoria em `WORKFLOW_IMPROVEMENTS.md` (formato IMP-XXX)
-2. Use `rdd-self-publish` para commit + push
+2. Use `rdd-core-publish` para commit + push
 3. Informe outros usuários (se aplicável)
 
 ---
@@ -347,7 +347,7 @@ Cada componente deve ter apenas as permissões necessárias:
 | `@rdd-intake-orchestrator` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | `@rdd-azure-orchestrator` | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | `@rdd-workflow-builder` | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| `rdd-self-update` | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `rdd-core-update` | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 ---
 

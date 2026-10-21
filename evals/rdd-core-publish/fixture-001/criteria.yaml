@@ -2,7 +2,7 @@ mode: manual
 checks:
   - id: front-matter
     type: structural
-    description: SKILL.md tem front matter com name == rdd-self-publish e description com triggers de publicacao
+    description: SKILL.md tem front matter com name == rdd-core-publish e description com triggers de publicacao
     expect: pass
   - id: nunca-git-add-A
     type: semantic

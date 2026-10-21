@@ -112,7 +112,7 @@ e as tabelas de subagents dos primary agents.
      `input/` mínimo e `criteria.yaml` (checks estruturais + semânticos).
      Execute o eval em baseline-mode para validar a fixture e registre o
      snapshot em `output-expected/` após aprovação do usuário. Skill sem
-     fixture não passa no Golden Set Gate do `rdd-self-publish`.
+     fixture não passa no Golden Set Gate do `rdd-core-publish`.
 
 ## Lê (upstream)
 

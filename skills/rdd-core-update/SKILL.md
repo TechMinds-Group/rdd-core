@@ -1,5 +1,5 @@
 ---
-name: rdd-self-update
+name: rdd-core-update
 description: >-
   Atualiza a config local do workflow RDD via git pull no repositório
   remoto da config (~/.config/opencode/). Verifica o working
@@ -9,7 +9,7 @@ description: >-
   opencode" ou "self-update do workflow".
 ---
 
-# rdd-self-update — Auto-atualização segura da config RDD
+# rdd-core-update — Auto-atualização segura da config RDD
 
 Responde "como trazer a config RDD local para a versão mais recente do
 repositório?" — diferente do `@rdd-workflow-improver` (corrige workflow) e
@@ -100,7 +100,7 @@ git -C $HOME/.config/opencode pull --ff-only
   local divergiu do remote (pull não é fast-forward). Isso indica commit
   local que não está no origin. Resolva manualmente: `git -C ... log
   origin/main..HEAD` para ver seus commits locais e decida entre rebase ou
-  merge — depois rode rdd-self-update de novo."*
+  merge — depois rode rdd-core-update de novo."*
 
 ### Passo 4 — Mostrar o delta
 
@@ -128,7 +128,7 @@ já carregada."*
 ## Formato de saída
 
 ```text
-═══ rdd-self-update — <RESULTADO> ═══
+═══ rdd-core-update — <RESULTADO> ═══
 
 📦 Repo: ~/.config/opencode/ (remote origin @ main)
 
@@ -142,7 +142,7 @@ já carregada."*
    Antes:  <commit-anterior>  (af832335...)
    Depois: <commit-novo>      (b3c9f2e...)
    Delta (N commits):
-     - b3c9f2e feat: rdd-self-update nova skill
+     - b3c9f2e feat: rdd-core-update nova skill
      - a11bcc0 fix: rdd-data-model seção §6
 
 ⚠️ Reinicie o OpenCode para a nova config valer.

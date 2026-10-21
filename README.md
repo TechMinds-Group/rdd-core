@@ -137,6 +137,8 @@ de melhorias e decisões de design fica no repo de desenvolvimento.
   esclarecimento). IDs são imutáveis — uma RN nunca renumera.
 - Nomes estruturais (paths, campos de contrato) em inglês; conteúdo e
   documentação em PT-BR.
+- Convenção de ciclo de repo: `rdd-<repo>-<action>` — `rdd-core-update`/
+  `rdd-core-publish` (core) e `rdd-pack-update`/`rdd-pack-publish` (packs).
 - Regras de projeto específicas vivem no produto (`<repo>/.opencode/rules/`),
   não no core.
 - DAG de documentos: PROJECT_CHARTER → REQUIREMENTS → artefatos de tradução →

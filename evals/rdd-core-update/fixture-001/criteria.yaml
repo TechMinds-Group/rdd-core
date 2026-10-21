@@ -2,7 +2,7 @@ mode: manual
 checks:
   - id: front-matter
     type: structural
-    description: SKILL.md tem front matter com name == rdd-self-update e description com triggers de atualizacao
+    description: SKILL.md tem front matter com name == rdd-core-update e description com triggers de atualizacao
     expect: pass
   - id: aborta-com-wip
     type: semantic

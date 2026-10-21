@@ -117,8 +117,8 @@ No primeiro turno da sessão, antes do fluxo normal, carregue a skill
 ### Invocação de Skills Transversais Diretas
 
 - `rdd-handover` — invocar para gerar resumo executivo do estado do módulo para transição.
-- `rdd-self-update` — atualizar a configuração local do workflow RDD via `git pull`.
-- `rdd-self-publish` — publicar melhorias aprovadas da configuração via `git push`.
+- `rdd-core-update` — atualizar a configuração local do workflow RDD via `git pull`.
+- `rdd-core-publish` — publicar melhorias aprovadas da configuração via `git push`.
 - `rdd-setup` — wizard de primeira configuração da máquina.
 - `rdd-agent-health-monitor` — diagnóstico e conformidade das skills e agentes.
 - `rdd-drift-detector` — medir degradação temporal da qualidade dos artefatos.

@@ -60,7 +60,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 
 ## Nunca edita
 
-- Agentes e skills versionados (`agents/rdd-*.md`, `skills/rdd-*/SKILL.md`) — são do remote via `rdd-self-update`
+- Agentes e skills versionados (`agents/rdd-*.md`, `skills/rdd-*/SKILL.md`) — são do remote via `rdd-core-update`
 - Blocos `provider`, `model`, `mcp` do opencode.jsonc — só `permission` e `agent`
 - Artefatos de módulo RDD (REQUIREMENTS, TASKS, etc.)
 - Remote — este wizard nunca commita nem push
@@ -187,7 +187,7 @@ GitHub) leem o perfil em vez de hardcode.
    Referências — lazy loading" estiver ausente (máquina antiga), repõe o
    padrão: instrução CRITICAL (ler só sob demanda) + 1 linha por
    `rules/*.md`. Se algum `rules/*.md` referenciado não existir,
-   oriente `rdd-self-update` (rules/ é versionado) e registre ⚠️ —
+   oriente `rdd-core-update` (rules/ é versionado) e registre ⚠️ —
    nunca crie conteúdo de rules/ por conta própria.
 3. **opencode.jsonc**:
    - `permission.external_directory["<dir>/**"] = "allow"`
@@ -329,7 +329,7 @@ Próximo passo sugerido: @rdd-next no módulo em que vai trabalhar.
   última edição e informe — nunca deixe a config num estado inválido.
 - **Índice lazy ausente ou `rules/*.md` faltando (máquina antiga):**
   repõe a seção do índice (Passo 3.2); arquivo `rules/` ausente é
-  resolvido via `rdd-self-update` (versionado no remote) — o wizard
+  resolvido via `rdd-core-update` (versionado no remote) — o wizard
   não inventa conteúdo de regras.
 - **Perfil do cliente ausente ou stale (IMP-103):** reexecute o Passo 2b antes do Passo 4 (Azure) — nunca rode tracker com defaults hardcoded.
 - **Blocos `azure-devops` no AGENTS.md (legado):** continuam suportados por compatibilidade, mas a fonte de verdade do wizard passa a ser `rules/client-profile.md` (IMP-103); sincronize o bloco a partir do perfil quando divergirem.

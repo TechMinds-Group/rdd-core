@@ -1,5 +1,5 @@
 ---
-name: rdd-self-publish
+name: rdd-core-publish
 description: >-
   Publica as melhorias da config local do workflow RDD (~/.config/opencode/)
   no repositório remoto da config via git commit + push (branch main), fechando o
@@ -15,10 +15,10 @@ description: >-
   mudanças na config do opencode".
 ---
 
-# rdd-self-publish — Publicação segura das melhorias da config RDD
+# rdd-core-publish — Publicação segura das melhorias da config RDD
 
 Responde "como publicar as melhorias aplicadas na config RDD local para os demais
-ambientes?" — o espelho inverso do `rdd-self-update` (que apenas traz do remote via
+ambientes?" — o espelho inverso do `rdd-core-update` (que apenas traz do remote via
 pull; esta skill apenas empacota e envia via commit + push). Diferente do
 `@rdd-workflow-improver` (corrige o workflow) e do `@rdd-workflow-builder` (cria
 componentes) — esta skill **não edita nada**; publica o que já está no working tree.
@@ -241,23 +241,23 @@ de ~100 arquivos):
 
 Informe: *"Config não é hot-reloaded — **reinicie o OpenCode** para que as
 skills/agents atualizados passem a valer na sessão. Os demais ambientes recebem
-esta publicação via `rdd-self-update` (git pull --ff-only no repo do remote origin)."*
+esta publicação via `rdd-core-update` (git pull --ff-only no repo do remote origin)."*
 
 ## Formato de saída
 
 ```text
-═══ rdd-self-publish — <RESULTADO> ═══
+═══ rdd-core-publish — <RESULTADO> ═══
 
 📦 Repo: ~/.config/opencode/ (remote origin @ main)
 
 ✅ PUBLICADO COM SUCESSO
    Commits criados (N):
-     - a11bcc0 feat(rdd): IMP-013 nova skill rdd-self-publish
+     - a11bcc0 feat(rdd): IMP-013 nova skill rdd-core-publish
      - b3c9f2e fix(rdd): rdd-azure-task-creator convenção de título
    Push: origin/main (branch atualizada)
 
 ⚠️ Reinicie o OpenCode para a nova config valer.
-   Demais ambientes recebem via rdd-self-update.
+   Demais ambientes recebem via rdd-core-update.
 
 ── ou ──
 
@@ -285,7 +285,7 @@ esta publicação via `rdd-self-update` (git pull --ff-only no repo do remote or
    nada fora do escopo + gates verdes): `git pull --ff-only` + `git push origin main`
    direto, 0 questions; qualquer anomalia: 1 question consolidada com o pacote
    (Passo 4).
-9. Aviso final: reiniciar OpenCode + demais ambientes via rdd-self-update (Passo 5).
+9. Aviso final: reiniciar OpenCode + demais ambientes via rdd-core-update (Passo 5).
 
 ## Casos de Borda
 
@@ -301,7 +301,7 @@ prossegue após eval verde ou decisão explícita registrada do usuário.
 
 ### MANIFEST divergente no pull anterior (IMP-103)
 
-Se o `rdd-self-update` reportou arquivos divergentes do `MANIFEST.sha256`,
+Se o `rdd-core-update` reportou arquivos divergentes do `MANIFEST.sha256`,
 resolva ANTES de publicar: commit legítimo (incluir no pacote) ou descarte
 consciente pelo operador. Publicar por cima de divergência silencia o
 detector de tampering.
@@ -311,7 +311,7 @@ detector de tampering.
 **ABORTA o push** (commits já criados permanecem locais) e reporta os
 findings — ex.: front matter com delimitador quebrado (caso real IMP-086:
 ` --` no lugar de `---` fez o runtime descartar permissões em silêncio).
-Orientação: corrigir via `@rdd-workflow-improver` e rodar `rdd-self-publish`
+Orientação: corrigir via `@rdd-workflow-improver` e rodar `rdd-core-publish`
 de novo. Nunca publique componente com front matter quebrado.
 
 ### Repo sem remote configurado
@@ -342,7 +342,7 @@ decidir."* Nunca `git reset --hard`/`checkout -- .` automaticamente.
 **ABORTA** e orienta: *"A branch local divergiu do remote. Identifique seus commits
 locais com `git -C ... log origin/main..HEAD` e decida entre `git rebase
 origin/main` (histórico linear) ou `git merge origin/main` (commit de merge).
-Depois rode rdd-self-publish de novo."* **Nunca** `git push --force`.
+Depois rode rdd-core-publish de novo."* **Nunca** `git push --force`.
 
 ### Push rejeitado por branch policy (ex.: PR obrigatório)
 
@@ -374,10 +374,10 @@ do usuário.
 Conventional Commits, mensagens em PT-BR descrevendo as melhorias publicadas.
 Se a mudança corresponder a um IMP registrado em WORKFLOW_IMPROVEMENTS.md, cite-o:
 
-- `feat(rdd): IMP-013 nova skill rdd-self-publish`
+- `feat(rdd): IMP-013 nova skill rdd-core-publish`
 - `feat(rdd): IMP-012 convenção de título de task obrigatória`
 - `fix(rdd): rdd-data-model seção §6`
-- `docs(rdd): atualiza ARCHITECTURE-MAP com rdd-self-publish`
+- `docs(rdd): atualiza ARCHITECTURE-MAP com rdd-core-publish`
 
 Múltiplas mudanças distintas → múltiplos commits atômicos (um por tema); uma única
 mudança → um único commit. Nunca empacotar temas não relacionados no mesmo commit.

@@ -35,8 +35,8 @@ primary_agents:
     invokes_direct:
       - rdd-prompt-gate
       - rdd-handover
-      - rdd-self-update
-      - rdd-self-publish
+      - rdd-core-update
+      - rdd-core-publish
       - rdd-setup
       - rdd-agent-health-monitor
       - rdd-drift-detector
@@ -579,10 +579,10 @@ skills:
   - id: rdd-skill-creator
     domain: meta
     description: "Cria nova skill do OpenCode"
-  - id: rdd-self-update
+  - id: rdd-core-update
     domain: meta
     description: "Atualiza config local via git pull"
-  - id: rdd-self-publish
+  - id: rdd-core-publish
     domain: meta
     description: "Publica melhorias da config local via git push"
   - id: rdd-setup
@@ -600,6 +600,9 @@ skills:
   - id: rdd-pack-update
     domain: meta
     description: "Atualiza packs instalados — pull dos clones, valida requires-core e no-override, reinstala provides e move o pin do sources.yaml só sob pedido explícito"
+  - id: rdd-pack-publish
+    domain: meta
+    description: "Publica o pack da organização — valida working tree do clone, commit + push, reinstala provides (requires-core + no-override) e move o pin do sources.yaml; par de publicação do rdd-pack-update"
   - id: rdd-pack-scaffold
     domain: meta
     description: "Onboarding de nova organização no open core — esqueleto do pack a partir do contrato (pack.yaml v0.1.0, regra da org, acúmulo), primeiro commit, repo remoto privado, registro no perfil e instalação no runtime"
@@ -776,8 +779,8 @@ domains:
       - rdd-subagent-creator
       - rdd-primary-agent-creator
       - rdd-skill-creator
-      - rdd-self-update
-      - rdd-self-publish
+      - rdd-core-update
+      - rdd-core-publish
       - rdd-setup
       - rdd-registry-render
       - rdd-skill-eval
@@ -787,6 +790,7 @@ domains:
       - rdd-skill-evolution
       - rdd-typesafe-ai
       - rdd-pack-update
+      - rdd-pack-publish
       - rdd-pack-scaffold
 
   transversal:
