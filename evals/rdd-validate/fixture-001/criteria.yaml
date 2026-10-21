@@ -1,0 +1,40 @@
+---
+name: "Validate — gap plantado RN-003 sem downstream de API"
+description: >
+  Módulo com RN-003 (integração GTA, envolve API) sem entrada em
+  API_CONTRACTS.md (arquivo ausente). VALIDATION_REPORT deve reportar
+  RN-003 como lacuna de downstream. GAP PLANTADO: o eval verifica se a
+  skill DETETA o problema, não se o módulo está perfeito.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "quality/VALIDATION_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "RN-003"
+    severity: error
+
+  - type: contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "API_CONTRACTS"
+    severity: error
+
+  - type: cross_ref
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/VALIDATION_REPORT.md"
+    min: 25
+    max: 400
+    severity: warning
+
+  - type: not_contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "TODO"
+    severity: warning

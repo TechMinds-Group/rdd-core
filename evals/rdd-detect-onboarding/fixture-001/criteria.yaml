@@ -1,0 +1,25 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-detect-onboarding e description indicando invocacao automatica no primeiro turno
+    expect: pass
+  - id: read-only-total
+    type: semantic
+    description: Skill nao edita nenhum arquivo - inclusive a flag .no_onboarding (quem toca e o orquestrador)
+    expect: pass
+  - id: criterios-ordenados
+    type: semantic
+    description: 5 criterios avaliados em ordem, com flag de supressao checada primeiro e vereditos SUPRIMIDO/MAQUINA NOVA/SEM PROJETOS/OPERANDO
+    expect: pass
+  - id: flag-expira-30-dias
+    type: semantic
+    description: Flag .no_onboarding com mais de 30 dias e ignorada (expirada) - reavalia os outros criterios do zero
+    expect: pass
+  - id: default-seguro
+    type: semantic
+    description: Modo de erro warn - AGENTS.md ilegivel vira MAQUINA NOVA e glob que falha vira SEM PROJETOS (nunca bloqueia)
+    expect: pass
+  - id: formato-veredito
+    type: semantic
+    description: Saida no formato padrao com veredito, flag, AGENTS.md e contagem de PROJECT_CHARTERs
+    expect: pass

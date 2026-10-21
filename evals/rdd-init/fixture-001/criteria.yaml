@@ -1,0 +1,42 @@
+---
+name: "Init — CONSTITUTION.md e INDEX.md com novo projeto"
+description: >
+  Módulo CONTATOS com PROJECT_CHARTER.md (repos: CONTATOS-API, CONTATOS-FE).
+  CONSTITUTION.md e INDEX.md existem mas sem CONTATOS na tabela. A skill
+  adiciona a linha do CONTATOS em ambos os documentos, preservando os
+  projetos existentes (CATALOGO).
+inputs_required: ["PROJECT_CHARTER.md", "CONSTITUTION.md", "INDEX.md"]
+
+checks:
+  - type: file_exists
+    path: "CONSTITUTION.md"
+    severity: error
+
+  - type: contains
+    path: "CONSTITUTION.md"
+    pattern: "CONTATOS"
+    severity: error
+
+  - type: contains
+    path: "CONSTITUTION.md"
+    pattern: "CATALOGO"
+    severity: error
+
+  - type: file_exists
+    path: "INDEX.md"
+    severity: error
+
+  - type: section_exists
+    path: "INDEX.md"
+    section: "## Mapa de Projetos"
+    severity: error
+
+  - type: contains
+    path: "INDEX.md"
+    pattern: "CONTATOS"
+    severity: error
+
+  - type: contains
+    path: "INDEX.md"
+    pattern: "CONTATOS-API"
+    severity: error

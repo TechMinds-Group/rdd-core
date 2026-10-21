@@ -1,0 +1,55 @@
+---
+name: "Figma Tasks — handoff de features com delta e propostas"
+description: >
+  Módulo mínimo (REQUIREMENTS + UI_SPEC) com design via fallback de notas
+  (MCP indisponível no eval). A skill deve gravar docs/FIGMA_TASKS_HANDOFF.md
+  (append-only) com seção Features candidatas (RN-âncora + RNs do escopo),
+  delta de UI_SPEC proposto, propostas de RN para o que extrapola requisitos
+  (reagendar) e sem qualquer menção a token/segredo.
+inputs_required: ["REQUIREMENTS.md", "UI_SPEC.md", "FIGMA_DESIGN_NOTES.md"]
+
+checks:
+  - type: file_exists
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    severity: error
+
+  - type: section_exists
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    section: "### Features candidatas"
+    severity: error
+
+  - type: section_exists
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    section: "### Propostas de RN"
+    severity: error
+
+  - type: contains
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    pattern: "RN-010"
+    severity: error
+
+  - type: contains
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    pattern: "Reagendar"
+    severity: error
+
+  - type: contains
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    pattern: "rdd-task-spec"
+    severity: warning
+
+  - type: not_contains
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    pattern: "FIGMA_API_KEY"
+    severity: error
+
+  - type: not_contains
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    pattern: "token="
+    severity: error
+
+  - type: line_count_range
+    path: "docs/FIGMA_TASKS_HANDOFF.md"
+    min: 20
+    max: 300
+    severity: warning

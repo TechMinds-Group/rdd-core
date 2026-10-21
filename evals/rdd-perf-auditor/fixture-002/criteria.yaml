@@ -1,0 +1,41 @@
+---
+name: "Roll-up por feature/primary - join heuristico declarado (IMP-099)"
+description: >
+  O PERF_REPORT deve ter secao de roll-up por feature (RN-ancora), primary
+  e tier de modelo, declarando explicitamente que o join e heuristico e a
+  metrica aproximada; sessoes nao mapeadas sao excluidas e contadas,
+  nunca atribuidas.
+
+checks:
+  - type: file_exists
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    severity: error
+
+  - type: section_exists
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    section: "Roll-up por Feature/Primary"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    pattern: "heuristic"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    pattern: "APROXIMAD"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    pattern: "nunca atribuidas"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-10-17-10-00.md"
+    pattern: "Sessoes nao mapeadas: 3"
+    severity: error

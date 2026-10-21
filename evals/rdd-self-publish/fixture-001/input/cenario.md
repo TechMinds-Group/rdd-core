@@ -1,0 +1,3 @@
+﻿Cenario: Operador pede "publicar as melhorias do RDD" apos o workflow-improver corrigir a skill rdd-clarify. Working tree tem: skills/rdd-clarify/SKILL.md (M), AGENTS.md (M), opencode.jsonc (??) e evals/trends/trends.json (M). origin/main esta 2 commits a frente do HEAD local.
+
+Tarefa: classificar o escopo, rodar os gates (Golden Set, atualizacao, saude), decidir entre execucao direta ou 1 question consolidada (IMP-090) e publicar com git add explicito + pull --ff-only + push origin main.

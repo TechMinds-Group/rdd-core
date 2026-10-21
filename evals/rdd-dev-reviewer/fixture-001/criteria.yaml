@@ -1,0 +1,46 @@
+---
+name: "Dev Reviewer - request-changes quando RN sem match no diff"
+description: >
+  Diff cobre RN-005 mas RN-010 listada na task não tem mudança
+  correspondente. O review deve reprovar (request-changes), citar RN-010
+  como descoberta e NUNCA aprovar (invariantes: sem veredito approve e
+  sem reviewed: true quando há RN sem correspondência no diff).
+inputs_required: [diff-summary.md]
+
+checks:
+  - type: file_exists
+    path: "REVIEW.md"
+    severity: error
+
+  - type: contains
+    path: "REVIEW.md"
+    pattern: "veredito: request-changes"
+    severity: error
+
+  - type: contains
+    path: "REVIEW.md"
+    pattern: "RN-010"
+    severity: error
+
+  # invariante: nunca aprovar task com RN sem correspondência no diff
+  - type: not_contains
+    path: "REVIEW.md"
+    pattern: "veredito: approve"
+    severity: error
+
+  - type: not_contains
+    path: "REVIEW.md"
+    pattern: "reviewed: true"
+    severity: error
+
+  - type: cross_ref
+    path: "REVIEW.md"
+    pattern: "RN-(\\d+)"
+    sources: ["diff-summary.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "REVIEW.md"
+    min: 8
+    max: 60
+    severity: warning

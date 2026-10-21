@@ -1,0 +1,43 @@
+---
+name: "Primary Agent Creator — arquivo do primary agent com front matter"
+description: >
+  Solicitação de criação de primary agent rdd-coverage-auditor para auditar
+  cobertura de RNs. A skill gera agents/rdd-coverage-auditor.md com front
+  matter (name, description), seções de Subagents e roteamento, Tools e
+  Modo de erro.
+inputs_required: []
+
+checks:
+  - type: file_exists
+    path: "agents/rdd-coverage-auditor.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "agents/rdd-coverage-auditor.md"
+    severity: error
+
+  - type: contains
+    path: "agents/rdd-coverage-auditor.md"
+    pattern: "name: rdd-coverage-auditor"
+    severity: error
+
+  - type: contains
+    path: "agents/rdd-coverage-auditor.md"
+    pattern: "description:"
+    severity: error
+
+  - type: section_exists
+    path: "agents/rdd-coverage-auditor.md"
+    section: "## Subagents e roteamento"
+    severity: error
+
+  - type: section_exists
+    path: "agents/rdd-coverage-auditor.md"
+    section: "## Modo de erro"
+    severity: error
+
+  - type: line_count_range
+    path: "agents/rdd-coverage-auditor.md"
+    min: 20
+    max: 300
+    severity: warning

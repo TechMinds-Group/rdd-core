@@ -1,0 +1,22 @@
+---
+name: "Promocao PEND->RN carrega origem (IMP-099)"
+description: >
+  Checkpoint de reavaliacao que promove PEND a RN deve carregar a
+  proveniencia com a origem requisito-mal-capturado; PEND->CR herda o
+  campo Origem.
+inputs_required: ["meetings/2026-09-22-00.md"]
+
+checks:
+  - type: file_exists
+    path: "meetings/2026-09-22-01.md"
+    severity: error
+
+  - type: contains
+    path: "meetings/2026-09-22-01.md"
+    pattern: "Promovida de PEND-001"
+    severity: error
+
+  - type: contains
+    path: "meetings/2026-09-22-01.md"
+    pattern: "requisito-mal-capturado"
+    severity: error

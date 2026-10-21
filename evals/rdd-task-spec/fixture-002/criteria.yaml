@@ -1,0 +1,100 @@
+---
+name: "Task Spec L1 — RN de front+back vira DUAS tasks com escopo único (IMP-040 pasta por feature)"
+description: >
+  EDGE: RNs tocam backend e frontend (UI_SPEC presente). Regra de escopo
+  único: gerar task [Bloqueios.API] E task [Bloqueios.MFE] separadas —
+  nunca uma task misturando dois repositórios. Convenção IMP-035/037/040:
+  uma PASTA "delivery/2026-09/RN-001 — Aplicação de bloqueio/" com
+  "RN-001 — Analise-Funcional.md" + "RN-001 — Analise-Tecnica.md"
+  (tasks ID RN-001-1 e RN-001-2 no técnico). Proibido o flat pré-IMP-040.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "[Bloqueios.API]"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "[Bloqueios.MFE]"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "Frontend"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "RN-001-1"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "Dependências"
+    severity: warning
+
+  - type: cross_ref
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: no_todos
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    severity: error
+
+  - type: reference_match
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    expected: "output-expected/delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Tecnica.md"
+    severity: error
+
+  # --- funcional: linguagem de negócio, sem tech (IMP-040) ---
+  - type: frontmatter_valid
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    pattern: "## Regras de negócio"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    pattern: "Bloqueios.API"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    pattern: "Bloqueios.MFE"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-001 — Aplicação de bloqueio/RN-001 — Analise-Funcional.md"
+    min: 15
+    max: 120
+    severity: warning

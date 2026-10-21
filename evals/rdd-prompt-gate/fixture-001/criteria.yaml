@@ -1,0 +1,60 @@
+---
+name: "Prompt Gate — prompt vago multi-intenção (< 50)"
+description: >
+  Operador submete prompt vago e multi-intenção (melhorar relatórios +
+  corrigir erro não especificado + gráfico novo). O gate deve avaliar via
+  jev_classify, computar score < 50, devolver o prompt REESCRITO para
+  reenvio e sugerir roteamento rdd-req → rdd-clarify. Baseline capturado
+  em output-expected/veredito.md (baseline-mode).
+inputs_required: ["input/prompt-operador.md"]
+
+checks:
+  - type: file_exists
+    path: "veredito.md"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "Prompt Gate"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "PROMPT REESCRITO"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "Score:"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "Prompt reescrito"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "rdd-req"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "rdd-clarify"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "jev_classify"
+    severity: error
+
+  - type: contains
+    path: "veredito.md"
+    pattern: "Rota sugerida"
+    severity: error
+
+  - type: line_count_range
+    path: "veredito.md"
+    min: 12
+    max: 80
+    severity: warning

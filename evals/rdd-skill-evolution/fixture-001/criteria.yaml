@@ -1,0 +1,25 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-skill-evolution e description com triggers de evolucao
+    expect: pass
+  - id: confirmacao-antes-aplicar
+    type: semantic
+    description: Modo interativo - toda mudanca em skill requer confirmacao explicita do usuario antes de aplicar (nunca automatica)
+    expect: pass
+  - id: valida-com-skill-eval
+    type: semantic
+    description: Apos aplicar, invoca rdd-skill-eval --skill <skill> para validar; FAIL - reverter e reportar
+    expect: pass
+  - id: nunca-edita-retrospectivas
+    type: semantic
+    description: Retrospectivas e codigo-fonte de projetos sao read-only (so edita skills e WORKFLOW_IMPROVEMENTS.md)
+    expect: pass
+  - id: registra-imp
+    type: semantic
+    description: Cada mudanca aplicada gera entrada IMP-XXX em WORKFLOW_IMPROVEMENTS.md com problema, causa raiz, correcao e projetos motivadores
+    expect: pass
+  - id: priorizacao-por-ocorrencia
+    type: semantic
+    description: Padroes priorizados por ocorrencia (1 - baixa/observar; 2 - media; 3+ - alta/aplicar)
+    expect: pass

@@ -1,0 +1,1 @@
+# Data Model (output incompleto de proposito - UI_SPEC nao foi gerada)

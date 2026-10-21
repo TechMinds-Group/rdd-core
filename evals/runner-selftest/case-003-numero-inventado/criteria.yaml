@@ -1,0 +1,12 @@
+expect: fail
+checks:
+- type: contains
+  path: "PROGRESS_REPORT.md"
+  pattern: "N/A (sem dados)"
+  expect: fail
+  severity: error
+- type: not_contains
+  path: "PROGRESS_REPORT.md"
+  pattern: "retrabalho: 35%"
+  expect: fail
+  severity: error

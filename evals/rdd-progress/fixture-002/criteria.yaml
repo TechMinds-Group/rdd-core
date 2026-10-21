@@ -1,0 +1,42 @@
+---
+name: "Bloco Resultado (outcome) com invariante N/A (IMP-099)"
+description: >
+  O dashboard deve ter o bloco 5 Resultado: PENDs abertos vs resolvidos,
+  CRs por origem (retrabalho = fracao requisito-mal-capturado) e features
+  >14 dias sem drift-check. Dado ausente = N/A (sem dados), nunca numero
+  estimado.
+inputs_required: ["REQUIREMENTS.md", "support/CHANGE_REQUESTS.md"]
+
+checks:
+  - type: file_exists
+    path: "quality/PROGRESS_REPORT.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/PROGRESS_REPORT.md"
+    severity: error
+
+  - type: section_exists
+    path: "quality/PROGRESS_REPORT.md"
+    section: "Resultado"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "requisito-mal-capturado"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "N/A (sem dados)"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "RN-010"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "drift-check"
+    severity: error

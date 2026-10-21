@@ -1,0 +1,69 @@
+---
+name: "Design Brief — greenfield com UI_SPEC mínima"
+description: >
+  Módulo greenfield com PROJECT_CHARTER.md, REQUIREMENTS.md e UI_SPEC.md
+  mínimos (uma tela de contatos). A skill deve gravar specs/DESIGN_BRIEF.md
+  com as 8 seções do template, status "greenfield" na seção de estado atual
+  da UI, instruções do/don't para o Figma Make, e sem vazamento de
+  varredura de código frontend (nenhum token de tema/config de build).
+inputs_required: ["PROJECT_CHARTER.md", "REQUIREMENTS.md", "specs/UI_SPEC.md"]
+
+checks:
+  - type: file_exists
+    path: "specs/DESIGN_BRIEF.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "specs/DESIGN_BRIEF.md"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DESIGN_BRIEF.md"
+    section: "## 1. Identidade do produto"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DESIGN_BRIEF.md"
+    section: "## 5. Estado atual da UI"
+    severity: error
+
+  - type: contains
+    path: "specs/DESIGN_BRIEF.md"
+    pattern: "greenfield"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DESIGN_BRIEF.md"
+    section: "## 7. Telas prioritárias"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DESIGN_BRIEF.md"
+    section: "## 8. Instruções para o Figma Make"
+    severity: error
+
+  - type: contains
+    path: "specs/DESIGN_BRIEF.md"
+    pattern: "Não faça"
+    severity: error
+
+  - type: contains
+    path: "specs/DESIGN_BRIEF.md"
+    pattern: "simplicidade"
+    severity: warning
+
+  - type: not_contains
+    path: "specs/DESIGN_BRIEF.md"
+    pattern: "tailwind.config"
+    severity: error
+
+  - type: not_contains
+    path: "specs/DESIGN_BRIEF.md"
+    pattern: "Angular Material"
+    severity: error
+
+  - type: line_count_range
+    path: "specs/DESIGN_BRIEF.md"
+    min: 40
+    max: 300
+    severity: warning

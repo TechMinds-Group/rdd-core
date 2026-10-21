@@ -1,0 +1,71 @@
+---
+name: "Architecture — 2 outputs com ADR do DEC-001 e diagrama"
+description: >
+  DATA_MODEL + DECISIONS (DEC-001 histórico unificado) + atores.
+  ARCHITECTURE deve citar HIST_BLOQUEIO (ADR) e ter diagrama mermaid;
+  SECURITY deve derivar autorização dos atores (Operador/Consultor).
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/ARCHITECTURE.md"
+    severity: error
+
+  - type: file_exists
+    path: "specs/SECURITY.md"
+    severity: error
+
+  - type: section_exists
+    path: "specs/ARCHITECTURE.md"
+    section: "## 2. Stack"
+    severity: error
+
+  - type: contains
+    path: "specs/ARCHITECTURE.md"
+    pattern: "HIST_BLOQUEIO"
+    severity: error
+
+  - type: contains
+    path: "specs/SECURITY.md"
+    pattern: "Operador"
+    severity: error
+
+  - type: contains
+    path: "specs/SECURITY.md"
+    pattern: "Consultor"
+    severity: error
+
+  - type: mermaid_valid
+    path: "specs/ARCHITECTURE.md"
+    severity: error
+
+  - type: cross_ref
+    path: "specs/ARCHITECTURE.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/ARCHITECTURE.md"
+    min: 50
+    max: 400
+    severity: warning
+
+  - type: line_count_range
+    path: "specs/SECURITY.md"
+    min: 30
+    max: 300
+    severity: warning
+
+  - type: no_todos
+    path: "specs/ARCHITECTURE.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/ARCHITECTURE.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "specs/SECURITY.md"
+    severity: error

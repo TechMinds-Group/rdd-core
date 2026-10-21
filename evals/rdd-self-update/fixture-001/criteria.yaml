@@ -1,0 +1,29 @@
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-self-update e description com triggers de atualizacao
+    expect: pass
+  - id: aborta-com-wip
+    type: semantic
+    description: Working tree sujo (WIP local) ABORTA o pull e lista os arquivos sujos - nunca sobrescreve trabalho local
+    expect: pass
+  - id: nunca-commita-empurra
+    type: semantic
+    description: Skill nunca commita, pusha, cria branch ou tag - apenas aplica atualizacao publicada no remote
+    expect: pass
+  - id: pull-ff-only
+    type: semantic
+    description: Pull e sempre --ff-only; branch divergente aborta com orientacao de resolucao manual (nunca merge/rebase automatico)
+    expect: pass
+  - id: escopo-pull
+    type: semantic
+    description: Nunca toca arquivos nao versionados (opencode.jsonc, AGENTS.md, settings.json, hooks/, plugins/)
+    expect: pass
+  - id: avisa-reinicio
+    type: semantic
+    description: Apos o pull, informa que a config nao e hot-reloaded e pede reinicio do OpenCode
+    expect: pass
+  - id: manifest-verificado
+    type: semantic
+    description: Apos o pull verifica sha256 contra MANIFEST.sha256; divergencia gera warning listando os arquivos - nunca auto-corrigida
+    expect: pass

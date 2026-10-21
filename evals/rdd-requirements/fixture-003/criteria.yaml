@@ -1,0 +1,47 @@
+---
+name: "Requirements — RNs induzidas de engenharia reversa carregam confiança (IMP-096)"
+description: >
+  Módulo com sistema_existente: true cuja fonte de requisitos é relatório
+  de engenharia reversa (@rdd-reverse-orchestrator). RNs induzidas devem
+  carregar a tag **Confiança:** (Alta/Média/Baixa) no corpo; RN induzida de
+  confiança Baixa não validada por humano NUNCA ancora feature — vira PEND
+  com proveniência (IMP-094). COMPORTAMENTO PLANTADO: a candidata RN-c3
+  (Baixa, não determinável) deve virar PEND-001, não RN-003.
+inputs_required: [PROJECT_CHARTER.md, quality/REVERSE_REPORT_2026-10-14-0930.md, meetings/2026-10-14-01.md]
+
+checks:
+  - type: file_exists
+    path: "REQUIREMENTS.md"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "Confiança:"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "PEND-001"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "IMP-094"
+    severity: error
+
+  - type: cross_ref
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["quality/REVERSE_REPORT_2026-10-14-0930.md"]
+    severity: error
+
+  - type: id_sequence
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: not_contains
+    path: "REQUIREMENTS.md"
+    pattern: "TODO"
+    severity: error

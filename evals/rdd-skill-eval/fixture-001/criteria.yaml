@@ -1,0 +1,25 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-skill-eval e description com triggers de eval/regressao
+    expect: pass
+  - id: nunca-edita-skill-avaliada
+    type: semantic
+    description: Nunca edita skills, agents, fixtures ou registry.yaml - execucao read-only exceto relatorios/trends
+    expect: pass
+  - id: sandbox-obrigatorio
+    type: semantic
+    description: Toda fixture executavel roda em sandbox isolado (%TEMP%/opencode-eval) - NUNCA invoca a skill apontando para artefatos reais de modulos
+    expect: pass
+  - id: fixture-incompleta-skipped
+    type: semantic
+    description: Fixture sem criteria.yaml ou inputs e SKIPPED com warning - nao aborta o eval inteiro
+    expect: pass
+  - id: report-e-trends
+    type: semantic
+    description: Gera EVAL_REPORT_<skill>_<ts>.md em evals/reports/ e entrada append-only em evals/trends/trends.json
+    expect: pass
+  - id: registry-mode
+    type: semantic
+    description: Modo --registry (IMP-027) valida consistencia do registry.yaml contra o disco, independente de fixtures
+    expect: pass

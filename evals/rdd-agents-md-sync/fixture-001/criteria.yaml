@@ -1,0 +1,29 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-agents-md-sync e description com triggers de uso
+    expect: pass
+  - id: auditoria-read-only-primeiro
+    type: semantic
+    description: Primeira fase e auditoria read-only com relatorio de divergencias; nenhuma edicao durante a auditoria
+    expect: pass
+  - id: edicao-so-pos-confirmacao
+    type: semantic
+    description: Alteracoes nos AGENTS.md ocorrem somente apos confirmacao explicita do operador
+    expect: pass
+  - id: diff-minimo
+    type: semantic
+    description: Nunca substitui um AGENTS.md inteiro automaticamente - altera apenas blocos aprovados (diff minimo)
+    expect: pass
+  - id: preserva-regras-especificas
+    type: semantic
+    description: Regras especificas de repo (stack, testes, deploy) nao sao promovidas ao bloco comum sem confirmacao
+    expect: pass
+  - id: evidencia-de-origem
+    type: semantic
+    description: Cada regra candidata a comum indica em quais repos foi encontrada (classificacao COMMON_CANDIDATE/CONFLICT/etc)
+    expect: pass
+  - id: nao-cria-agents-ausente-sem-confirmacao
+    type: semantic
+    description: Repos sem AGENTS.md sao classificados como pendencia (MISSING) sem criar arquivo
+    expect: pass

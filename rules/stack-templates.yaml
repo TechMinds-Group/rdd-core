@@ -1,0 +1,77 @@
+# Stack Templates Registry — RDD
+#
+# Mapeia stacks detectadas para boilerplate repos + setup procedure.
+# Usado por rdd-stack-boilerplate e rdd-dev-* executores.
+# Lazy-loaded via AGENTS.md — só lido quando necessário.
+#
+# IMP-105 (base neutra): o campo `boilerplate` é RELATIVO à organização —
+# o prefixo da org vem de `boilerplate_org` no `rules/client-profile.md`
+# (IMP-103), gravado pelo rdd-setup. O rdd-stack-boilerplate resolve
+# `<boilerplate_org>` antes de clonar. Sem perfil, pergunte ao operador.
+#
+# Exemplo Acme (pack rules/<pack-da-organizacao>.md): boilerplate_org: Acme-Group
+#   → .NET resolve para Acme-Group/Boilerplate.NET-API
+#
+# Adicione novas stacks conforme surgirem boilerplates.
+# A chave ("stack") é o identificador usado nos playbooks e no detector.
+
+boilerplate_org: <do client-profile — campo boilerplate_org (IMP-105)>
+
+templates:
+  .NET:
+    boilerplate: <boilerplate_org>/Boilerplate.NET-API
+    detect: ["*.csproj", "*.sln"]
+    description: |
+      Clean Architecture .NET 10 + CQRS/MediatR + PostgreSQL + Docker + CI.
+      Inclui: rename-project.ps1 (renomeia tudo para o projeto),
+      Dockerfile.dev/prod, docker-compose, GitHub Actions deploy,
+      health checks, backup/restore scripts.
+    pre_setup: null         # nada antes de clonar
+    post_setup: |
+      # 1. Clona boilerplate
+      # 2. Roda rename-project.ps1 <ProjectName>
+      # 3. Copia .env.example para .env
+      # 4. Ajusta connection strings (DB name = <ProjectName>)
+      # 5. Roda dotnet restore
+    base_image: mcr.microsoft.com/dotnet/aspnet:10.0
+    framework: ASP.NET Core
+    db_image: postgres:16
+    compose_ports:
+      api: 5000
+      db: 5434
+    conventions:
+      arquitetura: Clean Architecture (Api/Application/Domain/Infrastructure)
+      cqrs: MediatR
+      orm: EF Core
+      db: PostgreSQL 16
+      auth: JWT (configurável)
+      api_versioning: "[ApiVersion] controller annotations"
+      health_check: "/health endpoint"
+
+  Angular:
+    boilerplate: null      # não existe ainda (a criar na org)
+    detect: ["angular.json"]
+    description: "Angular MFE (Module Federation) — a criar boilerplate"
+    pre_setup: null
+    post_setup: null
+
+  React:
+    boilerplate: null      # não existe ainda
+    detect: ["package.json", "vite.config.ts"]
+    description: "React + Vite + Tailwind — a criar boilerplate"
+    pre_setup: null
+    post_setup: null
+
+  Rust:
+    boilerplate: null
+    detect: ["Cargo.toml"]
+    description: "Rust backend CORE — a criar boilerplate"
+    pre_setup: null
+    post_setup: null
+
+  Java:
+    boilerplate: null
+    detect: ["pom.xml", "build.gradle"]
+    description: "Java/Quarkus — a criar boilerplate"
+    pre_setup: null
+    post_setup: null

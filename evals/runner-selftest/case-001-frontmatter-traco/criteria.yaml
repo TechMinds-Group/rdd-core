@@ -1,0 +1,9 @@
+# Selftest do runner (IMP-100): prato quebrado conhecido.
+# expect: fail = o check DEVE falhar; PASS aqui significa que o runner
+# NAO discriminou (o eval inteiro vira FAIL).
+expect: fail
+checks:
+- type: frontmatter_valid
+  path: "skills/fake/SKILL.md"
+  expect: fail
+  severity: error

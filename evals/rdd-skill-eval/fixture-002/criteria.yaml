@@ -1,0 +1,11 @@
+# IMP-100: invariante — a skill de eval declara o golden set humano como
+# intocado e documenta o modo --golden.
+checks:
+- type: section_exists
+  path: "nunca-edita.md"
+  section: "## Nunca edita"
+  severity: error
+- type: contains
+  path: "nunca-edita.md"
+  pattern: "evals/golden-human/"
+  severity: error

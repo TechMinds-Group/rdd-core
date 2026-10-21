@@ -1,0 +1,57 @@
+---
+name: "Data Model L1 — reuso de tabela legada sem renomeação"
+description: >
+  EDGE: módulo legado com SDA_BLOQUEIO em produção. O modelo deve ADOTAR o
+  reuso, preservar nome/tipos/constraints legados (NUNCA renomear para
+  convenção nova) e adicionar apenas a tabela nova HIST_BLOQUEIO com o
+  evento EXPIRADO (RN-003).
+inputs_required: [REQUIREMENTS.md, LEGACY_CONTEXT.md]
+
+checks:
+  - type: file_exists
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "SDA_BLOQUEIO"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "SEQ_SDA_BLOQUEIO"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "Reutiliz"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "EXPIRADO"
+    severity: error
+
+  - type: not_contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "COD_BLOQUEIO"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "FLG_SITUACAO"
+    severity: error
+
+  - type: mermaid_valid
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: line_count_range
+    path: "specs/DATA_MODEL.md"
+    min: 60
+    max: 400
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/DATA_MODEL.md"
+    severity: error

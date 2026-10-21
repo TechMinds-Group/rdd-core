@@ -1,0 +1,65 @@
+---
+name: "Glossary — 3 audiências com termos do domínio"
+description: >
+  REQUIREMENTS + transcrição bruta. Os 3 glossários (DEV, BUSINESS, USER)
+  devem nascer com os termos do domínio (GTA, BLOQUEIO, produtor) na
+  audiência correta.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "glossaries/DEV_GLOSSARY.md"
+    severity: error
+
+  - type: file_exists
+    path: "glossaries/BUSINESS_GLOSSARY.md"
+    severity: error
+
+  - type: file_exists
+    path: "glossaries/USER_GLOSSARY.md"
+    severity: error
+
+  - type: contains
+    path: "glossaries/DEV_GLOSSARY.md"
+    pattern: "HIST_BLOQUEIO"
+    severity: error
+
+  - type: contains
+    path: "glossaries/BUSINESS_GLOSSARY.md"
+    pattern: "GTA"
+    severity: error
+
+  - type: contains
+    path: "glossaries/USER_GLOSSARY.md"
+    pattern: "Produtor"
+    severity: error
+
+  - type: line_count_range
+    path: "glossaries/DEV_GLOSSARY.md"
+    min: 10
+    max: 150
+    severity: warning
+
+  - type: line_count_range
+    path: "glossaries/BUSINESS_GLOSSARY.md"
+    min: 10
+    max: 150
+    severity: warning
+
+  - type: line_count_range
+    path: "glossaries/USER_GLOSSARY.md"
+    min: 10
+    max: 150
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "glossaries/DEV_GLOSSARY.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "glossaries/BUSINESS_GLOSSARY.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "glossaries/USER_GLOSSARY.md"
+    severity: error

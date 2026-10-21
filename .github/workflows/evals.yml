@@ -1,0 +1,42 @@
+name: Golden Set Evals
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  evals:
+    name: run-evals (deterministico)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Neutrality gate
+        shell: bash
+        run: |
+          bash evals/neutrality/scan.sh
+
+      - name: Rodar suite completa de evals
+        shell: bash
+        run: |
+          chmod +x evals/run-evals.sh
+          ./evals/run-evals.sh --all
+
+      - name: Consistencia do registry (IMP-027)
+        shell: bash
+        run: |
+          chmod +x evals/run-evals.sh
+          ./evals/run-evals.sh --registry
+
+      - name: Upload dos relatorios de eval
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-reports
+          path: evals/reports/
+          retention-days: 14

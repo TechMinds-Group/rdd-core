@@ -1,0 +1,15 @@
+# IMP-100: invariante anti-circularidade — o agent builder declara o
+# golden set humano como intocado na secao "Nunca edita".
+checks:
+- type: section_exists
+  path: "nunca-edita.md"
+  section: "## Nunca edita"
+  severity: error
+- type: contains
+  path: "nunca-edita.md"
+  pattern: "evals/golden-human/"
+  severity: error
+- type: contains
+  path: "nunca-edita.md"
+  pattern: "intocado por agents"
+  severity: error

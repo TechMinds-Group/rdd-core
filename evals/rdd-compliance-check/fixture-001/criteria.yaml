@@ -1,0 +1,54 @@
+---
+name: "Compliance Check - checklist LGPD dos 10 eixos"
+description: >
+  Charter com compliance: true + RNs de aceite versionado e exclusão de
+  conta + DATA_MODEL com dado pessoal. COMPLIANCE.md deve cobrir os 10
+  eixos LGPD com base legal por tratamento, evidência nas RNs e plano de
+  lacunas com roteamento para rdd-req.
+inputs_required: [PROJECT_CHARTER.md, REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/COMPLIANCE.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "specs/COMPLIANCE.md"
+    severity: error
+
+  - type: contains
+    path: "specs/COMPLIANCE.md"
+    pattern: "Base legal"
+    severity: error
+
+  - type: contains
+    path: "specs/COMPLIANCE.md"
+    pattern: "Art. 18"
+    severity: error
+
+  - type: contains
+    path: "specs/COMPLIANCE.md"
+    pattern: "Consentimento"
+    severity: error
+
+  - type: contains
+    path: "specs/COMPLIANCE.md"
+    pattern: "Plano de lacunas"
+    severity: error
+
+  - type: contains
+    path: "specs/COMPLIANCE.md"
+    pattern: "rdd-req"
+    severity: warning
+
+  - type: cross_ref
+    path: "specs/COMPLIANCE.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/COMPLIANCE.md"
+    min: 40
+    max: 400
+    severity: warning

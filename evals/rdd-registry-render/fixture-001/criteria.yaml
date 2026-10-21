@@ -1,0 +1,38 @@
+---
+name: "Registry Render — ARCHITECTURE.md regenerado do registry.yaml"
+description: >
+  registry.yaml minimal (1 primary, 1 subagent, 1 skill) e ARCHITECTURE.md
+  com marcadores <!-- BEGIN_REGISTRY --> / <!-- END_REGISTRY --> vazios.
+  A skill substitui o conteúdo entre os marcadores pelos diagramas e
+  tabelas gerados do registry (idempotente).
+inputs_required: ["registry.yaml", "ARCHITECTURE.md", "agents/rdd-req.md"]
+
+checks:
+  - type: file_exists
+    path: "ARCHITECTURE.md"
+    severity: error
+
+  - type: contains
+    path: "ARCHITECTURE.md"
+    pattern: "flowchart"
+    severity: error
+
+  - type: contains
+    path: "ARCHITECTURE.md"
+    pattern: "rdd-req"
+    severity: error
+
+  - type: contains
+    path: "ARCHITECTURE.md"
+    pattern: "rdd-next"
+    severity: error
+
+  - type: contains
+    path: "ARCHITECTURE.md"
+    pattern: "<!-- BEGIN_REGISTRY -->"
+    severity: error
+
+  - type: contains
+    path: "ARCHITECTURE.md"
+    pattern: "<!-- END_REGISTRY -->"
+    severity: error

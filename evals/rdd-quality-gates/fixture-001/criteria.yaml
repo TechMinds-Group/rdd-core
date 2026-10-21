@@ -1,0 +1,25 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-quality-gates e description com triggers (SOLID, KISS, YAGNI, quality gates)
+    expect: pass
+  - id: playbook-fonte-unica
+    type: semantic
+    description: Comandos de automacao vem do playbook da stack (IMP-077, fonte unica) - a skill nao inventa comandos proprios
+    expect: pass
+  - id: read-only-codigo
+    type: semantic
+    description: Nunca edita codigo-fonte nem artefatos de spec RDD (auditoria read-only)
+    expect: pass
+  - id: secoes-transversais
+    type: semantic
+    description: Cobre secoes transversais A-E (principios de codigo KISS/YAGNI/DRY/SOLID, checklist, testes, seguranca, performance)
+    expect: pass
+  - id: fail-nao-aborta
+    type: semantic
+    description: Gate FAIL nao aborta a skill - apenas bloqueia o [done] da task no rdd-dev-backend
+    expect: pass
+  - id: warn-tool-indisponivel
+    type: semantic
+    description: Ferramenta indisponivel - registra "nao executado" e segue com verificacao manual (nao falha a auditoria inteira)
+    expect: pass

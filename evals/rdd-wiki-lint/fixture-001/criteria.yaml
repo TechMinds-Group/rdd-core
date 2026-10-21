@@ -1,0 +1,38 @@
+---
+name: "Wiki Lint — 3 problemas estruturais plantados"
+description: >
+  Módulo com 3 defeitos plantados: DATA_MODEL.md na raiz (fora de specs/),
+  TODO placeholder no REQUIREMENTS §9 e DECISIONS.md sem front matter.
+  GAP PLANTADO: o relatório deve acusar os 3.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: dir_has_files
+    path: "quality/"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "DATA_MODEL"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "TODO"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "front matter"
+    severity: error
+
+  - type: line_count_range
+    path: "quality/"
+    min: 30
+    max: 300
+    severity: warning
+
+  - type: not_contains
+    path: "quality/"
+    pattern: "FIXME"
+    severity: warning

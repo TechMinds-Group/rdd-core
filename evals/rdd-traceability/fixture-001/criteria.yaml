@@ -1,0 +1,52 @@
+---
+name: "Traceability — matriz 4/4 RNs cobertas"
+description: >
+  Módulo com downstream completo (DATA_MODEL, API_CONTRACTS, UI_SPEC).
+  TRACEABILITY deve mapear as 4 RNs com cobertura integral.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "quality/TRACEABILITY.md"
+    severity: error
+
+  - type: contains
+    path: "quality/TRACEABILITY.md"
+    pattern: "RN-001"
+    severity: error
+
+  - type: contains
+    path: "quality/TRACEABILITY.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "quality/TRACEABILITY.md"
+    pattern: "RN-003"
+    severity: error
+
+  - type: contains
+    path: "quality/TRACEABILITY.md"
+    pattern: "RN-004"
+    severity: error
+
+  - type: cross_ref
+    path: "quality/TRACEABILITY.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/TRACEABILITY.md"
+    min: 25
+    max: 250
+    severity: warning
+
+  - type: no_todos
+    path: "quality/TRACEABILITY.md"
+    patterns: ["TODO", "FIXME"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "quality/TRACEABILITY.md"
+    severity: error

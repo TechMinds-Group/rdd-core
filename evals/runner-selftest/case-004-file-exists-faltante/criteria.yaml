@@ -1,0 +1,6 @@
+expect: fail
+checks:
+- type: file_exists
+  path: "specs/UI_SPEC.md"
+  expect: fail
+  severity: error

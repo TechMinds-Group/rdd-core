@@ -1,0 +1,57 @@
+---
+name: "Formulários Angular — Reactive Forms e bindings no template"
+description: >
+  Componente com validação manual espalhada, alert() no component e lógica
+  de exibição hardcoded (template-driven). O playbook exige Reactive Forms
+  (FormBuilder + Validators conforme UI_SPEC), bindings no template para
+  exibição condicional e persistência via service HttpClient.
+inputs_required: ["AGENTS.md", "cadastro.component.ts", "cadastro.component.html"]
+
+checks:
+  - type: file_exists
+    path: "cadastro.component.ts"
+    severity: error
+
+  - type: contains
+    path: "cadastro.component.ts"
+    pattern: "ReactiveFormsModule"
+    severity: error
+
+  - type: contains
+    path: "cadastro.component.ts"
+    pattern: "FormBuilder"
+    severity: error
+
+  - type: contains
+    path: "cadastro.component.ts"
+    pattern: "Validators.required"
+    severity: error
+
+  - type: not_contains
+    path: "cadastro.component.ts"
+    pattern: "alert("
+    severity: error
+
+  - type: file_exists
+    path: "cadastro.component.html"
+    severity: error
+
+  - type: contains
+    path: "cadastro.component.html"
+    pattern: "formControlName"
+    severity: error
+
+  - type: not_contains
+    path: "cadastro.component.html"
+    pattern: "[(ngModel)]"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "## Formulários (Angular)"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "UI_SPEC"
+    severity: error

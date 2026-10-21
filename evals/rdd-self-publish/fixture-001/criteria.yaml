@@ -1,0 +1,33 @@
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-self-publish e description com triggers de publicacao
+    expect: pass
+  - id: nunca-git-add-A
+    type: semantic
+    description: NUNCA git add -A / git add . - apenas paths explicitos do escopo versionado
+    expect: pass
+  - id: nunca-force-push
+    type: semantic
+    description: NUNCA git push --force / --force-with-lease em nenhuma condicao
+    expect: pass
+  - id: pull-ff-only-antes-push
+    type: semantic
+    description: Roda git pull --ff-only antes do push (local atualizado); pull nao fast-forward aborta
+    expect: pass
+  - id: escopo-versionado-rdd
+    type: semantic
+    description: So publica o escopo versionado (agents/rdd-*.md, skills/rdd-*/SKILL.md, ARCHITECTURE, WORKFLOW_IMPROVEMENTS) - AGENTS.md, opencode.jsonc e hooks ficam fora
+    expect: pass
+  - id: golden-set-gate
+    type: semantic
+    description: Golden Set Gate (Passo 1.5) verifica frescor/regressao dos evals das skills a publicar antes de commitar
+    expect: pass
+  - id: aprovacao-pacote-imp090
+    type: semantic
+    description: Contrato IMP-090 - fluxo feliz com gates verdes executa direto; qualquer anomalia gera 1 question consolidada com o pacote (nunca commit cego)
+    expect: pass
+  - id: manifest-gerado
+    type: semantic
+    description: Passo final gera MANIFEST.sha256 (sha256 dos arquivos versionados, paths relativos, exceto o proprio MANIFEST) e o inclui no commit/push
+    expect: pass

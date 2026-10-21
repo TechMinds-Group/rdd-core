@@ -1,0 +1,34 @@
+---
+name: "Restructure — módulo já estruturado é idempotente (nada é movido)"
+description: >
+  NEGATIVO/IDEMPOTÊNCIA: módulo já no layout IMP-011 (specs/ e quality/
+  presentes, nada na raiz além de REQUIREMENTS.md). A skill informa e NÃO
+  move, duplica ou reescreve nada: os artefatos permanecem exatamente nos
+  mesmos caminhos e nenhuma cópia surge na raiz.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "REQUIREMENTS.md"
+    severity: error
+
+  - type: file_exists
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: file_exists
+    path: "quality/TEST_STRATEGY.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "DATA_MODEL.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "TEST_STRATEGY.md"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "specs/DATA_MODEL.md"
+    severity: error

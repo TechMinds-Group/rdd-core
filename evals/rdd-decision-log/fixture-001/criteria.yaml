@@ -1,0 +1,50 @@
+---
+name: "Decision Log - ADR-001 em merge incremental (MADR)"
+description: >
+  Módulo com DECISIONS.md contendo DEC-001 legada e REQUIREMENTS com
+  RN-001/RN-002. A skill deve adicionar ADR-001 (formato MADR) preservando
+  a DEC-001 legada imutável (merge incremental), com Status Aceito,
+  Decisor, Contexto, Decisão e Consequências.
+inputs_required: ["REQUIREMENTS.md", "DECISIONS.md"]
+
+checks:
+  - type: file_exists
+    path: "DECISIONS.md"
+    severity: error
+
+  - type: section_exists
+    path: "DECISIONS.md"
+    section: "## [DEC-001]"
+    severity: error
+
+  - type: section_exists
+    path: "DECISIONS.md"
+    section: "## ADR-001:"
+    severity: error
+
+  - type: contains
+    path: "DECISIONS.md"
+    pattern: "Consequências:"
+    severity: error
+
+  - type: contains
+    path: "DECISIONS.md"
+    pattern: "Decisor:"
+    severity: error
+
+  - type: contains
+    path: "DECISIONS.md"
+    pattern: 'Status:** Aceito'
+    severity: error
+
+  - type: id_sequence
+    path: "DECISIONS.md"
+    pattern: "ADR-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: cross_ref
+    path: "DECISIONS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error

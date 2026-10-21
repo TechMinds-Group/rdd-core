@@ -1,0 +1,43 @@
+---
+name: "Split commits — plano por assunto, Conventional Commits, staging granular"
+description: >
+  Working tree misturado (auth, api, docs + .env.local não versionado). A
+  skill deve produzir um plano de commits (COMMITS.md) agrupado por assunto
+  com mensagens Conventional Commits, estratégia de staging granular
+  (git add por arquivo ou hunk) e nenhum staging cego nem comando destrutivo.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: "COMMITS.md"
+    severity: error
+
+  - type: contains
+    path: "COMMITS.md"
+    pattern: "feat("
+    severity: error
+
+  - type: contains
+    path: "COMMITS.md"
+    pattern: "fix("
+    severity: error
+
+  - type: contains
+    path: "COMMITS.md"
+    pattern: "## Commit 1"
+    severity: error
+
+  - type: contains
+    path: "COMMITS.md"
+    pattern: "git add -p"
+    severity: error
+
+  - type: not_contains
+    path: "COMMITS.md"
+    pattern: "git add -A"
+    severity: error
+
+  - type: not_contains
+    path: "COMMITS.md"
+    pattern: "reset --hard"
+    severity: error

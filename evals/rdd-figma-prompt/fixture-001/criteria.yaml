@@ -1,0 +1,44 @@
+---
+name: "Figma Prompt — modo completo com seção Não incluir"
+description: >
+  Módulo com REQUIREMENTS.md e UI_SPEC.md mínimos (uma tela de contatos).
+  A skill deve gravar specs/FIGMA_PROMPTS.md (append-only, com front matter)
+  contendo a seção de prompt no formato do template, modo completo, com
+  instrução "Não incluir" e sem vazamento de identificador técnico
+  (nenhum endpoint HTTP no prompt visual).
+inputs_required: ["REQUIREMENTS.md", "UI_SPEC.md"]
+
+checks:
+  - type: file_exists
+    path: "specs/FIGMA_PROMPTS.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "specs/FIGMA_PROMPTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "specs/FIGMA_PROMPTS.md"
+    section: "## Prompt — "
+    severity: error
+
+  - type: contains
+    path: "specs/FIGMA_PROMPTS.md"
+    pattern: "(modo: completo)"
+    severity: error
+
+  - type: contains
+    path: "specs/FIGMA_PROMPTS.md"
+    pattern: "Não incluir"
+    severity: error
+
+  - type: not_contains
+    path: "specs/FIGMA_PROMPTS.md"
+    pattern: "POST /api"
+    severity: error
+
+  - type: line_count_range
+    path: "specs/FIGMA_PROMPTS.md"
+    min: 30
+    max: 400
+    severity: warning

@@ -1,0 +1,114 @@
+---
+name: "Perf Auditor — relatório com percentis, thresholds e context bloat"
+description: >
+  A partir do JSON agregado do script get-perf-metrics.ps1 (input), a skill
+  gera quality/PERF_REPORT_<timestamp>.md com frontmatter, resumo executivo,
+  tabelas por dia/agente/modelo, top-10 turnos lentos, seção de context
+  bloat, latência de interação, recomendações e limitações (percentis
+  nearest-rank, TTFT indisponível, leitura read-only via opencode db).
+inputs_required: ["perf-metrics.json"]
+
+checks:
+  - type: file_exists
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Resumo Executivo"
+    severity: error
+
+  - type: table_has_columns
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    columns: ["Dia", "Turnos", "p50 (s)", "p95 (s)", "Veredito"]
+    severity: error
+
+  - type: table_has_columns
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    columns: ["Agente", "Turnos", "p50 (s)", "Max (s)"]
+    severity: error
+
+  - type: table_has_columns
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    columns: ["Modelo", "Turnos", "p95 (s)"]
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Top-10 Turnos Mais Lentos"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Context Bloat"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "Contexto Runaway"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "Sessões com contexto runaway"
+    severity: error
+
+  - type: table_has_columns
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    columns: ["Sessão", "tok_in 1º", "Flag"]
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Latência de Interação"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Recomendações"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "## Metodologia e Limitações"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "nearest-rank"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "time.first"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "opencode db"
+    severity: error
+
+  - type: contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "read-only"
+    severity: error
+
+  - type: section_order
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    sections: ["## Resumo Executivo", "## Latência por Dia", "## Top-10 Turnos Mais Lentos", "## Recomendações", "## Metodologia e Limitações"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    min: 80
+    max: 300
+    severity: error
+
+  - type: not_contains
+    path: "quality/PERF_REPORT_2026-09-26-1200.md"
+    pattern: "C:\Users"
+    severity: error

@@ -1,0 +1,3 @@
+﻿Cenario: Operador pede "atualizar o rdd" numa maquina que ficou 1 semana sem sync. git status --porcelain do repo ~/.config/opencode/ retorna skills/rdd-next/SKILL.md com status M (WIP local de uma correcao nao publicada). origin/main tem 5 commits novos.
+
+Tarefa: verificar o working tree, decidir entre aplicar o pull --ff-only ou abortar listando os arquivos sujos, e orientar o operador - nunca sobrescrevendo o WIP.

@@ -1,0 +1,47 @@
+---
+name: "How-to — documentação de usuário para feature done"
+description: >
+  Feature de exportação marcada como done (RN-002). A skill grava
+  docs/howto/exportar-agenda.md em linguagem de suporte/usuário final
+  (sem termos técnicos como endpoint), com Objetivo e Passo a Passo.
+inputs_required: ["REQUIREMENTS.md"]
+
+checks:
+  - type: file_exists
+    path: "docs/howto/exportar-agenda.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "docs/howto/exportar-agenda.md"
+    severity: error
+
+  - type: section_exists
+    path: "docs/howto/exportar-agenda.md"
+    section: "# How-to: "
+    severity: error
+
+  - type: section_exists
+    path: "docs/howto/exportar-agenda.md"
+    section: "## Objetivo"
+    severity: error
+
+  - type: section_exists
+    path: "docs/howto/exportar-agenda.md"
+    section: "## Passo a Passo"
+    severity: error
+
+  - type: not_contains
+    path: "docs/howto/exportar-agenda.md"
+    pattern: "endpoint"
+    severity: error
+
+  - type: contains
+    path: "docs/howto/exportar-agenda.md"
+    pattern: "exportar"
+    severity: error
+
+  - type: line_count_range
+    path: "docs/howto/exportar-agenda.md"
+    min: 18
+    max: 200
+    severity: warning

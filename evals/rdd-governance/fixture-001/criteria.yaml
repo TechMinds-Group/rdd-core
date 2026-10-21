@@ -1,0 +1,42 @@
+---
+name: "Governança — revisão alinha CONSTITUTION ao IMP-013 (Unidade é o Produto)"
+description: >
+  CONSTITUTION.md com princípio defasado (pastas por camada no repo de docs,
+  contrariando o IMP-013). A skill revisa o documento existente: princípio
+  substituído pela regra "Unidade é o Produto", mantendo a listagem de repos.
+  PRODUCT_GOAL.md não existe e NÃO deve ser criado (a skill apenas revisa).
+inputs_required: ["CONSTITUTION.md"]
+
+checks:
+  - type: file_exists
+    path: "CONSTITUTION.md"
+    severity: error
+
+  - type: section_exists
+    path: "CONSTITUTION.md"
+    section: "## Princípios"
+    severity: error
+
+  - type: contains
+    path: "CONSTITUTION.md"
+    pattern: "Unidade é o Produto"
+    severity: error
+
+  - type: contains
+    path: "CONSTITUTION.md"
+    pattern: "IMP-013"
+    severity: error
+
+  - type: not_contains
+    path: "CONSTITUTION.md"
+    pattern: "Pastas por camada:"
+    severity: error
+
+  - type: contains
+    path: "CONSTITUTION.md"
+    pattern: "Catalogo-API"
+    severity: error
+
+  - type: not_file_exists
+    path: "PRODUCT_GOAL.md"
+    severity: error

@@ -1,0 +1,34 @@
+---
+name: "Validate — módulo sem marcadores de confiança emite aviso, nunca falha o gate (IMP-096)"
+description: >
+  Módulo estruturalmente íntegro SEM marcadores de confiança (análise
+  reversa nunca aplicada). rdd-validate deve gerar quality/CONFIDENCE_REPORT.md
+  com o aviso "⚠️ Sem calibração de confiança (análise reversa não aplicada)"
+  — aviso, NUNCA falha de gate. O CONFIDENCE_REPORT sem marcadores não pode
+  conter a marca 🔴 (nenhum item Baixa existe), e o VALIDATION_REPORT verde
+  não pode apontar RNs como problema por ausência de marcadores.
+inputs_required: [REQUIREMENTS.md, specs/DATA_MODEL.md, quality/TRACEABILITY.md]
+
+checks:
+  - type: file_exists
+    path: "quality/CONFIDENCE_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "Sem calibração de confiança"
+    severity: error
+
+  - type: not_contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "🔴"
+    severity: error
+
+  - type: file_exists
+    path: "quality/VALIDATION_REPORT.md"
+    severity: error
+
+  - type: not_contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "RN-001"
+    severity: error

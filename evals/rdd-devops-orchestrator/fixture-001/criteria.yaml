@@ -1,0 +1,34 @@
+---
+name: "DevOps Orchestrator - roteia sintoma unhealthy para troubleshooting"
+description: >
+  Sintoma em VPS existente (container unhealthy pos-deploy); o roteamento
+  deve classificar como troubleshooting, delegar a skill
+  rdd-vps-troubleshoot, preservar o modo guiado (nunca execucao remota
+  pelo agente) e recusar atalho de setup quando a VPS ja esta configurada.
+inputs_required: [sintoma.md]
+
+checks:
+  - type: file_exists
+    path: "ROUTING_PLAN.md"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "Classificação: troubleshooting"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "rdd-vps-troubleshoot"
+    severity: error
+
+  # invariante: modo guiado - agente nao executa na VPS
+  - type: not_contains
+    path: "ROUTING_PLAN.md"
+    pattern: "vou executar ssh"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "rdd-vps-setup"
+    severity: warning

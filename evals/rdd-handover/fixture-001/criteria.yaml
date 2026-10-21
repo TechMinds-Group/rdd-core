@@ -1,0 +1,42 @@
+---
+name: "Handover — veredito persistido em append-only"
+description: >
+  Módulo CONTATOS em andamento (3 RNs com downstream, sem VALIDATION_REPORT).
+  A skill determina o veredito, exibe o resumo e persiste
+  delivery/HANDOVER_LOG.md (append-only) com Módulo, Veredito e Justificativa.
+inputs_required: ["REQUIREMENTS.md", "quality/TRACEABILITY.md"]
+
+checks:
+  - type: file_exists
+    path: "delivery/HANDOVER_LOG.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "delivery/HANDOVER_LOG.md"
+    severity: error
+
+  - type: section_exists
+    path: "delivery/HANDOVER_LOG.md"
+    section: "## Handover — "
+    severity: error
+
+  - type: contains
+    path: "delivery/HANDOVER_LOG.md"
+    pattern: "Veredito:"
+    severity: error
+
+  - type: contains
+    path: "delivery/HANDOVER_LOG.md"
+    pattern: "Justificativa:"
+    severity: error
+
+  - type: contains
+    path: "delivery/HANDOVER_LOG.md"
+    pattern: "em andamento"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/HANDOVER_LOG.md"
+    min: 12
+    max: 150
+    severity: warning

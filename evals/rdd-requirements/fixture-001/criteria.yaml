@@ -1,0 +1,78 @@
+---
+name: "Requirements - checkpoint com 2 RNs + 1 PEND + 1 ADR (MADR)"
+description: >
+  Checkpoint de clarify (2 candidatos >= 70, 1 PEND-001, decisão de
+  histórico unificado) + PROJECT_CHARTER.md. Primeira geração:
+  REQUIREMENTS.md novo com RN-001, RN-002, PEND-001; DECISIONS.md com
+  ADR-001 no formato MADR (pós-migração IMP-059); CHANGELOG.md; novo
+  checkpoint.
+inputs_required: [PROJECT_CHARTER.md]
+
+checks:
+  - type: file_exists
+    path: "REQUIREMENTS.md"
+    severity: error
+
+  - type: file_exists
+    path: "DECISIONS.md"
+    severity: error
+
+  - type: file_exists
+    path: "CHANGELOG.md"
+    severity: warning
+
+  - type: dir_has_files
+    path: "meetings/"
+    severity: warning
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-001"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "PEND-001"
+    severity: error
+
+  - type: contains
+    path: "DECISIONS.md"
+    pattern: "ADR-001"
+    severity: error
+
+  - type: contains
+    path: "DECISIONS.md"
+    pattern: "Decisor:"
+    severity: error
+
+  - type: not_contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-003"
+    severity: warning
+
+  - type: id_sequence
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: cross_ref
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["meetings/2026-09-20-01.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "REQUIREMENTS.md"
+    min: 50
+    max: 500
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "REQUIREMENTS.md"
+    severity: error

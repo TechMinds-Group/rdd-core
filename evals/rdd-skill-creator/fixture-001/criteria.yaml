@@ -1,0 +1,47 @@
+---
+name: "Skill Creator — SKILL.md com front matter e seções RDD"
+description: >
+  Solicitação de criação de skill rdd-coverage-audit para auditar cobertura
+  de RNs. A skill gera skills/rdd-coverage-audit/SKILL.md com front matter
+  (name, description), seções de Lê/Gera/Nunca edita, Tools e Modo de erro.
+inputs_required: []
+
+checks:
+  - type: file_exists
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    severity: error
+
+  - type: contains
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    pattern: "name: rdd-coverage-audit"
+    severity: error
+
+  - type: contains
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    pattern: "description:"
+    severity: error
+
+  - type: section_exists
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    section: "## Lê (upstream)"
+    severity: error
+
+  - type: section_exists
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    section: "## Gera (downstream)"
+    severity: error
+
+  - type: section_exists
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    section: "## Modo de erro"
+    severity: error
+
+  - type: line_count_range
+    path: "skills/rdd-coverage-audit/SKILL.md"
+    min: 30
+    max: 300
+    severity: warning

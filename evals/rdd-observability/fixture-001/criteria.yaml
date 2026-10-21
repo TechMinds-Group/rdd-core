@@ -1,0 +1,29 @@
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-observability e description com triggers
+    expect: pass
+  - id: healthcheck-start-period
+    type: semantic
+    description: Bloco healthcheck inclui start_period generoso (evita loop unhealthy + restart na subida com migrations)
+    expect: pass
+  - id: token-canal-nunca-no-chat
+    type: semantic
+    description: Segredo do canal de alerta (alert_channel do perfil; ex.: token Telegram) nunca pedido no chat nem versionado; reusa config do backup (chmod 600 na home); identificadores nao-secretos (chat_id) podem ser versionados
+    expect: pass
+  - id: alerta-so-na-transicao
+    type: semantic
+    description: Watchdog alerta apenas na transicao up->down / down->up (anti-spam via state file), nao a cada ciclo
+    expect: pass
+  - id: modo-guiado
+    type: semantic
+    description: Nao executa comando remoto na VPS - sugere comandos e o operador executa (validacao via output colado)
+    expect: pass
+  - id: escopo-kiss
+    type: semantic
+    description: Nao propoe Prometheus/Grafana/APM sem demanda explicita (Nunca edita / escopo minimo)
+    expect: pass
+  - id: frontendeira-troubleshoot
+    type: semantic
+    description: Diagnostico de container em loop (incidente ativo) e encaminhado a rdd-vps-troubleshoot
+    expect: pass

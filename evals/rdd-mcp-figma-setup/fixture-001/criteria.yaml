@@ -1,0 +1,48 @@
+---
+name: "MCP Figma — escopo projeto, server habilitado, sem token em arquivo"
+description: >
+  Projeto que consome designs do Figma via rdd-figma-tasks pede a configuração
+  do MCP. A skill deve gerar o bloco mcp.figma no .opencode/opencode.json do
+  projeto (type local, command npx, enabled true) SEM escrever o token em
+  arquivo — FIGMA_API_KEY vive exclusivamente na env var do usuário — e o
+  bloco figma-mcp no AGENTS.md do projeto documentando as tools.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: ".opencode/opencode.json"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"figma"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"type": "local"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"enabled": true'
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "FIGMA_API_KEY="
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "password"
+    severity: error
+
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- figma-mcp -->"
+    severity: error

@@ -1,0 +1,41 @@
+---
+name: "Migrações Quarkus — Flyway versionado, nunca DDL manual"
+description: >
+  Repo Quarkus com DDL manual em arquivo solto (fix-pedidos.sql para "rodar
+  no banco"). O playbook exige: toda mudança de schema via Flyway versionado
+  (V<n>__<descricao>.sql em db/migration), arquivo manual removido, e seção
+  de convenção no AGENTS.md (inclui JAVA_HOME antes de mvn verify).
+inputs_required: ["AGENTS.md", "src/main/resources/db/migration/V1__create_pedidos.sql", "src/main/resources/fix-pedidos.sql"]
+
+checks:
+  - type: file_exists
+    path: "src/main/resources/db/migration/V2__add_status_to_pedidos.sql"
+    severity: error
+
+  - type: contains
+    path: "src/main/resources/db/migration/V2__add_status_to_pedidos.sql"
+    pattern: "ALTER TABLE"
+    severity: error
+
+  - type: not_file_exists
+    path: "src/main/resources/fix-pedidos.sql"
+    severity: error
+
+  - type: file_exists
+    path: "src/main/resources/db/migration/V1__create_pedidos.sql"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "## Migrações (Flyway)"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "nunca DDL manual"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "mvn verify"
+    severity: error

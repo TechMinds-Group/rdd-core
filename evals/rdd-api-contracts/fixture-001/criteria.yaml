@@ -1,0 +1,81 @@
+---
+name: "API Contracts — 2 outputs com BLOQ_DUPLICADO"
+description: >
+  DATA_MODEL.md (BLOQUEIO, HIST_BLOQUEIO) + REQUIREMENTS.md com 4 RNs.
+  API_CONTRACTS deve mapear endpoints e ERROR_CATALOG deve ter BLOQ_DUPLICADO.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/API_CONTRACTS.md"
+    severity: error
+
+  - type: file_exists
+    path: "specs/ERROR_CATALOG.md"
+    severity: error
+
+  - type: contains
+    path: "specs/API_CONTRACTS.md"
+    pattern: "POST /bloqueios"
+    severity: error
+
+  - type: contains
+    path: "specs/API_CONTRACTS.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "specs/API_CONTRACTS.md"
+    pattern: "BLOQ_DUPLICADO"
+    severity: error
+
+  - type: contains
+    path: "specs/ERROR_CATALOG.md"
+    pattern: "BLOQ_DUPLICADO"
+    severity: error
+
+  - type: contains
+    path: "specs/ERROR_CATALOG.md"
+    pattern: "409"
+    severity: error
+
+  - type: cross_ref
+    path: "specs/API_CONTRACTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/API_CONTRACTS.md"
+    min: 60
+    max: 500
+    severity: warning
+
+  - type: line_count_range
+    path: "specs/ERROR_CATALOG.md"
+    min: 25
+    max: 300
+    severity: warning
+
+  - type: no_todos
+    path: "specs/API_CONTRACTS.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/API_CONTRACTS.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "specs/ERROR_CATALOG.md"
+    severity: error
+
+  - type: reference_match
+    path: "specs/API_CONTRACTS.md"
+    expected: "output-expected/API_CONTRACTS.md"
+    severity: error
+
+  - type: reference_match
+    path: "specs/ERROR_CATALOG.md"
+    expected: "output-expected/ERROR_CATALOG.md"
+    severity: error

@@ -1,0 +1,33 @@
+---
+name: "Health Monitor — relatório com checklist compliance"
+description: >
+  Módulo com REQUIREMENTS.md e PROPAGATION_STATUS.md. A skill gera
+  AGENT_HEALTH_REPORT_<timestamp>.md com scores de saúde dos componentes
+  e verificação de checklist (front matter, registro cruzado, portabilidade).
+inputs_required: ["REQUIREMENTS.md", "quality/PROPAGATION_STATUS.md"]
+
+checks:
+  - type: contains
+    path: "."
+    pattern: "Health Report"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "front matter"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "registro cruzado"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "✅"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "Portabilidade"
+    severity: error

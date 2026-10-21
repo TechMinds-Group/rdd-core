@@ -1,0 +1,48 @@
+---
+name: "Known Error — KE-002 em merge incremental com referência ao catálogo"
+description: >
+  Módulo com KNOWN_ERRORS.md contendo KE-001 e ERROR_CATALOG.md com ERR-001.
+  Incidente novo de mesma causa: a skill deve adicionar KE-002 preservando
+  KE-001 (merge incremental), com Workaround e Status, referenciando ERR-001
+  em vez de duplicar a causa.
+inputs_required: ["specs/ERROR_CATALOG.md", "support/KNOWN_ERRORS.md"]
+
+checks:
+  - type: file_exists
+    path: "support/KNOWN_ERRORS.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "support/KNOWN_ERRORS.md"
+    severity: error
+
+  - type: section_exists
+    path: "support/KNOWN_ERRORS.md"
+    section: "## [KE-001]"
+    severity: error
+
+  - type: section_exists
+    path: "support/KNOWN_ERRORS.md"
+    section: "## [KE-002]"
+    severity: error
+
+  - type: contains
+    path: "support/KNOWN_ERRORS.md"
+    pattern: "Workaround"
+    severity: error
+
+  - type: contains
+    path: "support/KNOWN_ERRORS.md"
+    pattern: 'Status:** workaround'
+    severity: error
+
+  - type: contains
+    path: "support/KNOWN_ERRORS.md"
+    pattern: "ERR-001"
+    severity: error
+
+  - type: id_sequence
+    path: "support/KNOWN_ERRORS.md"
+    pattern: "KE-(\\d+)"
+    allow_gaps: true
+    severity: error

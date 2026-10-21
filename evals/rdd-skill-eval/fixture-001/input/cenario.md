@@ -1,0 +1,3 @@
+﻿Cenario: O workflow-improver acabou de editar skills/rdd-data-model/SKILL.md e pede "rodar evals da rdd-data-model" para detectar regressao. A skill tem 2 fixtures (fixture-001 com criteria.yaml e 3 inputs; fixture-002 sem criteria.yaml). Existe o runner deterministico run-evals.ps1.
+
+Tarefa: determinar o alvo (--skill rdd-data-model), rodar as fixtures em sandbox isolado, classificar cada check (PASS/FAIL/WARN/SKIPPED), gerar EVAL_REPORT e adicionar entrada no trends.json - sem editar a skill avaliada nem as fixtures.

@@ -1,0 +1,36 @@
+---
+name: "CR com campo Origem (IMP-099)"
+description: >
+  Todo CR registrado deve ter o campo Origem com um dos 4 valores do
+  enum; CR sem origem e registro incompleto e a agregacao trata como
+  N/A (sem dados) - nunca inventa origem.
+inputs_required: ["REQUIREMENTS.md"]
+
+checks:
+  - type: file_exists
+    path: "support/CHANGE_REQUESTS.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "support/CHANGE_REQUESTS.md"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "**Origem:**"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "requisito-mal-capturado"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "N/A (sem dados)"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "CR-001"
+    severity: error

@@ -1,0 +1,70 @@
+---
+name: "GitHub Issues — pasta de feature IMP-040, corpo do Analise-Funcional"
+description: >
+  Pasta de feature delivery/2026-09/RN-010 — Bloqueios sanitarios/ (IMP-040)
+  com RN-010 — Analise-Funcional.md (corpo) e RN-010 — Analise-Tecnica.md
+  (estrutura). 2 tasks (RN-010-1 backend, RN-010-2 database). A skill roda
+  em modo dry-run (nunca cria issues reais em eval) e gera o manifesto
+  ISSUES_CREATED.md com estrutura (issue principal + tasks + labels +
+  milestone) e corpo funcional derivado do Analise-Funcional.
+inputs_required:
+  - "delivery/2026-09/RN-010 — Bloqueios sanitarios/RN-010 — Analise-Funcional.md"
+  - "delivery/2026-09/RN-010 — Bloqueios sanitarios/RN-010 — Analise-Tecnica.md"
+
+checks:
+  - type: file_exists
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "Bloqueios.API"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "Backend"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "Database"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "Issue principal"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "## Regras de negócio"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "## O que fica de fora"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "TODO"
+    severity: warning
+
+  - type: cross_ref
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    pattern: "RN-(\\d+)"
+    sources:
+      - "delivery/2026-09/RN-010 — Bloqueios sanitarios/RN-010 — Analise-Tecnica.md"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: reference_match
+    path: "delivery/2026-09/ISSUES_CREATED.md"
+    expected: "output-expected/delivery/2026-09/ISSUES_CREATED.md"
+    severity: error

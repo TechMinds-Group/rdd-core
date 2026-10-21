@@ -1,0 +1,12 @@
+---
+name: "Change Request L2 — NÃO registra CR para RN inexistente"
+description: >
+  NEGATIVO: pedido de mudança citando RN-999, que não existe em
+  REQUIREMENTS.md. O skill NÃO pode registrar CHANGE_REQUESTS.md
+  referenciando RN fantasma — requisito novo vai para requirements/clarify.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: not_file_exists
+    path: "support/CHANGE_REQUESTS.md"
+    severity: error

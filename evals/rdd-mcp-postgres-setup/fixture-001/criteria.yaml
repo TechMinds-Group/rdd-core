@@ -1,0 +1,63 @@
+---
+name: "MCP PostgreSQL — escopo projeto, ro e keyring (IMP-021)"
+description: >
+  Projeto que usa PostgreSQL local pede configuração do MCP. A skill deve
+  gerar a entrada mcp no .opencode/opencode.json do projeto (NUNCA na config
+  global), em access-mode ro, sem senha em arquivo (keyring via set-password)
+  e o bloco <!-- postgres-mcp --> no AGENTS.md do projeto com perfil, banco,
+  host:porta, modo e ferramentas.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: ".opencode/opencode.json"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "@microsoft/postgres-mcp"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "--access-mode"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "ro"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "password"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: ".config/opencode"
+    severity: error
+
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- postgres-mcp -->"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "access_mode: ro"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "postgres_mcp_query"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "postgres_mcp_modify"
+    severity: error

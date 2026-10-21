@@ -1,0 +1,49 @@
+---
+name: "Setup RDD — blocos locais e overrides de permissão (IMP-022)"
+description: >
+  Máquina nova sem config local. O wizard rdd-setup deve escrever o bloco
+  <!-- projeto-padrao --> no AGENTS.md com o diretório padrão de projetos e
+  aplicar no opencode.jsonc o permission.external_directory + os overrides
+  dos subagents rdd-dev-backend e rdd-dev-frontend, preservando as chaves
+  existentes. A validação do runtime Jev (Passo 6) é reportada no relatório
+  textual e não persiste arquivo — não verificável aqui por design.
+inputs_required: ["AGENTS.md", "opencode.jsonc"]
+
+checks:
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- projeto-padrao -->"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: 'D:\Projetos'
+    severity: error
+
+  - type: file_exists
+    path: "opencode.jsonc"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "external_directory"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "rdd-dev-backend"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "rdd-dev-frontend"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: '"model"'
+    severity: error

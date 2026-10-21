@@ -1,0 +1,53 @@
+---
+name: "Dev QA - reprova task com falhas sem editar codigo/teste"
+description: >
+  Suíte com 2 falhas e cobertura abaixo do piso. O relatório QA deve
+  reprovar a task (REPROVADA), citar as falhas com evidência, declarar
+  nenhum arquivo modificado (invariante: QA nunca edita código/teste para
+  passar) e NUNCA aprovar (invariante: sem veredito APROVADA em cenário
+  com falhas).
+inputs_required: [task-context.md]
+
+checks:
+  - type: file_exists
+    path: "QA_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "QA_REPORT.md"
+    pattern: "veredito: REPROVADA"
+    severity: error
+
+  # invariante: QA nunca edita código/teste para passar
+  - type: contains
+    path: "QA_REPORT.md"
+    pattern: "arquivos modificados: nenhum (QA é read-only)"
+    severity: error
+
+  # invariante: nunca aprovar em cenário com falhas
+  - type: not_contains
+    path: "QA_REPORT.md"
+    pattern: "veredito: APROVADA"
+    severity: error
+
+  - type: not_contains
+    path: "QA_REPORT.md"
+    pattern: "corrigido pelo QA"
+    severity: error
+
+  - type: cross_ref
+    path: "QA_REPORT.md"
+    pattern: "RN-(\\d+)"
+    sources: ["task-context.md"]
+    severity: error
+
+  - type: contains
+    path: "QA_REPORT.md"
+    pattern: "mvn verify"
+    severity: warning
+
+  - type: line_count_range
+    path: "QA_REPORT.md"
+    min: 8
+    max: 60
+    severity: warning

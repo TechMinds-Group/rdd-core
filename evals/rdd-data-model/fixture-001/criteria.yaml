@@ -1,0 +1,95 @@
+---
+name: "Modelo de dados — 2 tabelas com FK"
+description: >
+  REQUIREMENTS.md com RN-001 (PRODUTOR) e RN-002 (PROPRIEDADE com FK).
+  Verifica saída completa do rdd-data-model.
+inputs_required: [REQUIREMENTS.md, LEGACY_CONTEXT.md]
+
+checks:
+  - type: file_exists
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DATA_MODEL.md"
+    section: "## 1. Diagrama Entidade-Relacionamento"
+    severity: error
+
+  - type: section_exists
+    path: "specs/DATA_MODEL.md"
+    section: "## 2. Tabelas"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "RN-001"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "PRODUTOR"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "PROPRIEDADE"
+    severity: error
+
+  - type: contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "FK"
+    severity: error
+
+  - type: no_todos
+    path: "specs/DATA_MODEL.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: not_contains
+    path: "specs/DATA_MODEL.md"
+    pattern: "ORGEX"
+    severity: warning
+
+  - type: id_sequence
+    path: "specs/DATA_MODEL.md"
+    pattern: "RN-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: cross_ref
+    path: "specs/DATA_MODEL.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: mermaid_valid
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: line_count_range
+    path: "specs/DATA_MODEL.md"
+    min: 100
+    max: 400
+    severity: warning
+
+  - type: section_order
+    path: "specs/DATA_MODEL.md"
+    sections:
+      - "## 1. Diagrama Entidade-Relacionamento"
+      - "## 2. Tabelas"
+      - "## 3. Decisão de armazenamento"
+    severity: error
+
+  - type: reference_match
+    path: "specs/DATA_MODEL.md"
+    expected: "output-expected/DATA_MODEL.md"
+    severity: error

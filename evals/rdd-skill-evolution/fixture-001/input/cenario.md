@@ -1,0 +1,3 @@
+﻿Cenario: Tres projetos concluidos (FasTo, Salon, AcmeHub) tem em suas RETROSPECTIVE.md acoes recorrentes: "adicionar checklist de validacao de CNPJ" (3 projetos, apontando a rdd-requirements) e "melhorar secao de migracao" (1 projeto).
+
+Tarefa: agregar as acoes, identificar padroes recorrentes, priorizar, propor a mudanca a skill alvo com confirmacao do usuario, aplicar com validacao via rdd-skill-eval e registrar o IMP em WORKFLOW_IMPROVEMENTS.md.

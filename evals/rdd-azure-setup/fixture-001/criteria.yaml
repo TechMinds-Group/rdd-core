@@ -1,0 +1,25 @@
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-azure-setup e description com triggers
+    expect: pass
+  - id: sem-eco-de-token
+    type: semantic
+    description: O wizard NUNCA imprime/eco o valor de ADO_PAT_B64 — apenas verifica existência; proíbe setx com valor inline
+    expect: pass
+  - id: server-habilitado
+    type: semantic
+    description: Instruções mudam apenas o bloco mcp."azure-devops" (enabled true), sem tocar figma/playwright
+    expect: pass
+  - id: perfil-cliente
+    type: semantic
+    description: Fonte de defaults é o perfil do cliente (rules/client-profile.md, IMP-103) - sem hardcode de org/projeto do cliente na skill; valida conexao com a org do perfil
+    expect: pass
+  - id: idempotente
+    type: semantic
+    description: Re-execução pula passos já satisfeitos (Casos de Borda: re-execução idempotente)
+    expect: pass
+  - id: sem-arquivo-persistido
+    type: structural
+    description: Wizard não persiste arquivo de artefato — saída é relatório textual
+    expect: pass

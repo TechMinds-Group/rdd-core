@@ -1,0 +1,33 @@
+---
+name: "Clarify — transcrição bruta vira checkpoint com scores"
+description: >
+  Transcrição bruta (3 candidatos: 2 claros, 1 vago com 'automaticamente'
+  e 'quando necessário') deve gerar checkpoint em meetings/ com score por
+  candidato; o item vago (score < 70) vira PEND com follow-up.
+inputs_required: []
+
+checks:
+  - type: dir_has_files
+    path: "meetings/"
+    severity: error
+
+  - type: contains
+    path: "meetings/"
+    pattern: "score"
+    severity: error
+
+  - type: contains
+    path: "meetings/"
+    pattern: "PEND-"
+    severity: error
+
+  - type: line_count_range
+    path: "meetings/"
+    min: 20
+    max: 300
+    severity: warning
+
+  - type: not_contains
+    path: "meetings/"
+    pattern: "TODO"
+    severity: warning

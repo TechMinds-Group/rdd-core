@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# pre-push — gate de neutralidade do open core (Fase 1).
+#
+# Instalação (uma vez por clone):
+#   git config core.hooksPath evals/neutrality/git-hooks
+#
+# Risco coberto: `git add -f` acidental (ou ajuste de .gitignore) empurrando
+# conteúdo privado de organização/cliente (pack da org, perfil do cliente,
+# docs vivos com branding) para o repositório aberto. Antes de cada push este
+# hook re-executa o scanner de neutralidade sobre a árvore; qualquer hit
+# BLOQUEIA o push.
+#
+# Como revisar quando bloquear:
+#   1. Rode: bash evals/neutrality/scan.sh
+#   2. Generalize/corrija os trechos apontados (ou mova o conteúdo para o
+#      local privado correto).
+#   3. Refaça o commit e o push.
+
+set -euo pipefail
+
+# Lê os refs do stdin; ignora deletes (local_sha zerado = remoção de ref,
+# não há conteúdo novo a validar).
+has_update=0
+while read -r _local_ref local_sha _remote_ref _remote_sha; do
+  case "$local_sha" in
+    0000000000000000000000000000000000000000) continue ;;
+  esac
+  has_update=1
+done
+
+# Push só de deletes → nada a escanear.
+[ "$has_update" -eq 1 ] || exit 0
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+if ! bash "$REPO_ROOT/evals/neutrality/scan.sh"; then
+  {
+    echo ""
+    echo "pre-push: PUSH BLOQUEADO — gate de neutralidade falhou."
+    echo "  Conteúdo identificado de organização/cliente apareceu na base aberta."
+    echo "  Como revisar:"
+    echo "    1. Rode: bash evals/neutrality/scan.sh"
+    echo "    2. Generalize/corrija os trechos apontados (ou mova para o local privado)."
+    echo "    3. Refaça o commit e o push."
+  } >&2
+  exit 1
+fi
+
+exit 0

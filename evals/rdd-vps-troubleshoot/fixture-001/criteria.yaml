@@ -1,0 +1,39 @@
+---
+name: "VPS Troubleshoot — unhealthy por divergencia de porta"
+description: >
+  Cenario de container unhealthy (AcmeHub-API). A skill tria na
+  tabela de sintomas (S1), diagnostica divergencia entre porta real da
+  app e porta do healthcheck usando docker logs, docker ps e curl -i, e
+  distingue 404 (rota ausente) de connection refused (porta errada).
+inputs_required: ["scenario.md"]
+
+checks:
+  - type: contains
+    path: "."
+    pattern: "S1"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "docker logs"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "docker ps"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "curl -i"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "healthcheck"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "8082"
+    severity: error

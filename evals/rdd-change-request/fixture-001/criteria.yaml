@@ -1,0 +1,59 @@
+---
+name: "Change Request — RN-002 duplicidade só para bloqueio ativo"
+description: >
+  Pedido de mudança na RN-002 (rejeição de duplicidade apenas com
+  bloqueio ativo). CR-001 deve ser registrado como pending, referenciando
+  RN-002 e os downstreams impactados.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "support/CHANGE_REQUESTS.md"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "CR-001"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "pending"
+    severity: error
+
+  - type: contains
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "API_CONTRACTS"
+    severity: error
+
+  - type: cross_ref
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: id_sequence
+    path: "support/CHANGE_REQUESTS.md"
+    pattern: "CR-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: line_count_range
+    path: "support/CHANGE_REQUESTS.md"
+    min: 25
+    max: 300
+    severity: warning
+
+  - type: no_todos
+    path: "support/CHANGE_REQUESTS.md"
+    patterns: ["TODO", "FIXME"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "support/CHANGE_REQUESTS.md"
+    severity: error

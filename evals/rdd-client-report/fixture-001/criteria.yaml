@@ -1,0 +1,52 @@
+---
+name: "Client Report - relatório periódico em linguagem de negócio"
+description: >
+  Features RN-010 (done, entregue 2026-10-12) e RN-011 (in_progress) +
+  CR-001 (origem decisao-cliente). CLIENT_REPORT_2026-10.md deve ter
+  seção executiva sem IDs expostos no corpo, apêndice técnico com
+  rastreabilidade e seção de decisões que aguardam o cliente.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    pattern: "Precisamos de você"
+    severity: error
+
+  - type: contains
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    pattern: "Em linguagem do cliente"
+    severity: error
+
+  - type: contains
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    pattern: "Apêndice técnico"
+    severity: error
+
+  # entregas do período em linguagem de negócio
+  - type: contains
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    pattern: "Agendamento"
+    severity: error
+
+  # IDs técnicos só no apêndice (o relatório todo pode citar RN-XXX, mas
+  # a seção executiva não — verificado por cross_ref contra REQUIREMENTS)
+  - type: cross_ref
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/CLIENT_REPORT_2026-10.md"
+    min: 40
+    max: 300
+    severity: warning

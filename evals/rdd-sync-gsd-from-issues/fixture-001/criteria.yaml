@@ -1,0 +1,48 @@
+---
+name: "Sync GSD — status das issues refletido em INDEX e PLANs"
+description: >
+  Fase 03 do GSD com issues 23 (closed) e 24 (open) no GitHub. A skill deve
+  atualizar a coluna Status da wave table do 03-INDEX.md com marcadores,
+  inserir o comentario de status apos o comentario de issue em cada PLAN com
+  referencia, criar a secao Sync Log e PULAR silenciosamente o PLAN sem issue
+  (estrutura e conteudo das tasks intocados).
+inputs_required: [".planning/phases/03-polish/03-INDEX.md", ".planning/phases/03-polish/03-PLAN-02.md", ".planning/phases/03-polish/03-PLAN-04.md"]
+
+checks:
+  - type: file_exists
+    path: ".planning/phases/03-polish/03-INDEX.md"
+    severity: error
+
+  - type: contains
+    path: ".planning/phases/03-polish/03-INDEX.md"
+    pattern: "#23 ✅"
+    severity: error
+
+  - type: contains
+    path: ".planning/phases/03-polish/03-INDEX.md"
+    pattern: "## Sync Log"
+    severity: error
+
+  - type: contains
+    path: ".planning/phases/03-polish/03-INDEX.md"
+    pattern: "em andamento"
+    severity: error
+
+  - type: file_exists
+    path: ".planning/phases/03-polish/03-PLAN-02.md"
+    severity: error
+
+  - type: contains
+    path: ".planning/phases/03-polish/03-PLAN-02.md"
+    pattern: "<!-- issue: 23 -->"
+    severity: error
+
+  - type: contains
+    path: ".planning/phases/03-polish/03-PLAN-02.md"
+    pattern: "<!-- status: concluído -->"
+    severity: error
+
+  - type: not_contains
+    path: ".planning/phases/03-polish/03-PLAN-04.md"
+    pattern: "<!-- status:"
+    severity: error

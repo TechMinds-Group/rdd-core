@@ -1,0 +1,41 @@
+---
+name: "Dev Orchestrator - roteia task com QA aprovada para revisao formal"
+description: >
+  Task implementada e QA aprovada; o plano de roteamento deve indicar a
+  fase de revisao, apontar o rdd-dev-reviewer como proximo passo, preservar
+  as invariantes do dominio (QA independente ja cumprida; PR so apos approve
+  e so sob pedido explicito do operador) e NUNCA anunciar execucao direta de
+  codigo (o orquestrador roteia, nao executa).
+inputs_required: [task-context.md]
+
+checks:
+  - type: file_exists
+    path: "ROUTING_PLAN.md"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "Fase do ciclo: revis"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "rdd-dev-reviewer"
+    severity: error
+
+  # invariante: PR nao e o proximo passo (revisao pendente + sem pedido do operador)
+  - type: not_contains
+    path: "ROUTING_PLAN.md"
+    pattern: "Proximo passo: abrir PR"
+    severity: error
+
+  # invariante: orquestrador nao executa codigo
+  - type: not_contains
+    path: "ROUTING_PLAN.md"
+    pattern: "vou implementar"
+    severity: error
+
+  - type: contains
+    path: "ROUTING_PLAN.md"
+    pattern: "rdd-dev-qa"
+    severity: warning

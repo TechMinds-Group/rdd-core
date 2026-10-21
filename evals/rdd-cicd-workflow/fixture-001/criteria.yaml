@@ -1,0 +1,29 @@
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-cicd-workflow e description com triggers
+    expect: pass
+  - id: workflow-padrao-deploy
+    type: semantic
+    description: deploy.yml gerado segue push main -> build -> registry do perfil (ghcr_registry, ex.: ghcr.io/<org> lowercase) -> appleboy/ssh-action -> deploy.sh (IMP-105: registry/org do client-profile, nao hardcode)
+    expect: pass
+  - id: ghcr-github-token
+    type: semantic
+    description: Push GHCR usa GITHUB_TOKEN com permissions packages:write (nao PAT inline no YAML)
+    expect: pass
+  - id: secrets-nunca-no-chat
+    type: semantic
+    description: Checklist lista NOMES de secrets e onde obter valores; nunca imprime/eco valor de chave privada ou token
+    expect: pass
+  - id: dry-run-antes-de-gravar
+    type: semantic
+    description: Mostra o YAML completo e confirma com o operador ANTES de gravar o workflow (Casos de Borda / fluxo modo 1)
+    expect: pass
+  - id: chave-action-vs-deploy-key
+    type: semantic
+    description: Diferencia deploy_action_key (Action -> VPS) da Deploy Key de git pull (VPS -> GitHub); nao sugere reutilizar a mesma chave
+    expect: pass
+  - id: borderline-fronteira-troubleshoot
+    type: semantic
+    description: Sintoma pos-deploy (container unhealthy na VPS) e encaminhado a rdd-vps-troubleshoot, nao tratado como problema de pipeline
+    expect: pass

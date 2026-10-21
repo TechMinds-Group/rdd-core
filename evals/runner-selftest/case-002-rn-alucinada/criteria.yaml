@@ -1,0 +1,8 @@
+expect: fail
+checks:
+- type: cross_ref
+  path: "specs/DATA_MODEL.md"
+  pattern: "RN-(\d+)"
+  sources: ["REQUIREMENTS.md"]
+  expect: fail
+  severity: error

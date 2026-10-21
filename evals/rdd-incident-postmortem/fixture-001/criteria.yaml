@@ -1,0 +1,34 @@
+---
+name: "Post-Mortem — INCIDENT com timeline e impacto"
+description: >
+  Incidente de produção resolvido no módulo Contatos. A skill deve gerar o
+  arquivo INCIDENT_<modulo>_<timestamp>.md com front matter (module:
+  incident-postmortem, severity), H1 Post-Mortem, Timeline do Incidente em
+  tabela e seção de Impacto.
+inputs_required: ["REQUIREMENTS.md"]
+
+checks:
+  - type: contains
+    path: "."
+    pattern: "Post-Mortem — "
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "## 2. Timeline do Incidente"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "## 3. Impacto"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "module: incident-postmortem"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "severity:"
+    severity: error

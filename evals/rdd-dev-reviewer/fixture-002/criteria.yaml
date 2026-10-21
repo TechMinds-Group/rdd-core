@@ -1,0 +1,47 @@
+---
+name: "Dev Reviewer - eixo compliance (COMPLIANCE.md, IMP-102)"
+description: >
+  Charter compliance: true + specs/COMPLIANCE.md exigindo registro da
+  solicitação do titular na exclusão. Diff implementa RN-002 mas grava
+  apenas EXCLUIDO_EM. O review deve reprovar (request-changes) citando o
+  eixo 5/COMPLIANCE.md e NUNCA aprovar (invariantes: sem veredito approve
+  e sem reviewed: true quando item aplicável do checklist é violado).
+inputs_required: [diff-summary.md]
+
+checks:
+  - type: file_exists
+    path: "REVIEW.md"
+    severity: error
+
+  - type: contains
+    path: "REVIEW.md"
+    pattern: "veredito: request-changes"
+    severity: error
+
+  - type: contains
+    path: "REVIEW.md"
+    pattern: "COMPLIANCE"
+    severity: error
+
+  # invariante: nunca aprovar task com item de checklist violado
+  - type: not_contains
+    path: "REVIEW.md"
+    pattern: "veredito: approve"
+    severity: error
+
+  - type: not_contains
+    path: "REVIEW.md"
+    pattern: "reviewed: true"
+    severity: error
+
+  - type: cross_ref
+    path: "REVIEW.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "REVIEW.md"
+    min: 8
+    max: 60
+    severity: warning

@@ -1,0 +1,80 @@
+---
+name: "Pattern Extractor — taxonomia v2 (tipo/slug) e INDEX com colunas IMP-047"
+description: >
+  Retrospectiva do CONTATOS contém padrões extraídos (telefone-normalizado,
+  remocao-explicita — ambos Tipo dados). INDEX de input já usa taxonomia v2
+  (padrão existente codigo/autenticacao-jwt). A skill deve criar
+  docs/patterns/dados/telefone-normalizado/PATTERN.md e
+  docs/patterns/dados/remocao-explicita/PATTERN.md no template completo
+  (Categoria, Tipo, Evidência, Cenário, Maturidade novo = 1 projeto) e
+  atualizar o INDEX.md com colunas Tipo/Maturidade e seções Por Tipo,
+  preservando autenticacao-jwt (merge incremental).
+inputs_required: ["docs/projects/CONTATOS/RETROSPECTIVE.md", "docs/patterns/INDEX.md"]
+
+checks:
+  - type: file_exists
+    path: "docs/patterns/dados/telefone-normalizado/PATTERN.md"
+    severity: error
+
+  - type: file_exists
+    path: "docs/patterns/dados/remocao-explicita/PATTERN.md"
+    severity: error
+
+  - type: file_exists
+    path: "docs/patterns/INDEX.md"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/dados/telefone-normalizado/PATTERN.md"
+    pattern: "**Tipo:** dados"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/dados/telefone-normalizado/PATTERN.md"
+    pattern: "CONTATOS"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/dados/telefone-normalizado/PATTERN.md"
+    pattern: "Projetos que usaram"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/dados/telefone-normalizado/PATTERN.md"
+    pattern: "**Maturidade:** novo"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/dados/remocao-explicita/PATTERN.md"
+    pattern: "**Tipo:** dados"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "dados/telefone-normalizado"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "dados/remocao-explicita"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "Maturidade"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "### Dados"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "autenticacao-jwt"
+    severity: error
+
+  - type: reference_match
+    path: "docs/patterns/INDEX.md"
+    expected: "output-expected/docs/patterns/INDEX.md"
+    severity: error

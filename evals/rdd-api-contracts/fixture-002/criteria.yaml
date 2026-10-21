@@ -1,0 +1,42 @@
+---
+name: "API Contracts L2 — RN sem campos de resposta NÃO inventa contrato"
+description: >
+  NEGATIVO: RN-001 (consulta) sem campos de resposta definidos. O endpoint
+  deve ser gerado marcado "sujeito a revisão" com resposta "a definir" —
+  nunca com estrutura de resposta inventada.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/API_CONTRACTS.md"
+    severity: error
+
+  - type: file_exists
+    path: "specs/ERROR_CATALOG.md"
+    severity: error
+
+  - type: contains
+    path: "specs/API_CONTRACTS.md"
+    pattern: "revis"
+    severity: error
+
+  - type: contains
+    path: "specs/API_CONTRACTS.md"
+    pattern: "a definir"
+    severity: error
+
+  - type: cross_ref
+    path: "specs/API_CONTRACTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/API_CONTRACTS.md"
+    min: 20
+    max: 300
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/API_CONTRACTS.md"
+    severity: error

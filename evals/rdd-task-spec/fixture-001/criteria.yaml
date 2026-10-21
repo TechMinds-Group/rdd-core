@@ -1,0 +1,170 @@
+---
+name: "Task spec — 3 RNs com backend (pasta por feature com Analise-Funcional + Analise-Tecnica, IMP-040)"
+description: >
+  REQUIREMENTS.md com RN-010, RN-011, RN-012 + API_CONTRACTS.md.
+  Verifica derivação de tasks com prefixos e RNs referenciadas —
+  convenção IMP-035/037/040: uma PASTA "delivery/2026-09/RN-NNN — <título>/"
+  por feature na sprint, com SEMPRE exatamente 2 arquivos:
+  "RN-NNN — Analise-Funcional.md" (negócio, sem tech) +
+  "RN-NNN — Analise-Tecnica.md" (issue principal + tasks RN-NNN-M).
+  Proibido gerar o arquivo flat pré-IMP-040.
+inputs_required: [REQUIREMENTS.md, API_CONTRACTS.md]
+
+checks:
+  # --- pastas geradas: Analise-Tecnica existe (estrutura) ---
+  - type: file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-011 — Aplicar bloqueio/RN-011 — Analise-Tecnica.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-012 — Histórico de bloqueios/RN-012 — Analise-Tecnica.md"
+    severity: error
+
+  # --- Analise-Funcional existe (IMP-040: SEMPRE 2 arquivos) ---
+  - type: file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-011 — Aplicar bloqueio/RN-011 — Analise-Funcional.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-012 — Histórico de bloqueios/RN-012 — Analise-Funcional.md"
+    severity: error
+
+  # --- contrato IMP-040: flat pré-IMP-040 NÃO pode ser gerado ---
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios.md"
+    severity: error
+
+  # --- técnico: estrutura e conteúdo ---
+  - type: section_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    section: "## Issue principal"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    pattern: "RN-010"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    pattern: "RN-010-1"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-011 — Aplicar bloqueio/RN-011 — Analise-Tecnica.md"
+    pattern: "RN-011"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-012 — Histórico de bloqueios/RN-012 — Analise-Tecnica.md"
+    pattern: "RN-012"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    pattern: "Bloqueios.API"
+    severity: error
+
+  - type: no_todos
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    pattern: "SDA."
+    severity: warning
+
+  - type: cross_ref
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-011 — Aplicar bloqueio/RN-011 — Analise-Tecnica.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-012 — Histórico de bloqueios/RN-012 — Analise-Tecnica.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: section_order
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    sections:
+      - "## Issue principal"
+      - "## Resumo das tasks"
+    severity: error
+
+  - type: section_order
+    path: "delivery/2026-09/RN-011 — Aplicar bloqueio/RN-011 — Analise-Tecnica.md"
+    sections:
+      - "## Issue principal"
+      - "## Resumo das tasks"
+    severity: error
+
+  - type: section_order
+    path: "delivery/2026-09/RN-012 — Histórico de bloqueios/RN-012 — Analise-Tecnica.md"
+    sections:
+      - "## Issue principal"
+      - "## Resumo das tasks"
+    severity: error
+
+  - type: reference_match
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    expected: "output-expected/delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    severity: error
+
+  # --- funcional: linguagem de negócio, sem tech (IMP-040) ---
+  - type: frontmatter_valid
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    pattern: "## Regras de negócio"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    pattern: "Análise Funcional"
+    severity: error
+
+  # proibido jargão técnico no funcional (IMP-040)
+  - type: not_contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    pattern: "Bloqueios.API"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    pattern: "/bloqueios"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    min: 15
+    max: 120
+    severity: warning

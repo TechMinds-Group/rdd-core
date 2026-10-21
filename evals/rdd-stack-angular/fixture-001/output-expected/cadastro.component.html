@@ -1,0 +1,6 @@
+<form [formGroup]="form" (ngSubmit)="salvar()">
+  <input type="text" formControlName="nome" placeholder="Nome">
+  <input type="email" formControlName="email" placeholder="E-mail">
+  <!-- exibição condicional por binding, sem lógica hardcoded no component -->
+  <button type="submit" [disabled]="form.invalid">Salvar</button>
+</form>

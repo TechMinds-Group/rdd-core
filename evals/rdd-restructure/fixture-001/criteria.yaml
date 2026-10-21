@@ -1,0 +1,105 @@
+---
+name: "Restructure — IMP-011 + conversão flat pré-IMP-040 para pasta de feature (IMP-040)"
+description: >
+  Módulo com artefatos na raiz (pré-IMP-011) e um flat de tasks
+  "delivery/2026-09/RN-020 — Bloqueios por Período.md" (pré-IMP-040).
+  Reestruturação esperada: DATA_MODEL.md → specs/, TEST_STRATEGY.md →
+  quality/, flat → PASTA "delivery/2026-09/RN-020 — Bloqueios por
+  Período/" com Analise-Tecnica.md (conteúdo do flat + linha de migração
+  IMP-040) + Analise-Funcional.md (autoral, sem tech). Links do
+  REQUIREMENTS.md reescritos para os novos caminhos. Proibido deixar o
+  flat original e as cópias na raiz.
+inputs_required: [REQUIREMENTS.md, DATA_MODEL.md, TEST_STRATEGY.md]
+
+checks:
+  # --- estrutura IMP-011 ---
+  - type: file_exists
+    path: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: file_exists
+    path: "quality/TEST_STRATEGY.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "DATA_MODEL.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "TEST_STRATEGY.md"
+    severity: error
+
+  # --- conversão flat → pasta IMP-040 ---
+  - type: file_exists
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Tecnica.md"
+    severity: error
+
+  - type: file_exists
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Tecnica.md"
+    pattern: "IMP-040"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Tecnica.md"
+    pattern: "## Resumo das tasks"
+    severity: error
+
+  # --- links do REQUIREMENTS reescritos ---
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "specs/DATA_MODEL.md"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "quality/TEST_STRATEGY.md"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Tecnica.md"
+    severity: error
+
+  - type: not_contains
+    path: "REQUIREMENTS.md"
+    pattern: "](DATA_MODEL.md"
+    severity: error
+
+  - type: not_contains
+    path: "REQUIREMENTS.md"
+    pattern: "](TEST_STRATEGY.md"
+    severity: error
+
+  # --- funcional: linguagem de negócio, sem tech (IMP-040) ---
+  - type: frontmatter_valid
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    pattern: "## Regras de negócio"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    pattern: "POST /bloqueios"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    pattern: "Bloqueios.API"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-09/RN-020 — Bloqueios por Período/RN-020 — Analise-Funcional.md"
+    min: 15
+    max: 120
+    severity: warning

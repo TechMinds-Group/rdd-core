@@ -1,0 +1,47 @@
+---
+name: "MCP Playwright — escopo projeto, nunca global"
+description: >
+  Projeto com testes E2E Playwright pede o MCP de browser. A skill deve gerar
+  a entrada mcp.playwright no .opencode/opencode.json do projeto (type local,
+  command npx -y @playwright/mcp, enabled true) — NUNCA na config global — e
+  o bloco playwright-mcp no AGENTS.md do projeto com as tools disponíveis.
+inputs_required: ["README.md", "AGENTS.md", "package.json"]
+
+checks:
+  - type: file_exists
+    path: ".opencode/opencode.json"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"playwright"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"type": "local"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "@playwright/mcp"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: ".config/opencode"
+    severity: error
+
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- playwright-mcp -->"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "playwright_browser_navigate"
+    severity: error

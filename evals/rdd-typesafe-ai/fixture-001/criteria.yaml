@@ -1,0 +1,43 @@
+---
+name: "TypeSafe — design doc com judgments tipados"
+description: >
+  Skill de conhecimento: o output avaliado e um design doc (DESIGN_TYPESAFE.md)
+  que aplica os conceitos da skill a uma feature real — decisoes tipadas com
+  primitivas System One (Choice, Score, Noul), workflow em codigo e incerteza
+  tratada com probabilidades.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: "DESIGN_TYPESAFE.md"
+    severity: error
+
+  - type: contains
+    path: "DESIGN_TYPESAFE.md"
+    pattern: "System One"
+    severity: error
+
+  - type: contains
+    path: "DESIGN_TYPESAFE.md"
+    pattern: "Jev"
+    severity: error
+
+  - type: contains
+    path: "DESIGN_TYPESAFE.md"
+    pattern: "judgment"
+    severity: error
+
+  - type: contains
+    path: "DESIGN_TYPESAFE.md"
+    pattern: "Noul"
+    severity: error
+
+  - type: contains
+    path: "DESIGN_TYPESAFE.md"
+    pattern: "Choice"
+    severity: error
+
+  - type: section_exists
+    path: "DESIGN_TYPESAFE.md"
+    section: "## Decisões de Design"
+    severity: error

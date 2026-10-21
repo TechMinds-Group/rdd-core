@@ -1,0 +1,73 @@
+---
+name: "Aceitação — 4 RNs EARS em Gherkin"
+description: >
+  REQUIREMENTS.md com 4 RNs confirmadas (evento, indesejado, estado, evento).
+  Cada RN deve virar seção própria com cenários Dado-Quando-Então.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    severity: error
+
+  - type: section_exists
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    section: "## RN-001"
+    severity: error
+
+  - type: section_exists
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    section: "## RN-002"
+    severity: error
+
+  - type: section_exists
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    section: "## RN-003"
+    severity: error
+
+  - type: section_exists
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    section: "## RN-004"
+    severity: error
+
+  - type: contains
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    pattern: "Dado"
+    severity: error
+
+  - type: contains
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    pattern: "Então"
+    severity: error
+
+  - type: id_sequence
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    pattern: "RN-(\\d+)"
+    allow_gaps: true
+    severity: error
+
+  - type: cross_ref
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    min: 60
+    max: 400
+    severity: warning
+
+  - type: no_todos
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    severity: error
+
+  - type: reference_match
+    path: "specs/ACCEPTANCE_CRITERIA.md"
+    expected: "output-expected/ACCEPTANCE_CRITERIA.md"
+    severity: error

@@ -1,0 +1,48 @@
+checks:
+  - type: file_exists
+    path: "scripts/get-perf-metrics-v2.mjs"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "node:sqlite"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "readOnly: true"
+    severity: error
+  - type: not_contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "INSERT INTO"
+    severity: error
+  - type: not_contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "DELETE FROM"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "sqlite_master"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "session_v2"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "get-perf-metrics.ps1"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "unmapped"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "--days"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "nearest-rank"
+    severity: error
+  - type: contains
+    path: "scripts/get-perf-metrics-v2.mjs"
+    pattern: "wall-clock inflado — verificar causa"
+    severity: error

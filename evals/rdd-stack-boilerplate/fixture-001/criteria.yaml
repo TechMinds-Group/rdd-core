@@ -1,0 +1,25 @@
+﻿checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-stack-boilerplate e description com triggers de bootstrap/scaffold
+    expect: pass
+  - id: boilerplate-curado-primeiro
+    type: semantic
+    description: Usa boilerplate curado do registry (rules/stack-templates.yaml) - scaffold generico (dotnet new webapi) e SOMENTE fallback quando nao ha boilerplate
+    expect: pass
+  - id: nunca-edita-registry
+    type: semantic
+    description: Nunca edita rules/stack-templates.yaml nem os repos de boilerplate (lidos como template)
+    expect: pass
+  - id: repo-nao-vazio-pula
+    type: semantic
+    description: Repo com codigo-fonte existente (alem de README/configs minimos) - pula o bootstrap sem sobrescrever codigo
+    expect: pass
+  - id: rename-derivado-do-repo
+    type: semantic
+    description: Nome do projeto derivado do repo (Lumen-API - Lumen via rename-project.ps1); derivacao ambigua - question
+    expect: pass
+  - id: pos-clone-completo
+    type: semantic
+    description: Pos-clone cobre remocao do .git do boilerplate, .env a partir de .env.example, restore e connection string; relatorio lista pendencias
+    expect: pass

@@ -1,0 +1,37 @@
+---
+name: "Outcome metrics com fonte e N/A declarado (IMP-099)"
+description: >
+  _docs/METRICS.md deve ter a secao Outcome Metrics com as 4 metricas
+  (taxa resolucao PENDs, CRs por origem, tempo/tokens por feature,
+  drift-check pendentes), cada uma com fonte/periodo declarados; metrica
+  sem fonte = N/A (sem dados), nunca zero fingido.
+
+checks:
+  - type: file_exists
+    path: "_docs/METRICS.md"
+    severity: error
+
+  - type: section_exists
+    path: "_docs/METRICS.md"
+    section: "Outcome Metrics"
+    severity: error
+
+  - type: contains
+    path: "_docs/METRICS.md"
+    pattern: "Fonte/Periodo"
+    severity: error
+
+  - type: contains
+    path: "_docs/METRICS.md"
+    pattern: "N/A (sem dados)"
+    severity: error
+
+  - type: contains
+    path: "_docs/METRICS.md"
+    pattern: "rmc"
+    severity: error
+
+  - type: contains
+    path: "_docs/METRICS.md"
+    pattern: "nunca zero fingido"
+    severity: error

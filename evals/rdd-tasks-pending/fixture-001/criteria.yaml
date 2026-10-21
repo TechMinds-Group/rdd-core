@@ -1,0 +1,76 @@
+---
+name: "Tasks pendentes — sistema informado, feature IMP-040 + legado"
+description: >
+  Sistema unico (Salon-demo) informado de antemao. Feature RN-082
+  (status: confirmed) com 4 tasks: RN-082-1 marcada [done] (nao lista),
+  RN-082-2/3/4 pendentes. Feature RN-074 (status: done) concluida
+  (nao lista). TASKS.md legado com 1 task pendente e 1 done. PEND-007
+  aberto em REQUIREMENTS.md §11 deve ser destacado como bloqueio.
+  Sem --issues: advertencia de complemento ausente presente.
+inputs_required:
+  - "PROJECT_CHARTER.md"
+  - "REQUIREMENTS.md"
+  - "delivery/2026-10/RN-082 — Programa de Fidelidade/RN-082 — Analise-Tecnica.md"
+  - "delivery/2026-09/RN-074 — Lista de Espera/RN-074 — Analise-Tecnica.md"
+  - "delivery/TASKS.md"
+
+checks:
+  - type: file_exists
+    path: "TASKS_PENDING_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "═══ rdd-tasks-pending"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "Salon-demo"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "confirmed"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "RN-082-2"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "RN-082-3"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "RN-082-4"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "Rotacionar credenciais"
+    severity: error
+
+  - type: contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "PEND-007"
+    severity: error
+
+  - type: not_contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "RN-082-1"
+    severity: error
+
+  - type: not_contains
+    path: "TASKS_PENDING_REPORT.md"
+    pattern: "RN-074"
+    severity: error
+
+  - type: line_count_range
+    path: "TASKS_PENDING_REPORT.md"
+    min: 12
+    max: 80
+    severity: warning

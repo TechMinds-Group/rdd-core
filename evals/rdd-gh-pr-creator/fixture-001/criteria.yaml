@@ -1,0 +1,47 @@
+---
+name: "GH PR Creator — dry-run com RNs cobertas e issue"
+description: >
+  Contexto de PR (branch feature/rn-002, issue #12). Manifesto PR_CREATED
+  deve citar branch, issue e RNs cobertas — sem chamar o GitHub.
+inputs_required: [pr-context.md]
+
+checks:
+  - type: file_exists
+    path: "delivery/PR_CREATED.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/PR_CREATED.md"
+    pattern: "feature/rn-002-bloqueio-duplicado"
+    severity: error
+
+  - type: contains
+    path: "delivery/PR_CREATED.md"
+    pattern: "Closes #12"
+    severity: error
+
+  - type: contains
+    path: "delivery/PR_CREATED.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "delivery/PR_CREATED.md"
+    pattern: "Acme-Group/Bloqueios-API"
+    severity: error
+
+  - type: cross_ref
+    path: "delivery/PR_CREATED.md"
+    pattern: "RN-(\\d+)"
+    sources: ["pr-context.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/PR_CREATED.md"
+    min: 20
+    max: 200
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "delivery/PR_CREATED.md"
+    severity: error

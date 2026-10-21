@@ -1,0 +1,44 @@
+---
+name: "VPS Setup — wizard guiado com 12 fases"
+description: >
+  Cenario de VPS nova (Nimbus-API). A skill conduz o setup guiado pelas
+  12 fases (base de conhecimento: pack da organizacao — IMP-105), coletando
+  contexto em pergunta agrupada e sinalizando o caveat do curl-minimal e a
+  regra strict do tunnel exclusivo. OS/registry/DNS/canal = perfil do cliente.
+inputs_required: ["scenario.md"]
+
+checks:
+  - type: contains
+    path: "."
+    pattern: "Fase 1"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "curl-minimal"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "usermod -aG docker"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "ghcr.io"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "tunnel"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "rclone"
+    severity: error
+
+  - type: contains
+    path: "."
+    pattern: "systemd"
+    severity: error

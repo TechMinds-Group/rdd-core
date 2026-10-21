@@ -1,0 +1,42 @@
+---
+name: "Client Requirements — zero IDs internos no texto do cliente"
+description: >
+  REQUIREMENTS.md (4 RNs) como fonte. CLIENT_REQUIREMENTS.md NÃO pode
+  conter identificadores internos (RN-XXX) em nenhuma hipótese — é o
+  contrato da skill. Se conter, FAIL error.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    pattern: "RN-0"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    pattern: "PEND-0"
+    severity: error
+
+  - type: contains
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    pattern: "bloqueio"
+    severity: error
+
+  - type: contains
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    pattern: "Guia de Tr"
+    severity: warning
+
+  - type: line_count_range
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "delivery/CLIENT_REQUIREMENTS.md"
+    severity: error

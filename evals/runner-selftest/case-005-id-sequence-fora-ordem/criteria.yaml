@@ -1,0 +1,8 @@
+expect: fail
+checks:
+- type: id_sequence
+  path: "ACCEPTANCE_CRITERIA.md"
+  pattern: "RN-(\d+)"
+  allow_gaps: true
+  expect: fail
+  severity: error

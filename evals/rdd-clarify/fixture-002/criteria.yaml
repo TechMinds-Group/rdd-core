@@ -1,0 +1,28 @@
+---
+name: "Clarify L1 — transcrição toda clara gera ZERO PENDs"
+description: >
+  EDGE (inverso do fixture-001): transcrição com todos os candidatos
+  claros (mensagem exata, bordas cobertas). O checkpoint NÃO pode
+  inventar pendência — zero PEND-XXX esperado.
+inputs_required: []
+
+checks:
+  - type: dir_has_files
+    path: "meetings/"
+    severity: error
+
+  - type: contains
+    path: "meetings/"
+    pattern: "score"
+    severity: error
+
+  - type: not_contains
+    path: "meetings/"
+    pattern: "PEND-"
+    severity: error
+
+  - type: line_count_range
+    path: "meetings/"
+    min: 15
+    max: 300
+    severity: warning

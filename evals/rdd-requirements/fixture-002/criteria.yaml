@@ -1,0 +1,55 @@
+---
+name: "Requirements L1 — merge incremental preserva RNs existentes"
+description: >
+  EDGE: REQUIREMENTS.md já existe (RN-001, RN-002, PEND-001) e checkpoint
+  novo traz RN-003 + PEND-001 resolvida. O merge NÃO pode reescrever do
+  zero: RN-001/RN-002 preservadas, RN-003 adicionada, PEND-001 movida para
+  resolvidas, IDs sequenciais sem renumeração.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "REQUIREMENTS.md"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-001"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RN-003"
+    severity: error
+
+  - type: contains
+    path: "REQUIREMENTS.md"
+    pattern: "RESOLVIDA"
+    severity: error
+
+  - type: id_sequence
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    allow_gaps: false
+    severity: error
+
+  - type: cross_ref
+    path: "REQUIREMENTS.md"
+    pattern: "RN-(\\d+)"
+    sources: ["meetings/2026-09-21-01.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "REQUIREMENTS.md"
+    min: 50
+    max: 500
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "REQUIREMENTS.md"
+    severity: error

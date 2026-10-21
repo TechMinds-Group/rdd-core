@@ -1,0 +1,27 @@
+---
+name: "Task Spec L2 — nenhuma RN confirmada ABORTA sem gerar tasks"
+description: >
+  NEGATIVO: REQUIREMENTS com todas as RNs [pendente]. Modo de erro da
+  skill: abortar, não há tasks a gerar. Nenhum output da feature pode
+  existir — nem a PASTA IMP-040 "delivery/2026-09/RN-010 — Listagem de
+  bloqueios/" (com seus 2 arquivos), nem o flat pré-IMP-040
+  "delivery/2026-09/RN-010 — Listagem de bloqueios.md", nem o legado
+  IMP-034 "delivery/RN-010.md" na raiz de delivery/.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Tecnica.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios/RN-010 — Analise-Funcional.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "delivery/2026-09/RN-010 — Listagem de bloqueios.md"
+    severity: error
+
+  - type: not_file_exists
+    path: "delivery/RN-010.md"
+    severity: error

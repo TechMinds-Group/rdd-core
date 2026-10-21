@@ -1,0 +1,348 @@
+﻿{
+    "generated_at":  "2026-09-26T23:25:30",
+    "days":  7,
+    "cutoff_ms":  1789871129515,
+    "source":  "opencode.db (read-only via opencode db)",
+    "has_data":  true,
+    "summary":  {
+                    "turns":  2437,
+                    "sessions":  64,
+                    "p50_ms":  13948,
+                    "p95_ms":  88684,
+                    "max_ms":  16319508,
+                    "verdict":  "WARNING",
+                    "bloat_sessions":  0,
+                    "insufficient_sessions":  22
+                },
+    "by_day":  [
+                   {
+                       "day":  "2026-09-20",
+                       "turns":  1041,
+                       "p50_ms":  12104,
+                       "p95_ms":  56994,
+                       "max_ms":  2491396,
+                       "verdict":  "WARNING"
+                   },
+                   {
+                       "day":  "2026-09-21",
+                       "turns":  1002,
+                       "p50_ms":  14575,
+                       "p95_ms":  73572,
+                       "max_ms":  1696851,
+                       "verdict":  "WARNING"
+                   },
+                   {
+                       "day":  "2026-09-22",
+                       "turns":  162,
+                       "p50_ms":  14088,
+                       "p95_ms":  430846,
+                       "max_ms":  2004235,
+                       "verdict":  "CRITICO"
+                   },
+                   {
+                       "day":  "2026-09-23",
+                       "turns":  21,
+                       "p50_ms":  12347,
+                       "p95_ms":  1865969,
+                       "max_ms":  16319508,
+                       "verdict":  "CRITICO"
+                   },
+                   {
+                       "day":  "2026-09-24",
+                       "turns":  10,
+                       "p50_ms":  9717,
+                       "p95_ms":  41355,
+                       "max_ms":  41355,
+                       "verdict":  "WARNING"
+                   },
+                   {
+                       "day":  "2026-09-25",
+                       "turns":  20,
+                       "p50_ms":  7645,
+                       "p95_ms":  31408,
+                       "max_ms":  131318,
+                       "verdict":  "WARNING"
+                   },
+                   {
+                       "day":  "2026-09-26",
+                       "turns":  181,
+                       "p50_ms":  20259,
+                       "p95_ms":  1011860,
+                       "max_ms":  6582785,
+                       "verdict":  "CRITICO"
+                   }
+               ],
+    "by_agent":  [
+                     {
+                         "agent":  "build",
+                         "turns":  1058,
+                         "p50_ms":  14674,
+                         "p95_ms":  71172,
+                         "max_ms":  16319508,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "explore",
+                         "turns":  37,
+                         "p50_ms":  6392,
+                         "p95_ms":  40643,
+                         "max_ms":  44696,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "general",
+                         "turns":  6,
+                         "p50_ms":  5389,
+                         "p95_ms":  77661,
+                         "max_ms":  77661,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "gsd-planner",
+                         "turns":  49,
+                         "p50_ms":  15965,
+                         "p95_ms":  248768,
+                         "max_ms":  350460,
+                         "verdict":  "CRITICO"
+                     },
+                     {
+                         "agent":  "jev-classifier",
+                         "turns":  70,
+                         "p50_ms":  6818,
+                         "p95_ms":  36005,
+                         "max_ms":  230260,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "plan",
+                         "turns":  2,
+                         "p50_ms":  6754,
+                         "p95_ms":  632499,
+                         "max_ms":  632499,
+                         "verdict":  "CRITICO"
+                     },
+                     {
+                         "agent":  "rdd-dev",
+                         "turns":  57,
+                         "p50_ms":  9717,
+                         "p95_ms":  179571,
+                         "max_ms":  2004235,
+                         "verdict":  "CRITICO"
+                     },
+                     {
+                         "agent":  "rdd-dev-backend",
+                         "turns":  1,
+                         "p50_ms":  4329,
+                         "p95_ms":  4329,
+                         "max_ms":  4329,
+                         "verdict":  "OK"
+                     },
+                     {
+                         "agent":  "rdd-doc",
+                         "turns":  123,
+                         "p50_ms":  18482,
+                         "p95_ms":  84920,
+                         "max_ms":  6582785,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "rdd-jev-classifier",
+                         "turns":  2,
+                         "p50_ms":  3200,
+                         "p95_ms":  11539,
+                         "max_ms":  11539,
+                         "verdict":  "OK"
+                     },
+                     {
+                         "agent":  "rdd-next",
+                         "turns":  1,
+                         "p50_ms":  665,
+                         "p95_ms":  665,
+                         "max_ms":  665,
+                         "verdict":  "OK"
+                     },
+                     {
+                         "agent":  "rdd-progress",
+                         "turns":  1,
+                         "p50_ms":  725,
+                         "p95_ms":  725,
+                         "max_ms":  725,
+                         "verdict":  "OK"
+                     },
+                     {
+                         "agent":  "rdd-req",
+                         "turns":  911,
+                         "p50_ms":  13670,
+                         "p95_ms":  82745,
+                         "max_ms":  1696851,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "rdd-reverse-orchestrator",
+                         "turns":  28,
+                         "p50_ms":  6605,
+                         "p95_ms":  96264,
+                         "max_ms":  116434,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "agent":  "rdd-translation-orchestrator",
+                         "turns":  1,
+                         "p50_ms":  709,
+                         "p95_ms":  709,
+                         "max_ms":  709,
+                         "verdict":  "OK"
+                     },
+                     {
+                         "agent":  "rdd-workflow-builder",
+                         "turns":  62,
+                         "p50_ms":  30146,
+                         "p95_ms":  1237066,
+                         "max_ms":  3277109,
+                         "verdict":  "CRITICO"
+                     },
+                     {
+                         "agent":  "rdd-workflow-improver",
+                         "turns":  28,
+                         "p50_ms":  15218,
+                         "p95_ms":  1469874,
+                         "max_ms":  2741069,
+                         "verdict":  "CRITICO"
+                     }
+                 ],
+    "by_model":  [
+                     {
+                         "model":  "deepseek/deepseek-v4-flash",
+                         "turns":  436,
+                         "p50_ms":  12506,
+                         "p95_ms":  85803,
+                         "max_ms":  1696851,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "model":  "glm-5.3-flash",
+                         "turns":  1189,
+                         "p50_ms":  14986,
+                         "p95_ms":  65570,
+                         "max_ms":  682279,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "model":  "mimo-v2.5-free",
+                         "turns":  118,
+                         "p50_ms":  7068,
+                         "p95_ms":  91969,
+                         "max_ms":  286544,
+                         "verdict":  "WARNING"
+                     },
+                     {
+                         "model":  "mimo-v2.6-flash-free",
+                         "turns":  394,
+                         "p50_ms":  16376,
+                         "p95_ms":  752371,
+                         "max_ms":  16319508,
+                         "verdict":  "CRITICO"
+                     },
+                     {
+                         "model":  "z-ai/glm-5.3-flash",
+                         "turns":  300,
+                         "p50_ms":  9580,
+                         "p95_ms":  45724,
+                         "max_ms":  2491396,
+                         "verdict":  "WARNING"
+                     }
+                 ],
+    "top_slow":  [
+                     {
+                         "session":  "ses_f30f",
+                         "agent":  "build",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-23",
+                         "tok_in":  509,
+                         "turn_ms":  16319508
+                     },
+                     {
+                         "session":  "ses_f20a",
+                         "agent":  "rdd-doc",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  15652,
+                         "turn_ms":  6582785
+                     },
+                     {
+                         "session":  "ses_f202",
+                         "agent":  "rdd-workflow-builder",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  724,
+                         "turn_ms":  3277109
+                     },
+                     {
+                         "session":  "ses_f20a",
+                         "agent":  "rdd-workflow-improver",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  1406,
+                         "turn_ms":  2741069
+                     },
+                     {
+                         "session":  "ses_f98d",
+                         "agent":  "build",
+                         "model":  "z-ai/glm-5.3-flash",
+                         "day":  "2026-09-20",
+                         "tok_in":  188,
+                         "turn_ms":  2491396
+                     },
+                     {
+                         "session":  "ses_f20a",
+                         "agent":  "rdd-doc",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  1725,
+                         "turn_ms":  2465617
+                     },
+                     {
+                         "session":  "ses_f35f",
+                         "agent":  "rdd-dev",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-22",
+                         "tok_in":  1049,
+                         "turn_ms":  2004235
+                     },
+                     {
+                         "session":  "ses_f202",
+                         "agent":  "rdd-workflow-builder",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  1640,
+                         "turn_ms":  1911197
+                     },
+                     {
+                         "session":  "ses_f202",
+                         "agent":  "rdd-workflow-builder",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-26",
+                         "tok_in":  1104,
+                         "turn_ms":  1901847
+                     },
+                     {
+                         "session":  "ses_f346",
+                         "agent":  "build",
+                         "model":  "mimo-v2.6-flash-free",
+                         "day":  "2026-09-23",
+                         "tok_in":  88860,
+                         "turn_ms":  1865969
+                     }
+                 ],
+    "context_bloat":  [
+
+                      ],
+    "interaction":  {
+                        "samples_first":  188,
+                        "p50_first_ms":  18875,
+                        "p95_first_ms":  328452,
+                        "samples_interaction":  188,
+                        "p50_interaction_ms":  126836,
+                        "p95_interaction_ms":  2397925
+                    }
+}

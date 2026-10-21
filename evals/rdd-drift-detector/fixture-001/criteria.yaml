@@ -1,0 +1,42 @@
+---
+name: "Drift Detector — baseline atualizado e report com recomendações"
+description: >
+  Módulo com DRIFT_BASELINE.md contendo medições #1 e #2. Nova execução deve
+  atualizar o baseline com a medição #3 (mantendo o histórico) e gerar o
+  DRIFT_REPORT_<timestamp>.md com a seção de Recomendações (tabela
+  Prioridade/Ação/Artefato/Skill corretiva).
+inputs_required: ["REQUIREMENTS.md", "specs/DATA_MODEL.md", "quality/DRIFT_BASELINE.md"]
+
+checks:
+  - type: file_exists
+    path: "quality/DRIFT_BASELINE.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/DRIFT_BASELINE.md"
+    severity: error
+
+  - type: contains
+    path: "quality/DRIFT_BASELINE.md"
+    pattern: "Baseline #3"
+    severity: error
+
+  - type: contains
+    path: "quality/DRIFT_BASELINE.md"
+    pattern: "Baseline #1"
+    severity: error
+
+  - type: table_has_columns
+    path: "quality/DRIFT_BASELINE.md"
+    columns: ["Artefato", "Linhas", "RNs cobertas", "IDs quebrados", "Placeholders"]
+    severity: error
+
+  - type: contains
+    path: "quality"
+    pattern: "## Recomendações"
+    severity: error
+
+  - type: contains
+    path: "quality"
+    pattern: "Skill corretiva"
+    severity: error

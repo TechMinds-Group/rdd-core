@@ -1,0 +1,42 @@
+---
+name: "Project Intake — transcrição vira PROJECT_CHARTER"
+description: >
+  Primeira conversa de intake (módulo VACINACAO). PROJECT_CHARTER deve
+  nascer com repos do conversation (Vacinacao.API), redmine 407 e
+  legado: false (sem sistema existente).
+inputs_required: []
+
+checks:
+  - type: file_exists
+    path: "PROJECT_CHARTER.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "PROJECT_CHARTER.md"
+    severity: error
+
+  - type: contains
+    path: "PROJECT_CHARTER.md"
+    pattern: "Vacinacao.API"
+    severity: error
+
+  - type: contains
+    path: "PROJECT_CHARTER.md"
+    pattern: "407"
+    severity: error
+
+  - type: contains
+    path: "PROJECT_CHARTER.md"
+    pattern: "Escopo"
+    severity: error
+
+  - type: line_count_range
+    path: "PROJECT_CHARTER.md"
+    min: 15
+    max: 200
+    severity: warning
+
+  - type: no_todos
+    path: "PROJECT_CHARTER.md"
+    patterns: ["TODO", "FIXME"]
+    severity: warning

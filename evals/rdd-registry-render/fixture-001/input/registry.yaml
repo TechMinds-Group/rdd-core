@@ -1,0 +1,25 @@
+version: 1
+project: TM.Opencode.RDD
+
+primary_agents:
+  - id: rdd-req
+    description: "Agente principal — requisitos, discovery de negócio"
+    delegates:
+      - rdd-next
+    invokes_direct:
+      - rdd-handover
+
+subagents:
+  - id: rdd-next
+    description: "Auto-routing — recomenda próxima skill"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+    invokes:
+      - rdd-data-model
+
+skills:
+  - id: rdd-data-model
+    domain: translation
+    description: "Gera DATA_MODEL.md a partir das RNs"

@@ -1,0 +1,42 @@
+---
+name: "Migration — plano com escopo, mapeamento e scripts UP/DOWN"
+description: >
+  Módulo com LEGACY_CONTEXT.md (tabelas legadas) e DATA_MODEL.md (modelo
+  novo). A skill gera support/MIGRATION.md com escopo, mapeamento campo a
+  campo, scripts UP e DOWN, cronograma e riscos.
+inputs_required: ["support/LEGACY_CONTEXT.md", "specs/DATA_MODEL.md"]
+
+checks:
+  - type: file_exists
+    path: "support/MIGRATION.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "support/MIGRATION.md"
+    severity: error
+
+  - type: section_exists
+    path: "support/MIGRATION.md"
+    section: "## 1. Escopo da Migração"
+    severity: error
+
+  - type: contains
+    path: "support/MIGRATION.md"
+    pattern: "UP"
+    severity: error
+
+  - type: contains
+    path: "support/MIGRATION.md"
+    pattern: "DOWN"
+    severity: error
+
+  - type: contains
+    path: "support/MIGRATION.md"
+    pattern: "Rollback"
+    severity: error
+
+  - type: line_count_range
+    path: "support/MIGRATION.md"
+    min: 25
+    max: 400
+    severity: warning

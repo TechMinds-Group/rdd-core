@@ -1,0 +1,85 @@
+---
+name: "Azure Work Items — Feature.md IMP-093 (estrutura) + Analise-Funcional (corpo)"
+description: >
+  Feature RN-030 no formato IMP-092/IMP-093: delivery/2026-10/RN-030 — Emissão de
+  multas — Feature.md (estrutura: issue principal + tasks RN-030-1/RN-030-2,
+  com linha "> Análise:" apontando analysis/) e analysis/RN-030 — Emissão
+  de multas/RN-030 — Analise-Funcional.md (corpo). A skill roda em modo
+  dry-run de avaliação (OPTIONS.md fixa org Orgex, projeto PRJ.AMA,
+  principal=Feature; nenhum work item real é criado) e gera o manifesto
+  ISSUES_CREATED.md com a hierarquia Feature + Tasks filhas.
+inputs_required:
+  - "delivery/2026-10/RN-030 — Emissão de multas — Feature.md"
+  - "analysis/RN-030 — Emissão de multas/RN-030 — Analise-Funcional.md"
+  - "OPTIONS.md"
+
+checks:
+  - type: file_exists
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "Azure DevOps"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "Orgex"
+    severity: warning
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "PRJ.AMA"
+    severity: warning
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "Feature"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "RN-030"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "RN-030-1"
+    severity: error
+
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "RN-030-2"
+    severity: error
+
+  # hierarquia: tasks filhas do principal (parent link declarado no manifesto)
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "Task"
+    severity: error
+
+  # corpo funcional presente no manifesto (fonte: Analise-Funcional)
+  - type: contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "Regras de negócio"
+    severity: error
+
+  - type: not_contains
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "TODO"
+    severity: warning
+
+  # referências cruzadas: RNs citadas existem no Feature.md (fonte da estrutura)
+  - type: cross_ref
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    pattern: "RN-(\\d+)"
+    sources:
+      - "delivery/2026-10/RN-030 — Emissão de multas — Feature.md"
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/2026-10/ISSUES_CREATED.md"
+    min: 12
+    max: 80
+    severity: warning

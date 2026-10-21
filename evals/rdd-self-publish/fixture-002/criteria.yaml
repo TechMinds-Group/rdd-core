@@ -1,0 +1,15 @@
+# IMP-100: invariante — o self-publish rejeita path em evals/golden-human
+# num commit publicado por ele (golden set humano = intocado por agents).
+checks:
+- type: section_exists
+  path: "nunca-edita.md"
+  section: "## Nunca edita"
+  severity: error
+- type: contains
+  path: "nunca-edita.md"
+  pattern: "evals/golden-human/"
+  severity: error
+- type: contains
+  path: "nunca-edita.md"
+  pattern: "rejeitar"
+  severity: error

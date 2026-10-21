@@ -1,0 +1,50 @@
+---
+name: "Decision Audit - contradição plantada + referência quebrada (legado DEC)"
+description: >
+  DECISIONS.md com DEC-001 e DEC-002 ativas CONTRADITÓRIAS (histórico
+  unificado × segmentado) e DEC-003 referenciando RN-999 inexistente.
+  GAP PLANTADO: o relatório deve acusar o conflito e a referência quebrada,
+  no template pós-migração (seção 8 inventaria entradas legadas DEC-XXX).
+inputs_required: [DECISIONS.md, REQUIREMENTS.md]
+
+checks:
+  - type: dir_has_files
+    path: "quality/"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "DEC-002"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "CONFLITO"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "RN-999"
+    severity: error
+
+  - type: contains
+    path: "quality/"
+    pattern: "## 8. Legado"
+    severity: error
+
+  - type: cross_ref
+    path: "quality/"
+    pattern: "DEC-(\\d+)"
+    sources: ["DECISIONS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/"
+    min: 30
+    max: 300
+    severity: warning
+
+  - type: not_contains
+    path: "quality/"
+    pattern: "TODO"
+    severity: warning

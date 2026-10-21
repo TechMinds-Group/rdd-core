@@ -1,0 +1,37 @@
+---
+name: "Metrics Collector — nova linha acumulada no METRICS.md"
+description: >
+  docs/METRICS.md já contém a linha do projeto CATALOGO. Coleta para o
+  projeto CONTATOS deve adicionar nova linha na tabela (projeto, data,
+  skills, issues, cobertura, duplicação, quality gate, IMPs) preservando
+  o histórico.
+inputs_required: ["docs/METRICS.md", "quality/TRACEABILITY.md"]
+
+checks:
+  - type: file_exists
+    path: "docs/METRICS.md"
+    severity: error
+
+  - type: contains
+    path: "docs/METRICS.md"
+    pattern: "CONTATOS"
+    severity: error
+
+  - type: contains
+    path: "docs/METRICS.md"
+    pattern: "CATALOGO"
+    severity: error
+
+  - type: table_has_columns
+    path: "docs/METRICS.md"
+    columns: ["Projeto", "Data", "Skills", "Issues", "Cobertura"]
+    severity: error
+
+  - type: contains
+    path: "docs/METRICS.md"
+    pattern: "Quality Gate"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "docs/METRICS.md"
+    severity: error

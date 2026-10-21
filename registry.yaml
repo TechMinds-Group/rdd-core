@@ -1,0 +1,816 @@
+# Registry RDD — Manifesto Canônico do Workflow
+# FONTE DA VERDADE: toda edição estrutural (agentes, skills, domínios)
+# deve ser feita aqui. As views (ARCHITECTURE.md, tabelas nos primary agents)
+# são geradas a partir deste arquivo pela skill rdd-registry-render.
+#
+# version: incrementar quando o schema mudar
+# version: schema do manifesto. Incrementar apenas quando a estrutura
+#   do YAML mudar (ex: novo campo obrigatório, refatoração de seções).
+#   Conteúdo (skills, agents, relações) é versionado pelo git.
+version: 1
+project: TM.Opencode.RDD
+
+# ----------------------------------------------
+# Primary Agents (Quadri RDD: Requirements, Documentation, Development, DevOps)
+# ----------------------------------------------
+primary_agents:
+  - id: rdd-req
+    description: "Agente principal do pipeline RDD — requisitos, discovery de negócio e intake greenfield"
+    delegates:
+      - rdd-next
+      - rdd-progress
+      - rdd-cr-propagation-guard
+      - rdd-tasks-pending
+      - rdd-intake-orchestrator
+      - rdd-requirements-orchestrator
+      - rdd-governance-orchestrator
+      - rdd-github-orchestrator
+      - rdd-figma-orchestrator
+      - rdd-workflow-builder
+      - rdd-workflow-improver
+      - rdd-onboarding-orchestrator
+      - rdd-azure-orchestrator
+      - rdd-compliance-orchestrator
+      - rdd-jev-classifier
+    invokes_direct:
+      - rdd-prompt-gate
+      - rdd-handover
+      - rdd-self-update
+      - rdd-self-publish
+      - rdd-setup
+      - rdd-agent-health-monitor
+      - rdd-drift-detector
+      - rdd-detect-onboarding
+
+  - id: rdd-doc
+    description: "Agente principal para documentação técnica de sistemas existentes, engenharia reversa e specs RDD"
+    delegates:
+      - rdd-reverse-orchestrator
+      - rdd-translation-orchestrator
+      - rdd-quality-orchestrator
+      - rdd-support-orchestrator
+      - rdd-next
+      - rdd-progress
+      - rdd-cr-propagation-guard
+      - rdd-workflow-builder
+      - rdd-workflow-improver
+      - rdd-onboarding-orchestrator
+      - rdd-compliance-orchestrator
+      - rdd-jev-classifier
+    invokes_direct:
+      - rdd-prompt-gate
+      - rdd-drift-detector
+      - rdd-wiki-lint
+      - rdd-handover
+      - rdd-agents-md-sync
+      - rdd-legacy-context
+      - rdd-traceability
+      - rdd-howto
+      - rdd-detect-onboarding
+
+  - id: rdd-dev
+    description: "Agente principal para sessões de desenvolvimento de código — fluxo de qualidade do domínio Dev: executor → QA independente (rdd-dev-qa) → revisão formal pré-PR (rdd-dev-reviewer) → PR (rdd-gh-pr-creator, só de task aprovada)"
+    delegates:
+      - rdd-dev-orchestrator
+      - rdd-dev-backend
+      - rdd-dev-frontend
+      - rdd-dev-qa
+      - rdd-dev-reviewer
+      - rdd-next
+      - rdd-progress
+      - rdd-tasks-pending
+      - rdd-cr-propagation-guard
+      - rdd-workflow-builder
+      - rdd-workflow-improver
+      - rdd-onboarding-orchestrator
+      - rdd-azure-orchestrator
+      - rdd-jev-classifier
+    invokes_direct:
+      - rdd-prompt-gate
+      - rdd-detect-onboarding
+
+  - id: rdd-devops
+    description: "Agente principal da camada DevOps — setup de VPS (OS do perfil), infra de deploy (Docker, registry, SSH, Cloudflare tunnels, systemd, backup) e troubleshooting guiado"
+    delegates:
+      - rdd-devops-orchestrator
+      - rdd-next
+      - rdd-progress
+    invokes_direct:
+      - rdd-prompt-gate
+      - rdd-vps-setup
+      - rdd-vps-troubleshoot
+      - rdd-cicd-workflow
+      - rdd-observability
+      - rdd-detect-onboarding
+
+# ----------------------------------------------
+# Subagents
+# ----------------------------------------------
+subagents:
+  - id: rdd-reverse-orchestrator
+    description: "Subagent especializado em engenharia reversa de código multi-repo — extrai dados, APIs, UI e regras de negócio com blindagem DDD e evidências; orquestrador do domínio Documentação"
+    registered_by: rdd-doc
+    owner: rdd-doc
+    available_to:
+      - rdd-doc
+    invokes:
+      - rdd-stack-java-quarkus
+      - rdd-stack-dotnet-csharp
+      - rdd-stack-angular
+      - rdd-stack-rust
+
+  - id: rdd-intake-orchestrator
+    description: "Orquestrador da fase de Intake — charter, CONSTITUTION e INDEX (fronteira: Intake DETECTA legado via flags do charter; DESCOBERTA de contexto do sistema existente é do domínio Documentação — rdd-legacy-context / rdd-reverse-orchestrator)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+    invokes:
+      - rdd-project-intake
+      - rdd-init
+
+  - id: rdd-requirements-orchestrator
+    description: "Orquestrador da fase de Requisitos — clarify, requirements, CR, escopo"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+    invokes:
+      - rdd-clarify
+      - rdd-requirements
+      - rdd-change-request
+      - rdd-scope-agreement
+      - rdd-client-requirements
+      - rdd-decision-log
+      - rdd-decision-audit
+      - rdd-client-report
+
+  - id: rdd-translation-orchestrator
+    description: "Orquestrador da Tradução Técnica — modelo de dados, API, UI, arquitetura"
+    registered_by: rdd-doc
+    owner: rdd-doc
+    available_to:
+      - rdd-doc
+    invokes:
+      - rdd-data-model
+      - rdd-api-contracts
+      - rdd-ui-spec
+      - rdd-architecture
+      - rdd-glossary
+      - rdd-acceptance-criteria
+      - rdd-task-spec
+
+  - id: rdd-quality-orchestrator
+    description: "Orquestrador de Qualidade e Entrega — test strategy, rastreabilidade, validação"
+    registered_by: rdd-doc
+    owner: rdd-doc
+    available_to:
+      - rdd-doc
+    invokes:
+      - rdd-test-strategy
+      - rdd-traceability
+      - rdd-validate
+      - rdd-wiki-lint
+
+  - id: rdd-support-orchestrator
+    description: "Orquestrador de suporte — known errors e migração de dados"
+    registered_by: rdd-doc
+    owner: rdd-doc
+    available_to:
+      - rdd-doc
+    invokes:
+      - rdd-known-error
+      - rdd-migration
+      - rdd-incident-postmortem
+
+  - id: rdd-governance-orchestrator
+    description: "Orquestrador de governança — reestruturação e revisão de CONSTITUTION"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+    invokes:
+      - rdd-restructure
+      - rdd-governance
+
+  - id: rdd-github-orchestrator
+    description: "Centraliza operações GitHub — setup da gh, issues e PRs"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-dev
+    invokes:
+      - rdd-gh-setup
+      - rdd-gh-issue-creator
+      - rdd-gh-pr-creator
+
+  - id: rdd-azure-orchestrator
+    description: "Centraliza operações Azure DevOps — setup do MCP Azure (server + PAT) e work items (Azure Boards)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-dev
+    invokes:
+      - rdd-azure-setup
+      - rdd-azure-workitem-creator
+
+  - id: rdd-figma-orchestrator
+    description: "Roteia pedidos de prompt para protótipo Figma Make"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+    invokes:
+      - rdd-figma-prompt
+      - rdd-design-brief
+      - rdd-figma-tasks
+
+  - id: rdd-workflow-builder
+    description: "Arquiteto de componentes — cria subagents, primary agents e skills"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+    invokes:
+      - rdd-subagent-creator
+      - rdd-primary-agent-creator
+      - rdd-skill-creator
+      - rdd-perf-auditor
+      - rdd-skill-evolution
+
+  - id: rdd-workflow-improver
+    description: "Diagnostica e corrige o workflow quando artefato fica aquém do esperado"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+    invokes: []
+
+  - id: rdd-next
+    description: "Recomenda próxima skill a executar (read-only)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+      - rdd-devops
+    invokes: []
+
+  - id: rdd-progress
+    description: "Dashboard de status do pipeline (read-only)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+      - rdd-devops
+    invokes: []
+
+  - id: rdd-cr-propagation-guard
+    description: "Detecta artefatos stale após CRs (read-only)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+    invokes: []
+
+  - id: rdd-tasks-pending
+    description: "Lista tasks pendentes/em andamento por sistema — Feature.md (IMP-093; fallback — Tasks.md IMP-092, front matter status), Analise-Tecnicas legadas IMP-040 e issues GitHub (read-only; âncora da feature só RN-NNN — IMP-094; âncoras PEND pré-IMP-094 são legado, legíveis em leitura)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-dev
+    invokes: []
+
+  - id: rdd-jev-classifier
+    description: "Classificador calibrado TypeSafe Jev — segunda camada semântica das skills (contradições, severidade)"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+    invokes: []
+
+  - id: rdd-onboarding-orchestrator
+    description: "Orquestrador de onboarding — tour pelo workflow, setup de máquina nova (rdd-setup), primeiro projeto guiado (recomendação via primary) e assunção de módulo (rdd-handover); roteia, não executa"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+      - rdd-dev
+    invokes:
+      - rdd-setup
+      - rdd-handover
+
+  - id: rdd-dev-backend
+    description: "Executor genérico de backend — detecta stack, carrega playbook e implementa a task"
+    registered_by: rdd-dev
+    owner: rdd-dev
+    available_to:
+      - rdd-dev
+    invokes:
+      - rdd-stack-java-quarkus
+      - rdd-stack-rust
+
+  - id: rdd-dev-frontend
+    description: "Executor genérico de frontend — detecta stack, carrega playbook e implementa a task"
+    registered_by: rdd-dev
+    owner: rdd-dev
+    available_to:
+      - rdd-dev
+    invokes:
+      - rdd-stack-angular
+
+  - id: rdd-dev-qa
+    description: "QA independente do dominio Dev - roda as suites de teste pelo playbook da stack (dotnet/ng/cargo/mvn - IMP-077), mede cobertura, compara contra quality/TEST_STRATEGY.md e quality/DEFINITION_OF_DONE.md e reprova a task com relatorio quando os criterios nao baterem; nunca edita codigo nem ajusta teste para passar (retrabalho e do executor via rdd-dev); read-only"
+    registered_by: rdd-dev
+    owner: rdd-dev
+    available_to:
+      - rdd-dev
+    invokes:
+      - rdd-stack-java-quarkus
+      - rdd-stack-dotnet-csharp
+      - rdd-stack-angular
+      - rdd-stack-rust
+
+  - id: rdd-dev-reviewer
+    description: "Revisao formal pre-PR do diff da task no dominio Dev - (1) RNs cobertas: cada RN da task com mudanca correspondente no diff; (2) quality gates via rdd-quality-gates; (3) itens aplicaveis de specs/SECURITY.md; (4) docs vivas checadas. Veredito approve/request-changes com lista acionavel; nunca edita codigo, nunca commita, nunca cria PR (o rdd-gh-pr-creator so abre PR de task aprovada)"
+    registered_by: rdd-dev
+    owner: rdd-dev
+    available_to:
+      - rdd-dev
+    invokes:
+      - rdd-quality-gates
+      - rdd-stack-rust
+      - rdd-stack-dotnet-csharp
+
+  - id: rdd-dev-orchestrator
+    description: "Orquestrador do dominio Dev - roteia o ciclo de fechamento da task: boilerplate (repo vazio) -> executor (backend/frontend) -> QA independente (rdd-dev-qa) -> revisao formal (rdd-dev-reviewer) -> PR (rdd-gh-pr-creator, so de task aprovada). Roteia, nao executa"
+    registered_by: rdd-dev
+    owner: rdd-dev
+    available_to:
+      - rdd-dev
+    invokes:
+      - rdd-stack-boilerplate
+      - rdd-quality-gates
+
+  - id: rdd-devops-orchestrator
+    description: "Orquestrador do dominio DevOps - roteia setup de VPS (rdd-vps-setup), troubleshooting por sintoma (rdd-vps-troubleshoot), pipeline de deploy (rdd-cicd-workflow) e observabilidade (rdd-observability). Roteia, nao executa: valida pre-condicoes e delega a skill do dominio"
+    registered_by: rdd-devops
+    owner: rdd-devops
+    available_to:
+      - rdd-devops
+    invokes:
+      - rdd-vps-setup
+      - rdd-vps-troubleshoot
+      - rdd-cicd-workflow
+      - rdd-observability
+
+  - id: rdd-compliance-orchestrator
+    description: "Orquestrador do domínio Compliance — roteia a verificação LGPD de produtos que tratam dado pessoal: checklist (rdd-compliance-check), gatilho no intake (compliance: true), eixo no rdd-dev-reviewer e finding no rdd-validate. Roteia, não executa; dúvida de base legal vai ao DPO/jurídico do cliente"
+    registered_by: rdd-req
+    owner: rdd-req
+    available_to:
+      - rdd-req
+      - rdd-doc
+    invokes:
+      - rdd-compliance-check
+# ----------------------------------------------
+# Skills
+# ----------------------------------------------
+skills:
+  # Intake
+  - id: rdd-project-intake
+    domain: intake
+    description: "Cria PROJECT_CHARTER.md a partir da primeira conversa com cliente"
+  - id: rdd-init
+    domain: intake
+    description: "Verifica/cria CONSTITUTION.md e estrutura de diretórios"
+  - id: rdd-legacy-context
+    domain: documentacao
+    description: "Gera LEGACY_CONTEXT.md a partir de sistema/banco existente"
+
+  # Metaskills (diagnóstico transversal)
+  - id: rdd-detect-onboarding
+    domain: meta
+    description: "Skill read-only de diagnóstico de onboarding (máquina nova, sem módulos, supressão) — invocada pelos primaries no 1º turno"
+
+  # Requisitos
+  - id: rdd-clarify
+    domain: requisitos
+    description: "Questiona ambiguidades e atribui score (0-100) — decide destino: score ≥ 70 vira RN, alteração em RN confirmada vira CR, abaixo disso PEND-XXX (IMP-094)"
+  - id: rdd-requirements
+    domain: requisitos
+    description: "Gera/atualiza REQUIREMENTS.md a partir de transcrição de reunião — merge incremental; PEND sai por promoção a RN (resolvida) ou vira CR (IMP-094)"
+  - id: rdd-change-request
+    domain: requisitos
+    description: "Registra mudança em requisito confirmado (CR) — gate de score: CR direto exige ≥ 70, abaixo disso nasce PEND via clarify (IMP-094)"
+  - id: rdd-scope-agreement
+    domain: requisitos
+    description: "Gera SCOPE_AGREEMENT.md — alinhamento com cliente"
+  - id: rdd-client-requirements
+    domain: requisitos
+    description: "Gera CLIENT_REQUIREMENTS.md — visão business-only"
+  - id: rdd-decision-log
+    domain: requisitos
+    description: "Formaliza decisões em DECISIONS.md"
+  - id: rdd-decision-audit
+    domain: requisitos
+    description: "Audita DECISIONS.md — conflitos semânticos, IDs, referências"
+
+  # Compliance
+  - id: rdd-compliance-check
+    domain: compliance
+    description: "Checklist LGPD (Lei 13.709/2018) aplicável a produtos que tratam dado pessoal — gera specs/COMPLIANCE.md com os 10 eixos: levantamento, base legal, consentimento, minimização, retenção, direitos do titular, segurança, registros (RTD/RIPD), terceiros e internacionalização"
+  - id: rdd-client-report
+    domain: requisitos
+    description: "Gera delivery/CLIENT_REPORT_<periodo>.md — relatório periódico para o cliente em linguagem de negócio (fontes: SCOPE_AGREEMENT, bloco Resultado do rdd-progress IMP-099, CLIENT_REQUIREMENTS, Feature.md); fecha o artefato CLIENT_REPORT_* da estrutura IMP-011"
+
+  # Tradução Técnica
+  - id: rdd-data-model
+    domain: traducao
+    description: "Gera DATA_MODEL.md — tabelas, colunas, tipos, PKs, FKs"
+  - id: rdd-api-contracts
+    domain: traducao
+    description: "Gera API_CONTRACTS.md e ERROR_CATALOG.md"
+  - id: rdd-ui-spec
+    domain: traducao
+    description: "Gera UI_SPEC.md — telas, componentes, navegação"
+  - id: rdd-architecture
+    domain: traducao
+    description: "Gera ARCHITECTURE.md (módulo) e SECURITY.md"
+  - id: rdd-glossary
+    domain: traducao
+    description: "Gera 3 glossários (DEV, BUSINESS, USER)"
+  - id: rdd-acceptance-criteria
+    domain: traducao
+    description: "Gera ACCEPTANCE_CRITERIA.md — critérios Dado-Quando-Então"
+
+  # Qualidade
+  - id: rdd-quality-gates
+    domain: qualidade
+    description: "Quality gates universal — KISS, YAGNI, DRY, SOLID, testes, segurança, métricas"
+  - id: rdd-project-retrospective
+    domain: qualidade
+    description: "Retrospectiva pós-projeto — captura aprendizados, padrões e métricas"
+  - id: rdd-pattern-extractor
+    domain: qualidade
+    description: "Extrai padrões reutilizáveis de retrospectivas para a pattern library"
+  - id: rdd-metrics-collector
+    domain: qualidade
+    description: "Coleta métricas de projetos e acumula em docs/METRICS.md"
+  - id: rdd-perf-auditor
+    domain: meta
+    description: "Auditoria de performance do runtime OpenCode — latência por turno, context bloat, p50/p95"
+  - id: rdd-skill-evolution
+    domain: meta
+    description: "Evolui skills baseado em aprendizados acumulados de múltiplos projetos"
+  - id: rdd-test-strategy
+    domain: qualidade
+    description: "Gera TEST_STRATEGY.md e DEFINITION_OF_DONE.md"
+  - id: rdd-traceability
+    domain: documentacao
+    description: "Gera TRACEABILITY.md — matriz RN → downstream"
+  - id: rdd-validate
+    domain: qualidade
+    description: "Valida integridade da DAG de documentos"
+  - id: rdd-task-spec
+    domain: traducao
+    description: "Gera analysis/RN-NNN — <título>/ (2 análises) + delivery/<estilo §9>/RN-NNN — <título> — Feature.md (IMP-093; fallback — Tasks.md IMP-092) para revisão — âncora da feature só RN-NNN (IMP-094: PEND nunca ancora; âncoras PEND pré-IMP-094 são legado, legíveis em leitura)"
+  - id: rdd-howto
+    domain: documentacao
+    description: "Gera HOWTO.md — doc orientada a tarefas"
+  - id: rdd-wiki-lint
+    domain: documentacao
+    description: "Lint documental — contradições, órfãos, links, placeholders"
+
+  # Suporte
+  - id: rdd-known-error
+    domain: suporte
+    description: "Gera KNOWN_ERRORS.md a partir de incidentes reais"
+  - id: rdd-migration
+    domain: suporte
+    description: "Gera MIGRATION.md — estratégia de corte e rollback"
+  - id: rdd-incident-postmortem
+    domain: suporte
+    description: "Gera INCIDENT_*.md — timeline, causa raiz, ações corretivas"
+
+  # Governança
+  - id: rdd-restructure
+    domain: governanca
+    description: "Reestrutura projetos (legado → novo formato)"
+  - id: rdd-governance
+    domain: governanca
+    description: "Revisa CONSTITUTION.md e PRODUCT_GOAL.md"
+  - id: rdd-agent-health-monitor
+    domain: governanca
+    description: "Health check dos agents/skills"
+  - id: rdd-drift-detector
+    domain: governanca
+    description: "Drift de qualidade dos artefatos — baseline vs atual"
+
+  # GitHub
+  - id: rdd-gh-setup
+    domain: github
+    description: "Wizard de configuração da GitHub CLI (gh) — instalação, autenticação, org GitHub do perfil (org_github)"
+  - id: rdd-gh-issue-creator
+    domain: github
+    description: "Cria issues no GitHub a partir de TASKS.md"
+  - id: rdd-gh-pr-creator
+    domain: github
+    description: "Cria PRs no GitHub com template padronizado"
+
+  # Figma
+  - id: rdd-figma-prompt
+    domain: figma
+    description: "Gera prompt para protótipo Figma Make"
+  - id: rdd-design-brief
+    domain: figma
+    description: "Gera DESIGN_BRIEF.md — contexto de produto (identidade, estilo, estado atual da UI) para o Figma Make"
+  - id: rdd-figma-tasks
+    domain: figma
+    description: "Lê design real do Figma via MCP (figma-developer-mcp) e gera delta de UI_SPEC.md + propostas de RN/CR + handoff de features candidatas para o rdd-task-spec (direção Figma → RDD)"
+
+  # Azure
+  - id: rdd-azure-setup
+    domain: azure
+    description: "Wizard de configuração do MCP Azure DevOps — server azure-devops no opencode.jsonc, env var ADO_PAT_B64 (nunca impressa ou commitada), org/projeto do perfil do cliente (rules/client-profile.md — IMP-103), validação de conexão"
+  - id: rdd-azure-workitem-creator
+    domain: azure
+    description: "Cria work items no Azure DevOps (Azure Boards) a partir das tasks do delivery — arquivo RN-NNN — <título> — Feature.md (IMP-093; fallback — Tasks.md IMP-092 + legados) — hierarquia principal (Feature/User Story) + tasks RN-NNN-M filhas"
+
+  # Stack Playbooks
+  - id: rdd-stack-boilerplate
+    domain: dev
+    description: "Template engine de bootstrapping — clona boilerplate curado por stack (rules/stack-templates.yaml), executa setup pós-clone (rename, env, restore) e prepara repo vazio para implementação"
+  - id: rdd-stack-java-quarkus
+    domain: dev
+    description: "Playbook Quarkus/Java — mvn, padrões, JUnit"
+  - id: rdd-stack-angular
+    domain: dev
+    description: "Playbook Angular/MFE — ng test, Module Federation"
+  - id: rdd-stack-rust
+    domain: dev
+    description: "Playbook Rust/CORE — cargo, actix, tokio, sqlx"
+  - id: rdd-stack-dotnet-csharp
+    domain: dev
+    description: "Playbook .NET C# — dotnet CLI, Clean Architecture, MediatR, EF Core, xUnit"
+
+  # Meta (Workflow)
+  - id: rdd-subagent-creator
+    domain: meta
+    description: "Cria novo subagent do OpenCode"
+  - id: rdd-primary-agent-creator
+    domain: meta
+    description: "Cria novo primary agent do OpenCode"
+  - id: rdd-skill-creator
+    domain: meta
+    description: "Cria nova skill do OpenCode"
+  - id: rdd-self-update
+    domain: meta
+    description: "Atualiza config local via git pull"
+  - id: rdd-self-publish
+    domain: meta
+    description: "Publica melhorias da config local via git push"
+  - id: rdd-setup
+    domain: meta
+    description: "Wizard de primeira configuração"
+  - id: rdd-registry-render
+    domain: meta
+    description: "Regenera views do ARCHITECTURE.md e tabelas dos primary agents a partir do registry.yaml"
+  - id: rdd-skill-eval
+    domain: meta
+    description: "Testes de regressão (evals) para skills RDD a partir de fixtures em evals/"
+  - id: rdd-prompt-gate
+    domain: meta
+    description: "Gate de qualidade de prompt do operador — avalia via Jev (jev_classify), score por faixa, prompt otimizado e roteamento por intenção (read-only)"
+  - id: rdd-pack-update
+    domain: meta
+    description: "Atualiza packs instalados — pull dos clones, valida requires-core e no-override, reinstala provides e move o pin do sources.yaml só sob pedido explícito"
+
+  # Navegação/Estado (duplo registro: subagent invocável + skill executável)
+  - id: rdd-next
+    domain: meta
+    description: "Auto-routing — recomenda a próxima skill pelo estado real do módulo"
+  - id: rdd-progress
+    domain: meta
+    description: "Dashboard de progresso — cobertura, drift, pendências, fase"
+  - id: rdd-cr-propagation-guard
+    domain: meta
+    description: "Detecta artefatos stale após CRs — persiste PROPAGATION_STATUS.md"
+  - id: rdd-tasks-pending
+    domain: meta
+    description: "Lista tasks pendentes/em andamento por sistema (— Feature.md IMP-093, fallback — Tasks.md IMP-092 + legados IMP-040 + issues gh; âncora da feature só RN-NNN — IMP-094; âncoras PEND pré-IMP-094 são legado, legíveis em leitura) — read-only"
+
+  # Transversal
+  - id: rdd-handover
+    domain: documentacao
+    description: "Resumo de estado do módulo para assunção"
+  - id: rdd-agents-md-sync
+    domain: transversal
+    description: "Audita e sincroniza AGENTS.md de repos multi-módulo com confirmação e preservação de regras específicas"
+
+  # Setup / Infra
+  - id: rdd-mcp-playwright-setup
+    domain: transversal
+    description: "Guia de configuração do MCP Playwright (@playwright/mcp) em projetos OpenCode"
+  - id: rdd-mcp-figma-setup
+    domain: transversal
+    description: "Wizard de configuração do MCP Figma (figma-developer-mcp) — server, env var FIGMA_API_KEY (nunca impressa ou commitada) e validação de conexão"
+
+  # DevOps
+  - id: rdd-vps-setup
+    domain: devops
+    description: "Wizard guiado de setup de VPS nova (OS do perfil) — Docker/Compose/buildx, registry do perfil, deploy keys, SSH-action, tunnel Cloudflare EXCLUSIVO por servidor, systemd, logging, pipeline de deploy e backup (RClone + cronie + canal do perfil); base de conhecimento no pack da organização (IMP-105)"
+  - id: rdd-vps-troubleshoot
+    domain: devops
+    description: "Diagnóstico guiado por sintoma em VPS existente — unhealthy, registry denied, git HTTPS, handshake SSH (appleboy), services systemd duplicados, tunnel compartilhado, porta ocupada, banco vazio/migrations, logs e backup/cron; runbook de sintomas genéricos embutido"
+  - id: rdd-cicd-workflow
+    domain: devops
+    description: "Cria e mantém o pipeline de deploy GitHub Actions dos repos de produto da organização (deploy.yml: build → registry do perfil → appleboy/ssh-action → deploy.sh), secrets e auditoria por sintoma; base de conhecimento validada no pack da organização (IMP-105)"
+  - id: rdd-observability
+    domain: devops
+    description: "Observabilidade mínima de APIs em VPS — healthcheck no compose (start_period), watchdog com alerta no canal do perfil na transição de estado, cron e logs com rotação; modo guiado, escopo KISS; receitas validadas no pack da organização (IMP-105)"
+
+# ----------------------------------------------
+
+  # Utilitarios (nao-RDD - demanda direta do operador)
+  - id: rdd-mcp-postgres-setup
+    domain: transversal
+    description: "Guia completo para configurar o MCP PostgreSQL (@microsoft/postgres-mcp) em projetos OpenCode, sempre no escopo do projeto (.opencode/opencode.json)"
+  - id: rdd-split-commits-by-diff
+    domain: dev
+    description: "Use when the user asks to split existing changes into multiple commits"
+  - id: rdd-sync-gsd-from-issues
+    domain: utilitarios
+    description: "Use when the user asks to sync, update, or refresh the local GSD state from GitHub issues"
+  - id: rdd-typesafe-ai
+    domain: meta
+    description: "Build AI-powered software with TypeSafe: small units of AI intelligence you can use like programming primitives"
+# Domínios
+# ----------------------------------------------
+domains:
+  intake:
+    description: "Captura inicial do projeto — charter, CONSTITUTION e INDEX. Fronteira formal Intake <-> Documentação: o Intake DETECTA legado (flags legado/sistema_existente no charter, modo simplificado do rdd-project-intake); a DESCOBERTA de contexto — leitura de código/banco — ‹ da Documentação (rdd-legacy-context -> rdd-reverse-orchestrator), via handoff após o charter"
+    orchestrator: rdd-intake-orchestrator
+    skills:
+      - rdd-project-intake
+      - rdd-init
+
+  documentacao:
+    description: "Documentação — contexto legado, rastreabilidade (ref. cruzada com Qualidade), lint documental, handover"
+    orchestrator: rdd-reverse-orchestrator
+    skills:
+      - rdd-legacy-context
+      - rdd-traceability
+      - rdd-wiki-lint
+      - rdd-handover
+      - rdd-howto
+
+  requisitos:
+    description: "Regras de negócio, clarify, CRs, escopo"
+    orchestrator: rdd-requirements-orchestrator
+    skills:
+      - rdd-clarify
+      - rdd-requirements
+      - rdd-change-request
+      - rdd-scope-agreement
+      - rdd-client-requirements
+      - rdd-decision-log
+      - rdd-decision-audit
+      - rdd-client-report
+
+  traducao:
+    description: "Tradução técnica — modelo de dados, API, UI, arquitetura"
+    orchestrator: rdd-translation-orchestrator
+    skills:
+      - rdd-data-model
+      - rdd-api-contracts
+      - rdd-ui-spec
+      - rdd-architecture
+      - rdd-glossary
+      - rdd-acceptance-criteria
+      - rdd-task-spec
+
+  qualidade:
+    description: "Qualidade e Entrega — test strategy, rastreabilidade, validação, quality gates, aprendizado contínuo"
+    orchestrator: rdd-quality-orchestrator
+    skills:
+      - rdd-quality-gates
+      - rdd-project-retrospective
+      - rdd-pattern-extractor
+      - rdd-metrics-collector
+      - rdd-test-strategy
+      - rdd-validate
+
+  suporte:
+    description: "Suporte — known errors, migração, postmortem"
+    orchestrator: rdd-support-orchestrator
+    skills:
+      - rdd-known-error
+      - rdd-migration
+      - rdd-incident-postmortem
+
+  governanca:
+    description: "Governança — reestruturação, revisão de CONSTITUTION, health, drift"
+    orchestrator: rdd-governance-orchestrator
+    skills:
+      - rdd-restructure
+      - rdd-governance
+      - rdd-agent-health-monitor
+      - rdd-drift-detector
+
+  github:
+    description: "Integração GitHub — setup da gh CLI, issues e PRs"
+    orchestrator: rdd-github-orchestrator
+    skills:
+      - rdd-gh-setup
+      - rdd-gh-issue-creator
+      - rdd-gh-pr-creator
+
+  figma:
+    description: "Protótipo Figma Make (prompt/brief) e tasks a partir de design real via MCP"
+    orchestrator: rdd-figma-orchestrator
+    skills:
+      - rdd-figma-prompt
+      - rdd-design-brief
+      - rdd-figma-tasks
+
+  azure:
+    description: "Integração Azure DevOps — work items (Azure Boards)"
+    orchestrator: rdd-azure-orchestrator
+    skills:
+      - rdd-azure-setup
+      - rdd-azure-workitem-creator
+
+  dev:
+    description: "Playbooks de stack e garantia de qualidade de código do domínio Dev — executores (rdd-dev-backend/frontend), QA independente (rdd-dev-qa) e revisão formal pré-PR (rdd-dev-reviewer)"
+    orchestrator: rdd-dev-orchestrator
+    skills:
+      - rdd-stack-boilerplate
+      - rdd-stack-java-quarkus
+      - rdd-stack-angular
+      - rdd-stack-rust
+      - rdd-stack-dotnet-csharp
+      - rdd-split-commits-by-diff
+  meta:
+    description: "Componentes do próprio workflow — criação, auto-update, auto-publish, onboarding, diagnóstico transversal"
+    orchestrator: rdd-workflow-builder
+    skills:
+      - rdd-subagent-creator
+      - rdd-primary-agent-creator
+      - rdd-skill-creator
+      - rdd-self-update
+      - rdd-self-publish
+      - rdd-setup
+      - rdd-registry-render
+      - rdd-skill-eval
+      - rdd-prompt-gate
+      - rdd-detect-onboarding
+      - rdd-perf-auditor
+      - rdd-skill-evolution
+      - rdd-typesafe-ai
+      - rdd-pack-update
+
+  transversal:
+    description: "Skills invocadas diretamente pelo primary, sem orquestrador fixo"
+    orchestrator: null
+    skills:
+      - rdd-agents-md-sync
+      - rdd-mcp-playwright-setup
+      - rdd-mcp-figma-setup
+      - rdd-mcp-postgres-setup
+
+  compliance:
+    description: "Verificação LGPD de produtos que tratam dado pessoal — checklist specs/COMPLIANCE.md, gatilho no intake (compliance: true), eixo compliance no rdd-dev-reviewer e finding no rdd-validate (IMP-102)"
+    orchestrator: rdd-compliance-orchestrator
+    skills:
+      - rdd-compliance-check
+
+  devops:
+    description: "Infraestrutura de deploy da organização — setup de VPS (OS/registry/DNS/canal do perfil), Cloudflare tunnels, systemd, backup e troubleshooting por sintoma"
+    orchestrator: rdd-devops-orchestrator
+    skills:
+      - rdd-vps-setup
+      - rdd-vps-troubleshoot
+      - rdd-cicd-workflow
+      - rdd-observability
+  utilitarios:
+    description: "Skills utilitarias do ambiente - fora do pipeline RDD; demanda direta do operador"
+    orchestrator: null
+    skills:
+      - rdd-sync-gsd-from-issues
+

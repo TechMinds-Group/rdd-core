@@ -1,0 +1,43 @@
+---
+name: "UI Spec L1 — sem API_CONTRACTS ainda gera spec válida"
+description: >
+  EDGE: apenas REQUIREMENTS como entrada (sem API_CONTRACTS, sem
+  DATA_MODEL). UI_SPEC deve derivar telas e validações exclusivamente do
+  REQUIREMENTS, com nota de revisão quando o contrato existir.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "specs/UI_SPEC.md"
+    severity: error
+
+  - type: contains
+    path: "specs/UI_SPEC.md"
+    pattern: "Operador"
+    severity: error
+
+  - type: contains
+    path: "specs/UI_SPEC.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: cross_ref
+    path: "specs/UI_SPEC.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "specs/UI_SPEC.md"
+    min: 30
+    max: 300
+    severity: warning
+
+  - type: no_todos
+    path: "specs/UI_SPEC.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "specs/UI_SPEC.md"
+    severity: error

@@ -1,0 +1,68 @@
+---
+name: "GH Setup — wizard idempotente com relatório de validação"
+description: >
+  Máquina nova onde gh precisa ser instalada/autenticada e a org GitHub do
+  perfil (org_github do client-profile — IMP-105; exemplo: Acme-Group)
+  validada. O wizard rdd-gh-setup deve gerar relatório
+  textual no formato do Passo 5 (instalada / autenticada / org OK,
+  tabela de validação, próximo passo). A skill não persiste arquivo por
+  design — o relatório é reportado textualmente e não edita AGENTS.md
+  nem opencode.jsonc.
+inputs_required: []
+
+checks:
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "rdd-gh-setup"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "gh instalada"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "Autenticada"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "Org (perfil)"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "Validação"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "@rdd-github-orchestrator"
+    severity: error
+
+  - type: contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "rdd-setup"
+    severity: warning
+
+  - type: not_contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "gho_"
+    severity: error
+
+  - type: not_contains
+    path: "GH_SETUP_REPORT.md"
+    pattern: "password"
+    severity: warning
+
+  - type: no_todos
+    path: "GH_SETUP_REPORT.md"
+    patterns: ["TODO", "FIXME", "TBD"]
+    severity: warning
+
+  - type: line_count_range
+    path: "GH_SETUP_REPORT.md"
+    min: 15
+    max: 120
+    severity: warning

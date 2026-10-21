@@ -1,0 +1,43 @@
+---
+name: "Next Recommendation — --save com tradução ausente"
+description: >
+  Módulo com PROJECT_CHARTER.md e REQUIREMENTS.md (3 RNs) mas sem nenhum
+  artefato de tradução. Com --save, a skill grava quality/NEXT_RECOMMENDATION.md
+  (IMP-026) com front matter, seção Recomendação indicando rdd-data-model
+  como próximo passo natural da DAG, e o estado analisado.
+inputs_required: ["PROJECT_CHARTER.md", "REQUIREMENTS.md"]
+
+checks:
+  - type: file_exists
+    path: "quality/NEXT_RECOMMENDATION.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/NEXT_RECOMMENDATION.md"
+    severity: error
+
+  - type: section_exists
+    path: "quality/NEXT_RECOMMENDATION.md"
+    section: "## Recomendação"
+    severity: error
+
+  - type: contains
+    path: "quality/NEXT_RECOMMENDATION.md"
+    pattern: "rdd-data-model"
+    severity: error
+
+  - type: contains
+    path: "quality/NEXT_RECOMMENDATION.md"
+    pattern: "Motivo"
+    severity: error
+
+  - type: contains
+    path: "quality/NEXT_RECOMMENDATION.md"
+    pattern: "Estado analisado"
+    severity: error
+
+  - type: line_count_range
+    path: "quality/NEXT_RECOMMENDATION.md"
+    min: 15
+    max: 150
+    severity: warning

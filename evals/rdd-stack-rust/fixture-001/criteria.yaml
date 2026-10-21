@@ -1,0 +1,53 @@
+---
+name: "Rust — async Mutex, Result/anyhow e clippy -D warnings"
+description: >
+  Repository Rust com std::sync::Mutex em contexto async (trava a thread do
+  runtime) e .unwrap() em produção (pânico). O playbook exige tokio::sync::Mutex,
+  propagação de erro via Result com anyhow (infra) e zero warnings de clippy
+  (cargo clippy -- -D warnings).
+inputs_required: ["AGENTS.md", "src/infra/pedido_repository.rs"]
+
+checks:
+  - type: file_exists
+    path: "src/infra/pedido_repository.rs"
+    severity: error
+
+  - type: contains
+    path: "src/infra/pedido_repository.rs"
+    pattern: "tokio::sync::Mutex"
+    severity: error
+
+  - type: not_contains
+    path: "src/infra/pedido_repository.rs"
+    pattern: "std::sync::Mutex"
+    severity: error
+
+  - type: contains
+    path: "src/infra/pedido_repository.rs"
+    pattern: "anyhow::Result"
+    severity: error
+
+  - type: contains
+    path: "src/infra/pedido_repository.rs"
+    pattern: ".lock().await"
+    severity: error
+
+  - type: not_contains
+    path: "src/infra/pedido_repository.rs"
+    pattern: ".unwrap()"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "## Qualidade (Rust)"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "cargo clippy -- -D warnings"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "thiserror"
+    severity: error

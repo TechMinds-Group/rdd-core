@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "zai-coding-plan/glm-5.3-flash",
+  "permission": {
+    "external_directory": {
+      "D:/Projetos/**": "allow"
+    }
+  },
+  "agent": {
+    "rdd-dev-backend": {
+      "permission": {
+        "edit": { "D:/Projetos/**": "allow", "*": "ask" },
+        "write": { "D:/Projetos/**": "allow", "*": "ask" }
+      }
+    },
+    "rdd-dev-frontend": {
+      "permission": {
+        "edit": { "D:/Projetos/**": "allow", "*": "ask" },
+        "write": { "D:/Projetos/**": "allow", "*": "ask" }
+      }
+    }
+  }
+}

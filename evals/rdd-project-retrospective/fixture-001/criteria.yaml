@@ -1,0 +1,76 @@
+---
+name: "Retrospectiva — RETROSPECTIVE.md com Scorecard do Workflow (IMP-048)"
+description: >
+  Projeto CONTATOS concluído. A skill gera docs/projects/CONTATOS/RETROSPECTIVE.md
+  com front matter, seções O que funcionou / O que não funcionou / Padrões
+  extraídos / Métricas do projeto / Ações e o Scorecard do Workflow (IMP-048):
+  tabela de 14 segmentos (7 fases + 7 transversais) com nota 0-10 ou N/A
+  (sem uso — nunca chute) e evidência por linha; nota geral = média das
+  fases COM evidência. Modo não-interativo: sem invocação de sub-skills
+  (pattern-extractor/metrics-collector fora do escopo da fixture).
+inputs_required: ["PROJECT_CHARTER.md", "quality/TRACEABILITY.md"]
+
+checks:
+  - type: file_exists
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    severity: error
+
+  - type: section_exists
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    section: "## O que funcionou"
+    severity: error
+
+  - type: section_exists
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    section: "## O que não funcionou"
+    severity: error
+
+  - type: section_exists
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    section: "## Padrões extraídos"
+    severity: error
+
+  - type: section_exists
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    section: "## Scorecard do Workflow"
+    severity: error
+
+  - type: table_has_columns
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    columns: ["Segmento", "Tipo", "Nota", "Evidência"]
+    severity: error
+
+  - type: contains
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    pattern: "N/A"
+    severity: error
+
+  - type: contains
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    pattern: "transversal"
+    severity: error
+
+  - type: contains
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    pattern: "CONTATOS"
+    severity: error
+
+  - type: section_order
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    sections:
+      - "## O que funcionou"
+      - "## O que não funcionou"
+      - "## Padrões extraídos"
+      - "## Métricas do projeto"
+      - "## Scorecard do Workflow"
+    severity: error
+
+  - type: line_count_range
+    path: "docs/projects/CONTATOS/RETROSPECTIVE.md"
+    min: 40
+    max: 400
+    severity: warning

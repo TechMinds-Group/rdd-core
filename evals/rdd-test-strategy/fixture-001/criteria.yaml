@@ -1,0 +1,62 @@
+---
+name: "Test Strategy — 2 outputs com casos de erro do catálogo"
+description: >
+  AC + API_CONTRACTS + ERROR_CATALOG como entrada. TEST_STRATEGY deve
+  derivar níveis de teste (incl. teste de erro BLOQ_DUPLICADO) e DoD deve
+  referenciar as RNs.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "quality/TEST_STRATEGY.md"
+    severity: error
+
+  - type: file_exists
+    path: "quality/DEFINITION_OF_DONE.md"
+    severity: error
+
+  - type: section_exists
+    path: "quality/TEST_STRATEGY.md"
+    section: "## 2. Níveis de Teste"
+    severity: error
+
+  - type: contains
+    path: "quality/TEST_STRATEGY.md"
+    pattern: "BLOQ_DUPLICADO"
+    severity: error
+
+  - type: contains
+    path: "quality/DEFINITION_OF_DONE.md"
+    pattern: "RN-002"
+    severity: error
+
+  - type: cross_ref
+    path: "quality/TEST_STRATEGY.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/TEST_STRATEGY.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: line_count_range
+    path: "quality/DEFINITION_OF_DONE.md"
+    min: 20
+    max: 200
+    severity: warning
+
+  - type: no_todos
+    path: "quality/TEST_STRATEGY.md"
+    patterns: ["TODO", "FIXME", "PEND-"]
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "quality/TEST_STRATEGY.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/DEFINITION_OF_DONE.md"
+    severity: error

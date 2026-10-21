@@ -1,0 +1,47 @@
+---
+name: "Scope Agreement — linguagem de negócio sem IDs no corpo"
+description: >
+  REQUIREMENTS + CR-001 + CHANGELOG. SCOPE_AGREEMENT deve traduzir RNs
+  para linguagem de negócio (IDs só na seção de rastreamento).
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "delivery/SCOPE_AGREEMENT.md"
+    severity: error
+
+  - type: contains
+    path: "delivery/SCOPE_AGREEMENT.md"
+    pattern: "bloqueio"
+    severity: error
+
+  - type: contains
+    path: "delivery/SCOPE_AGREEMENT.md"
+    pattern: "Rastreamento"
+    severity: error
+
+  - type: contains
+    path: "delivery/SCOPE_AGREEMENT.md"
+    pattern: "CR-001"
+    severity: warning
+
+  - type: not_contains
+    path: "delivery/SCOPE_AGREEMENT.md"
+    pattern: "EARS"
+    severity: warning
+
+  - type: cross_ref
+    path: "delivery/SCOPE_AGREEMENT.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "delivery/SCOPE_AGREEMENT.md"
+    min: 40
+    max: 300
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "delivery/SCOPE_AGREEMENT.md"
+    severity: error

@@ -1,0 +1,43 @@
+---
+name: "Validate L1 — módulo íntegro NÃO gera falsos positivos"
+description: >
+  EDGE (complemento do gap plantado do fixture-001): módulo COMPLETO e
+  coerente. O relatório deve confirmar integridade — ZERO lacunas, ZERO
+  falsos positivos. Se acusar problema inexistente, FAIL.
+inputs_required: [REQUIREMENTS.md]
+
+checks:
+  - type: file_exists
+    path: "quality/VALIDATION_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "Nenhuma lacuna"
+    severity: error
+
+  - type: not_contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "LACUNA"
+    severity: error
+
+  - type: not_contains
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "RN-999"
+    severity: warning
+
+  - type: cross_ref
+    path: "quality/VALIDATION_REPORT.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/VALIDATION_REPORT.md"
+    min: 20
+    max: 300
+    severity: warning
+
+  - type: frontmatter_valid
+    path: "quality/VALIDATION_REPORT.md"
+    severity: error

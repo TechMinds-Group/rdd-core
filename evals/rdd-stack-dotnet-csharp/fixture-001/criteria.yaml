@@ -1,0 +1,55 @@
+---
+name: "Migrações EF Core — convenção crítica (IMP-019)"
+description: >
+  Repo .NET com migração hand-written sem [DbContext] e sem [Migration]
+  (silenciosamente ignorada pela descoberta do EF Core) e AGENTS.md sem a
+  seção de convenção. A aplicação do playbook corrige os dois atributos
+  obrigatórios e documenta a convenção (dotnet ef migrations add, pasta
+  única, has-pending-model-changes, proibição de suprimir
+  PendingModelChangesWarning).
+inputs_required: ["AGENTS.md", "Migrations/20260921090000_AddOutboxEvents.cs"]
+
+checks:
+  - type: file_exists
+    path: "Migrations/20260921090000_AddOutboxEvents.cs"
+    severity: error
+
+  - type: contains
+    path: "Migrations/20260921090000_AddOutboxEvents.cs"
+    pattern: '[DbContext(typeof('
+    severity: error
+
+  - type: contains
+    path: "Migrations/20260921090000_AddOutboxEvents.cs"
+    pattern: '[Migration("20260921090000_AddOutboxEvents")]'
+    severity: error
+
+  - type: not_contains
+    path: "Migrations/20260921090000_AddOutboxEvents.cs"
+    pattern: "PendingModelChangesWarning"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "## Migrações (EF Core)"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "dotnet ef migrations add"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "has-pending-model-changes"
+    severity: error
+
+  - type: contains
+    path: "AGENTS.md"
+    pattern: "PendingModelChangesWarning"
+    severity: error
+
+  - type: not_contains
+    path: "AGENTS.md"
+    pattern: ".Ignore(RelationalEventId.PendingModelChangesWarning)"
+    severity: error

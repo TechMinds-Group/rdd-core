@@ -1,0 +1,39 @@
+---
+name: "Validate — CONFIDENCE_REPORT com marcadores presentes (IMP-096)"
+description: >
+  Módulo com marcadores de confiança (🟢/🟡/🔴 e **Confiança:**) em
+  REQUIREMENTS.md (3🟢+1🟡+1🔴) e specs/DATA_MODEL.md (1🟢+1🟡). rdd-validate
+  deve gerar quality/CONFIDENCE_REPORT.md com contagem por documento,
+  percentual pela fórmula (🟢 + 0,5×🟡)/total e a lista dos 🔴/Baixa com
+  link para os PEND-XXX (RN-004 → PEND-001). Módulo COM marcadores NÃO
+  deve emitir o aviso "Sem calibração de confiança".
+inputs_required: [REQUIREMENTS.md, specs/DATA_MODEL.md, quality/TRACEABILITY.md]
+
+checks:
+  - type: file_exists
+    path: "quality/CONFIDENCE_REPORT.md"
+    severity: error
+
+  - type: contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "(🟢 + 0,5×🟡)"
+    severity: error
+
+  - type: contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "RN-004"
+    severity: error
+
+  - type: contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "PEND-001"
+    severity: error
+
+  - type: not_contains
+    path: "quality/CONFIDENCE_REPORT.md"
+    pattern: "Sem calibração de confiança"
+    severity: error
+
+  - type: file_exists
+    path: "quality/VALIDATION_REPORT.md"
+    severity: error

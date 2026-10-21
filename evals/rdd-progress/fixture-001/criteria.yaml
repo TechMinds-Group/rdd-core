@@ -1,0 +1,44 @@
+---
+name: "Progress Report — --save com 4 blocos e fase Quality"
+description: >
+  Módulo maduro: 3 RNs com TRACEABILITY 3/3, PROPAGATION_STATUS sem
+  pendências, VALIDATION_REPORT ausente (fase Quality 3/4). Com --save,
+  a skill grava quality/PROGRESS_REPORT.md com front matter (generated_at)
+  e os 4 blocos do dashboard (cobertura, drift, pendências, fase).
+inputs_required: ["REQUIREMENTS.md", "quality/TRACEABILITY.md", "quality/PROPAGATION_STATUS.md"]
+
+checks:
+  - type: file_exists
+    path: "quality/PROGRESS_REPORT.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "quality/PROGRESS_REPORT.md"
+    severity: error
+
+  - type: section_exists
+    path: "quality/PROGRESS_REPORT.md"
+    section: "Cobertura de Requisitos"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "Fase Atual"
+    severity: error
+
+  - type: contains
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "VALIDATION_REPORT"
+    severity: error
+
+  - type: cross_ref
+    path: "quality/PROGRESS_REPORT.md"
+    pattern: "RN-(\\d+)"
+    sources: ["REQUIREMENTS.md"]
+    severity: error
+
+  - type: line_count_range
+    path: "quality/PROGRESS_REPORT.md"
+    min: 20
+    max: 250
+    severity: warning

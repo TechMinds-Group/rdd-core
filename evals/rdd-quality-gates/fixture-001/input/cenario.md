@@ -1,0 +1,3 @@
+﻿Cenario: rdd-dev-backend acabou de implementar a task RN-004-2 (endpoint de pedidos atrasados, .NET/CSharp com MediatR) e chama a quality gate do Passo 7.1. O playbook rdd-stack-dotnet-csharp define os comandos (dotnet build/test). Ferramenta de formatacao indisponivel na maquina.
+
+Tarefa: executar a auditoria transversal (secoes A-E) no codigo modificado, registrar o comando faltante como "nao executado" e emitir veredito do gate sem editar codigo.
