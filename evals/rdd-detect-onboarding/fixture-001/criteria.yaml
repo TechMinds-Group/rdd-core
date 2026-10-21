@@ -1,3 +1,4 @@
+mode: manual
 ﻿checks:
   - id: front-matter
     type: structural

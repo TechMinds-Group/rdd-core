@@ -1,29 +1,38 @@
-node_modules
-package.json
-package-lock.json
-bun.lock
-.git
-command/*
-hooks
-plugins
-.gsd-profile
-gsd-*.json
-opencode.jsonc
-settings.json
-AGENTS.md
-get-shit-done/*
+# Padrões ancorados na raiz (/) — patterns soltos casam em QUALQUER profundidade
+# e ignoravam arquivos de fixtures silenciosamente (IMP-121).
 
-agents/*
-!agents/rdd-*.md
+# runtime local do OpenCode
+/node_modules/
+/package.json
+/package-lock.json
+/bun.lock
+/opencode.jsonc
+/settings.json
+/AGENTS.md
+/cli.json
+/service.json
+/hooks/
+/plugins/
+/command/*
+/get-shit-done/*
+/.gsd-profile
+/gsd-*.json
 
-skills/*
-!skills/rdd-*/
-!skills/rdd-*/SKILL.md
-rules/client-profile.md
-cli.json
-service.json
+# agentes/skills: só o versionado entra (whitelist)
+/agents/*
+!/agents/rdd-*.md
 
-# packs instalados (gerado pelo rdd-setup � IMP-111)
-packs/
-rules/packs/
-.rdd/
+/skills/*
+!/skills/rdd-*/
+!/skills/rdd-*/SKILL.md
+
+# perfil do cliente (IMP-103) — nunca versionado
+/rules/client-profile.md
+
+# packs instalados e lockfile (gerado pelo rdd-setup — IMP-111/112)
+/packs/
+/rules/packs/
+/.rdd/
+
+# operacional de evals — trends.json mantém o histórico de scores (IMP-121)
+/evals/reports/

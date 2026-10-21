@@ -1,3 +1,4 @@
+mode: manual
 # IMP-100: invariante — a skill de eval declara o golden set humano como
 # intocado e documenta o modo --golden.
 checks:

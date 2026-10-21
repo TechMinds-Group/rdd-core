@@ -302,6 +302,17 @@ while IFS= read -r t; do
 
   if [ -n "$MODULE" ]; then modroot="$MODULE"
   elif [ -d "$fxdir/output-expected" ]; then modroot="$fxdir/output-expected"
+  elif [ -f "$fxdir/criteria.yaml" ] && grep -qiE '^mode:[[:space:]]*manual' "$fxdir/criteria.yaml" 2>/dev/null; then
+    # rubrica manual (revisão por agente/humano — sem output-expected) — IMP-121
+    RESULTS+=("$sk|$fx|$fx/manual|SKIPPED|-|rubrica manual")
+    SKIPPED=$((SKIPPED+1))
+    continue
+  elif [ -f "$fxdir/criteria.yaml" ]; then
+    # fixture com criteria mas sem output-expected e sem marcar manual = quebrada
+    # (arquivos capturados pelo .gitignore ou baseline incompleto — IMP-121). FAIL.
+    RESULTS+=("$sk|$fx|$fx/baseline|FAIL|error|output-expected ausente (ver .gitignore / IMP-121)")
+    FAIL=$((FAIL+1)); TOTAL=$((TOTAL+1))
+    continue
   else modroot=""; fi
 
   parse_criteria "$fxdir/criteria.yaml"

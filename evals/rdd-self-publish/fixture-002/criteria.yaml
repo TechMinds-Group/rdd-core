@@ -1,3 +1,4 @@
+mode: manual
 # IMP-100: invariante — o self-publish rejeita path em evals/golden-human
 # num commit publicado por ele (golden set humano = intocado por agents).
 checks:
