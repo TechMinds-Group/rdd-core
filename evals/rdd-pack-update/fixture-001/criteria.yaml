@@ -1,0 +1,51 @@
+---
+name: "rdd-pack-update — movimento de pin autorizado (demo 0.9.0 → 1.0.0)"
+description: >
+  Runtime com o pack demo pinado em 0.9.0 (commit abc1234). Sob pedido
+  explícito do operador o update move o pin para 1.0.0 (commit def5678),
+  mantém o mesmo path instalado, reinstala o provides (regra nova) e
+  reporta o delta sem recurso de força.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: ".rdd/sources.yaml"
+    severity: error
+
+  - type: file_exists
+    path: "DELTA.md"
+    severity: error
+
+  - type: file_exists
+    path: "packs/demo/rules/packs/demo.md"
+    severity: error
+
+  - type: contains
+    path: ".rdd/sources.yaml"
+    pattern: 'commit: "def5678"'
+    severity: error
+
+  - type: contains
+    path: ".rdd/sources.yaml"
+    pattern: 'version: "1.0.0"'
+    severity: error
+
+  - type: not_contains
+    path: ".rdd/sources.yaml"
+    pattern: "abc1234"
+    severity: error
+
+  - type: contains
+    path: "DELTA.md"
+    pattern: "demo"
+    severity: error
+
+  - type: contains
+    path: "DELTA.md"
+    pattern: "0.9.0"
+    severity: error
+
+  - type: not_contains
+    path: "DELTA.md"
+    pattern: "--force"
+    severity: error

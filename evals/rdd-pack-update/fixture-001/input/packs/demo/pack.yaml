@@ -1,0 +1,15 @@
+# pack.yaml — clone do pack demo no commit pinado (abc1234, v0.9.0)
+id: demo
+name: Demo Pack
+version: 0.9.0
+requires-core: ">=1 <2"
+
+# Paths relativos à raiz do pack, copiados para o runtime (~/.config/opencode/)
+provides:
+  - rules/packs/demo.md
+
+# Versionados no repo do pack, NUNCA instalados no runtime
+accumulation:
+  - accumulation/patterns/
+  - accumulation/metrics/
+  - accumulation/reverses/

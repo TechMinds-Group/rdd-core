@@ -1,0 +1,15 @@
+# pack.yaml — raiz do repo do pack (github.com/nimbus-org/RDD.PACK.NIMBUS)
+id: nimbus
+name: Nimbus Pack
+version: 0.1.0
+requires-core: ">=1 <2"
+
+# Paths relativos à raiz do pack, copiados para o runtime (~/.config/opencode/)
+provides:
+  - rules/packs/nimbus.md
+
+# Versionados no repo do pack, NUNCA instalados no runtime (IMP-116)
+accumulation:
+  - accumulation/patterns/
+  - accumulation/metrics/
+  - accumulation/reverses/

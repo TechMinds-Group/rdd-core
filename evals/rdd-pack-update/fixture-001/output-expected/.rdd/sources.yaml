@@ -1,0 +1,7 @@
+# .rdd/sources.yaml — lockfile de packs instalados (pin movido pelo update)
+packs:
+  demo:
+    version: "1.0.0"
+    commit: "def5678"
+    paths:
+      - rules/packs/demo.md

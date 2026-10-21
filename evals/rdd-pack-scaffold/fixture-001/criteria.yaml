@@ -1,0 +1,51 @@
+---
+name: "rdd-pack-scaffold — esqueleto do pack Nimbus"
+description: >
+  Onboarding da empresa fictícia Nimbus no open core. A skill cria o
+  esqueleto do pack a partir do PACK_SCHEMA — pack.yaml v0.1.0 (id,
+  requires-core, provides e accumulation IMP-116), regra da org com
+  seções-guia, acúmulo vazio com READMEs e README do pack.
+inputs_required: ["README.md", "client-profile.md"]
+
+checks:
+  - type: file_exists
+    path: "packs/nimbus/pack.yaml"
+    severity: error
+
+  - type: file_exists
+    path: "packs/nimbus/rules/packs/nimbus.md"
+    severity: error
+
+  - type: dir_has_files
+    path: "packs/nimbus/accumulation/"
+    severity: error
+
+  - type: contains
+    path: "packs/nimbus/pack.yaml"
+    pattern: "id: nimbus"
+    severity: error
+
+  - type: contains
+    path: "packs/nimbus/pack.yaml"
+    pattern: "version: 0.1.0"
+    severity: error
+
+  - type: contains
+    path: "packs/nimbus/pack.yaml"
+    pattern: "requires-core"
+    severity: error
+
+  - type: contains
+    path: "packs/nimbus/pack.yaml"
+    pattern: "accumulation:"
+    severity: error
+
+  - type: section_exists
+    path: "packs/nimbus/rules/packs/nimbus.md"
+    section: "## Infraestrutura validada"
+    severity: error
+
+  - type: contains
+    path: "packs/nimbus/rules/packs/nimbus.md"
+    pattern: "Runbooks"
+    severity: error

@@ -531,6 +531,10 @@ ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 trends[ts] = {"trigger": "runner", "mode": "all", "skills": {
     "_suite": {"score": round(passed / max(1, passed + failed), 2), "passed": passed, "failed": failed, "skipped": 0}
 }}
+# teto do histórico: mantém as 200 entradas mais recentes (IMP-117)
+if len(trends) > 200:
+    for k in sorted(trends.keys())[:-200]:
+        trends.pop(k)
 with open(path, "w", encoding="utf-8") as fh:
     json.dump(trends, fh, ensure_ascii=False, indent=2)
 PY
