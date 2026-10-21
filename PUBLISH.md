@@ -27,6 +27,7 @@ arquivo fora dela **nunca** é publicado:
 
 | Entrada | Observação |
 |---------|------------|
+| `.gitignore` | adotador clona o runtime já limpo (reports/trends/packs/instalados ignorados) |
 | `agents/` | primaries e subagents |
 | `skills/` | todas as skills |
 | `registry.yaml` | manifesto canônico |
