@@ -1,0 +1,54 @@
+---
+name: "MCP SQLite — escopo projeto, server habilitado, sem credenciais em arquivo"
+description: >
+  Projeto com banco SQLite local (inspeção de dados pelo agente) pede a
+  configuração do MCP SQLite. A skill deve gerar o bloco mcp.sqlite no
+  .opencode/opencode.json do projeto (type local, command apontando para o
+  binário mcp-sqlite.exe, enabled true) SEM credenciais em arquivo e a seção
+  sqlite-mcp no AGENTS.md do projeto documentando as tools (open_database,
+  get_schema, query, execute).
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: ".opencode/opencode.json"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"sqlite"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"type": "local"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"enabled": true'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "mcp-sqlite.exe"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "password"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "FIGMA_API_KEY"
+    severity: error
+
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- sqlite-mcp -->"
+    severity: error

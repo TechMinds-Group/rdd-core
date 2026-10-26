@@ -61,13 +61,14 @@ Se os marcadores não forem encontrados nos arquivos alvo, aborta e orienta.
 - **registry.yaml unparseável (YAML inválido):** **ABORTA** sem tocar nenhuma view — reporte a linha/erro de parse e oriente corrigir o manifesto primeiro; views desatualizadas são preferíveis a views corrompidas.
 - **Marcadores `BEGIN_REGISTRY`/`END_REGISTRY` ausentes em arquivo alvo:** aborta e orienta — nunca crie blocos por conta própria; se apenas um alvo estiver sem marcadores, aborte o lote inteiro e reporte quais arquivos estão irregulares.
 - **Id duplicado dentro da mesma coleção** (`subagents` ou `skills`): aborta e reporta — o render não decide qual entrada prevalece. Duplo registro ENTRE coleções (mesmo id em `subagents` e `skills` — ex.: rdd-next) é padrão legítimo e não é erro.
+- **Colisão de ID de nó no Mermaid (dois nós com o mesmo `S<N>`):** o segundo `S<N>` sobrescreve o label do primeiro e o diagrama renderiza errado (IMP-129). O render NUNCA emite ID repetido: os IDs são regenerados da lista completa em uma passada determinística (regra da View A); ao detectar colisão com a view anterior, renumere nós, arestas e class na mesma passada e reporte a correção.
 - **Conteúdo manual fora dos blocos:** seções narrativas fora dos marcadores (incl. edições manuais dentro do ARCHITECTURE.md) são **preservadas** — o render substitui SOMENTE o conteúdo entre `BEGIN_REGISTRY`/`END_REGISTRY`.
 - **Registry desatualizado vs. disco (skill/agent em disco sem registro):** renderiza o que existe e reporta os órfãos (`registry:agentes_em_disco_registrados` / `registry:skills_em_disco_registradas`) — registrar componente novo é trabalho do `rdd-workflow-builder`, não deste render.
 - **Referência pendente (delegates/invokes aponta para id inexistente):** reporte como dangling e aborta o gate (`registry:referencias_resolvem`) — não silencie a referência quebrada.
 - **Duplo registro na camada de skills (§1):** skills também registradas como subagents (`rdd-next`, `rdd-progress`, `rdd-cr-propagation-guard`, `rdd-tasks-pending`) NÃO recebem nó próprio na camada L5 do diagrama — contam no label `<N> skills` e são representadas pelo subagent correspondente (L4). Toda outra skill registrada ganha nó.
 - **Self-invokes (legado de duplo registro):** `invokes` auto-referente renderiza `—` na coluna "Invoca skills" da §4 e NÃO gera aresta — jamais emita aresta vazia (`X --> ` sem destino).
 - **Numeração da §5:** numere as sub-tabelas `### 5.<N>` sequencialmente conforme a ordem de exibição no documento (5.1, 5.2, …) — nunca reaproveite a ordem interna do registry.
-- **Encoding:** escreva sempre UTF-8 sem BOM (IMP-097); NUNCA produza mojibake (`ÔÇ—`, `â†'`, `â”€`, `Â§`). Mojibake pré-existente dentro do bloco é saneado na mesma passada (precedente IMP-105).
+- **Encoding:** escreva sempre UTF-8 sem BOM (IMP-097); NUNCA produza mojibake (`ÔÇ—`, `â†’`, `â”€`, `Â§`). Mojibake pré-existente dentro do bloco é saneado na mesma passada (precedente IMP-105).
 
 ## Workflow
 
@@ -112,6 +113,13 @@ flowchart BT
     DOC --> SA2
     SA1 --> S1 & S2
 ```
+
+**Atribuição de IDs de nós de skills (`S<N>`) — regra determinística anti-colisão (IMP-129):**
+
+1. Monte a lista completa de nós ANTES de atribuir qualquer ID: todas as skills registradas exceto as de duplo registro (caso de borda acima), ordenadas pela ordem das chaves `domains:` no registry.yaml e, dentro de cada domínio, pela ordem da lista `skills:` do domínio.
+2. Atribua `S1..SN` sequencialmente sobre essa lista em UMA única passada — IDs estritamente únicos.
+3. NUNCA derive ID da view anterior ("próximo ID livre" contra snapshot stale) — a numeração é SEMPRE regenerada da lista completa: mesma árvore, mesma saída (idempotência).
+4. Antes de aplicar, valide: (a) contagem de nós = N; (b) nenhum `S<N>` repetido; (c) as arestas e a linha `class ... skill` referenciam exatamente os IDs da lista final — sem duplicar nem omitir.
 
 #### View B — Diagrama de interações (Mermaid flowchart LR)
 

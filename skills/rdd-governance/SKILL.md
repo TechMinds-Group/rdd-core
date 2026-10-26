@@ -8,12 +8,12 @@ description: >-
 ---
 # rdd-governance — Governança do Produto
 
-Revisa `CONSTITUTION.md` e `PRODUCT_GOAL.md` na raiz do repo de docs do produto (`repo_docs_rdd`) quando os princípios
+Revisa `CONSTITUTION.md` e `PRODUCT_GOAL.md` na raiz do workspace de produtos do módulo corrente quando os princípios
 do produto ou convenções do workflow precisam ser atualizados.
 
 ## Referências
 
-- CONSTITUTION.md: raiz do repo de docs do produto (`repo_docs_rdd` — bloco `<!-- rdd-docs-repo -->` do AGENTS.md global)
+- CONSTITUTION.md: raiz do workspace de produtos do módulo corrente (detectado pela sessão — nunca hardcode, IMP-016)
 - Registry de skills: `registry.yaml` (raiz da config do OpenCode — fonte da verdade, IMP-027)
 
 ## Lê (upstream)

@@ -42,7 +42,7 @@ desenvolvedor precise redigir dezenas de documentos manualmente.
 ## Princípios de Operação
 
 1. **Unidade é o Produto (IMP-013):**
-   - No RDD, a pasta documental representa o **Produto** (ex: `Salon/`, `ZUMM/`).
+   - No RDD, a pasta documental representa o **Produto** (ex: `Salon/`, `Mobilis/`).
    - Um produto pode conter múltiplos repositórios (`-API`, `-FE`, `-CORE`). Você
      coleta e unifica a documentação de todos os repositórios em um único módulo.
 2. **Proteção de Contexto & Isolamento:**

@@ -1,0 +1,10 @@
+{
+  "mcp": {
+    "sqlite": {
+      "type": "local",
+      "command": ["C:\\Users\\victo\\AppData\\Local\\Programs\\mcp-sqlite\\mcp-sqlite.exe"],
+      "enabled": true,
+      "timeout": 10000
+    }
+  }
+}

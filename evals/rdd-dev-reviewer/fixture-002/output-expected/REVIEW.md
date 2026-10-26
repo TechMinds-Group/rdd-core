@@ -1,5 +1,5 @@
 ═══ rdd-dev-reviewer — RN-002-1 ═══
-repo: VibeCut-APP — diff: main...feature/rn-002-exclusao-conta (4 arquivos)
+repo: AcmeCut-APP — diff: main...feature/rn-002-exclusao-conta (4 arquivos)
 veredito: request-changes
 eixo 1 (RNs × diff): RN-002 → ContaService.java, ContaController.java | RN sem match: nenhum
 eixo 2 (quality gates): PASS

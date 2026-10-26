@@ -75,6 +75,7 @@ como fonte principal; caso contrário, faz fallback para `REQUIREMENTS.md`.
 | "gerar prompt Figma", "protótipo", "figma make" | `rdd-figma-prompt` |
 | "design brief", "contexto de produto" | `rdd-design-brief` |
 | "tasks do Figma", "tasks a partir do design", "delta de UI_SPEC" | `rdd-figma-tasks` |
+| CR aprovado com `Impacto visual: sim` (IMP-128) | `rdd-figma-prompt` (delta da tela/seção afetada) → após validação do operador no Figma, `rdd-figma-tasks` captura a nova versão e gera o delta de UI_SPEC + handoff de features — código só depois |
 
 ### Passo 2 — Validar pré-condições
 

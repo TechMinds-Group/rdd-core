@@ -21,7 +21,7 @@ com o cliente.
 ## Lê (upstream)
 
 - Nenhum (primeiro documento do projeto)
-- `<repo_docs_rdd>/_docs/patterns/INDEX.md` — bloco `rdd-docs-repo` do AGENTS.md (condicional — IMP-047): ao levantar o escopo, consultar padrões aplicáveis — especialmente Tipo `processo` (ex: existe produto-irmão de domínio cujas features podem ser adaptadas?)
+- `packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md (condicional — IMP-047): ao levantar o escopo, consultar padrões aplicáveis — especialmente Tipo `processo` (ex: existe produto-irmão de domínio cujas features podem ser adaptadas?)
 
 ## Gera (downstream)
 
@@ -134,7 +134,7 @@ question({
   question: "Qual o nome do produto e quais repositórios ele possui?",
   options: [
     { label: "Salon", description: "Sistema de agendamento — repos: Salon-API, Salon-FE" },
-    { label: "ZUMM", description: "Plataforma de mobilidade — repos: ZUMM.Motorista-FE, ZUMM.Passageiro-FE, ZUMM.DesignSystem-FE" },
+    { label: "Mobilis", description: "Plataforma de mobilidade — repos: Mobilis.Motorista-FE, Mobilis.Passageiro-FE, Mobilis.DesignSystem-FE" },
   ]
 })
 ```
@@ -197,7 +197,7 @@ question({
   question: "Qual o nome do produto e o cliente?",
   options: [
     { label: "Salon", description: "Sistema de agendamento — repos: Salon-API, Salon-FE" },
-    { label: "ZUMM", description: "Plataforma de mobilidade — repos: ZUMM.Motorista-FE, ZUMM.Passageiro-FE" },
+    { label: "Mobilis", description: "Plataforma de mobilidade — repos: Mobilis.Motorista-FE, Mobilis.Passageiro-FE" },
     { label: "AcmeHub", description: "Plataforma central — repos: AcmeHub-API, AcmeHub-FE" },
   ]
 })
@@ -217,7 +217,7 @@ Não invente dados não fornecidos pelo usuário.
 
 1. Se o usuário pedir "criar doc da API X" ou "criar doc do frontend Y", pergunte se faz parte de um produto maior
 2. Se sim, crie o charter do **produto** (ex: `Salon/`) listando todos os repos
-3. Se não (projeto isolado, sem par), crie como produto único (ex: `FasTo-API/`)
+3. Se não (projeto isolado, sem par), crie como produto único (ex: `Rapido-API/`)
 4. O campo `Repositórios` do charter deve listar todos os repos do produto
 
 ### Exemplo
@@ -343,14 +343,14 @@ status: draft
 
 ### Contexto
 
-Em workspaces com múltiplos repositórios de empresa (ex: `<diretorio_projetos>/` com `<Produto>-API/`, `<Produto>-FE/`, etc.), o OpenCode pode estar posicionado em qualquer repo. A skill DEVE detectar isso e redirecionar os artefatos para a pasta correta de documentação (`repo_docs_rdd` do perfil/bloco `<!-- rdd-docs-repo -->` no AGENTS.md).
+Em workspaces com múltiplos repositórios de empresa (ex: `<diretorio_projetos>/` com `<Produto>-API/`, `<Produto>-FE/`, etc.), o OpenCode pode estar posicionado em qualquer repo. A skill DEVE detectar isso e redirecionar os artefatos para a pasta correta de documentação (o **workspace de produtos** — detectado pela sessão ou `diretorio_projetos` do bloco `<!-- projeto-padrao -->`; o perfil local pode ter o campo `repo_docs_rdd` como dica).
 
 ### Detecção de Contexto
 
 Ao iniciar o intake, verifique se o workspace atual é:
 - Um repositório de código fonte (contém `src/`, `pom.xml`, `package.json`, `.csproj`, etc.)
 - Uma pasta de empresa com múltiplos repos (contém subpastas com nomes de projetos/repos)
-- Uma pasta dedicada de documentação (ex: `<repo_docs_rdd>/` — bloco `<!-- rdd-docs-repo -->` do AGENTS.md)
+- Uma pasta dedicada de documentação (o workspace de produtos — normalmente uma pasta do `diretorio_projetos`)
 
 ### Pergunta de Localização (quando aplicável)
 
@@ -361,7 +361,7 @@ question({
   header: "Localização da documentação",
   question: "Onde devo salvar os artefatos RDD deste projeto?",
   options: [
-    { label: "<repo_docs_rdd>/<projeto>/", description: "Pasta dedicada de docs (recomendado)" },
+    { label: "<workspace-de-produtos>/<projeto>/", description: "Pasta dedicada de docs (recomendado)" },
     { label: "docs/projects/<projeto>/", description: "Pasta docs dentro do repo atual" },
   ]
 })
@@ -371,9 +371,9 @@ question({
 
 | Cenário | Localização correta |
 |---------|---------------------|
-| Workspace é pasta de empresa (ex: `<diretorio_projetos>/`) | `<repo_docs_rdd>/<produto>/` |
-| Workspace é repo de código (ex: `Salon-API/`) | `<repo_docs_rdd>/<produto>/` (unificar com outros repos do mesmo produto) |
-| Workspace já é pasta de docs (ex: `<repo_docs_rdd>/`) | `<produto>/` (direto) |
+| Workspace é pasta de empresa (ex: `<diretorio_projetos>/`) | `<workspace-de-produtos>/<produto>/` |
+| Workspace é repo de código (ex: `Salon-API/`) | `<workspace-de-produtos>/<produto>/` (unificar com outros repos do mesmo produto) |
+| Workspace já é pasta de docs (ex: `<workspace-de-produtos>/`) | `<produto>/` (direto) |
 
 > **Lembrete:** A unidade é o **produto**, não a camada. Se o workspace é `Salon-API/` mas existe `Salon-FE`, crie `Salon/` na pasta de docs.
 
@@ -395,10 +395,10 @@ Skill detecta: workspace é repo de código (tem pom.xml)
 Skill pergunta: "O Salon API faz parte de um produto maior? Há frontend?"
 Usuário responde: "Sim, tem o Salon-FE"
 Skill pergunta: "Onde salvar?"
-Usuário escolhe: "<repo_docs_rdd>/Salon/"
+Usuário escolhe: "<workspace-de-produtos>/Salon/"
 
-Skill cria: C:\Users\...\<workspace>\<repo_docs_rdd>\<Produto>\PROJECT_CHARTER.md
-Skill cria: C:\Users\...\<workspace>\<repo_docs_rdd>\<Produto>\meetings\2026-09-16-01.md
+Skill cria: C:\Users\...\<workspace>\<workspace-de-produtos>\<Produto>\PROJECT_CHARTER.md
+Skill cria: C:\Users\...\<workspace>\<workspace-de-produtos>\<Produto>\meetings\2026-09-16-01.md
 ```
 
 ## Casos de Borda
@@ -411,5 +411,5 @@ Skill cria: C:\Users\...\<workspace>\<repo_docs_rdd>\<Produto>\meetings\2026-09-
 - **Operador em dúvida sobre dado pessoal** — não marque `compliance: true` por omissão; registre como pendência no charter e recomende `rdd-compliance-orchestrator` para decidir com o checklist.
 - **Projeto existente sem REQUIREMENTS.md** — ative modo simplificado; vá direto para `rdd-requirements` após o charter.
 - **Projeto existente com REQUIREMENTS.md parcial** — ative modo simplificado; recomende `rdd-requirements` para merge incremental.
-- **Workspace é repo de código fonte** — NUNCA crie artefatos RDD na raiz. Pergunte localização ou sugira `<repo_docs_rdd>/<produto>/`.
+- **Workspace é repo de código fonte** — NUNCA crie artefatos RDD na raiz. Pergunte localização ou sugira `<workspace-de-produtos>/<produto>/`.
 - **Usuário pede para criar por camada (API/FE)** — pergunte se faz parte de um produto maior. Se sim, crie o produto unificado. Se não (projeto isolado), crie como produto único.

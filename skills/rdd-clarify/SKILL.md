@@ -29,7 +29,7 @@ determina se vira RN direto ou entra como PEND-XXX com follow-up.
 - `<module-root>/meetings/` (checkpoints anteriores, para reavaliação incremental de PENDs)
 - `<module-root>/REQUIREMENTS.md` (se existir, para detectar conflitos com RNs/PENDs existentes)
 - `docs/CONSTITUTION.md` (para as categorias)
-- `<repo_docs_rdd>/_docs/patterns/INDEX.md` — bloco `rdd-docs-repo` do AGENTS.md (condicional — IMP-047): antes de propor RNs para feature de domínio já tratado em outro produto, consultar padrões aplicáveis (Tipo `processo`)
+- `packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md (condicional — IMP-047): antes de propor RNs para feature de domínio já tratado em outro produto, consultar padrões aplicáveis (Tipo `processo`)
 
 ## Gera (downstream)
 

@@ -44,8 +44,8 @@ na sessão é o único efeito; diagnostica e lista, nunca modifica nada.
 
 ## Resolução de caminhos
 
-- **`<repo-docs>`**: resolva pelo bloco `rdd-docs-repo` do AGENTS.md global
-  (chave `repo_docs_rdd`); fallback: diretório de trabalho corrente. NUNCA
+- **`<repo-docs>`**: resolva pelo diretório de trabalho corrente (cwd) — o
+  workspace de produtos onde a sessão está posicionada. NUNCA
   hardcode o caminho da máquina.
 - **`<sistema>`**: pasta com `PROJECT_CHARTER.md` diretamente sob `<repo-docs>`
   (ex.: `<repo-docs>/Salon/`). Detecte por glob, nunca construa o nome.

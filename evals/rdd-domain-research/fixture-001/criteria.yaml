@@ -1,0 +1,99 @@
+---
+mode: manual
+name: "Domain Research — KNOWLEDGE.md com front matter completo e INDEX atualizado"
+description: >
+  Pedido de fundação de conhecimento para o domínio (fictício, fixture L0)
+  "acessibilidade" — revisão de acessibilidade de UI web. A skill deve gerar
+  knowledge/acessibilidade/KNOWLEDGE.md com front matter completo (dominio,
+  versao, data_pesquisa, proxima_revisao, fontes) e as seções do template fixo
+  (Princípios, Checklist aplicável, Anti-patterns, Classificação/Severidade,
+  Referências), além de criar/atualizar knowledge/INDEX.md com a entrada do
+  domínio. Checks semânticos: fontes citadas com URL e data de acesso.
+inputs_required:
+  - "input/pedido.md"
+
+checks:
+  # ---- estruturais ----
+  - type: file_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    severity: error
+
+  - type: file_exists
+    path: "knowledge/INDEX.md"
+    severity: error
+
+  - type: frontmatter_valid
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "dominio: acessibilidade"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "versao:"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "data_pesquisa:"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "proxima_revisao:"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "fontes:"
+    severity: error
+
+  - type: contains
+    path: "knowledge/INDEX.md"
+    pattern: "acessibilidade"
+    severity: error
+
+  # ---- semânticos ----
+  - type: section_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    section: "## Princípios"
+    severity: error
+
+  - type: section_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    section: "## Checklist aplicável"
+    severity: error
+
+  - type: section_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    section: "## Anti-patterns"
+    severity: error
+
+  - type: section_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    section: "## Classificação/Severidade"
+    severity: error
+
+  - type: section_exists
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    section: "## Referências"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "http"
+    severity: error
+
+  - type: contains
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    pattern: "acessado em"
+    severity: error
+
+  - type: line_count_range
+    path: "knowledge/acessibilidade/KNOWLEDGE.md"
+    min: 60
+    max: 600
+    severity: warning

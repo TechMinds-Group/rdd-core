@@ -1,18 +1,18 @@
 ---
-project: VIBECUT
+project: ACMECUT
 module: charter
 audience: [negocio, tecnica]
 status: vigente
 ---
 
-# Termo de Abertura — VibeCut
+# Termo de Abertura — AcmeCut
 
 ## 1. Identificação
 
 | Campo | Valor |
 |---|---|
-| Nome do projeto | VibeCut |
-| Repositórios | VibeCut-APP |
+| Nome do projeto | AcmeCut |
+| Repositórios | AcmeCut-APP |
 | Compliance | compliance: true |
 
 ## 5. Tipo de projeto

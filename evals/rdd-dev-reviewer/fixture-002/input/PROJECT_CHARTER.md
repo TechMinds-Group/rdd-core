@@ -1,11 +1,11 @@
 ---
-project: VIBECUT
+project: ACMECUT
 module: charter
 audience: [negocio, tecnica]
 status: vigente
 ---
 
-# Termo de Abertura — VibeCut
+# Termo de Abertura — AcmeCut
 
 | Campo | Valor |
 |---|---|

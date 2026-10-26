@@ -18,7 +18,7 @@ mode: manual
     expect: pass
   - id: rename-derivado-do-repo
     type: semantic
-    description: Nome do projeto derivado do repo (Lumen-API - Lumen via rename-project.ps1); derivacao ambigua - question
+    description: Nome do projeto derivado do repo (Candela-API - Candela via rename-project.ps1); derivacao ambigua - question
     expect: pass
   - id: pos-clone-completo
     type: semantic

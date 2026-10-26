@@ -1,0 +1,10 @@
+{
+  // OpenCode config — estado inicial SEM o server hostinger
+  "mcp": {
+    "azure-devops": {
+      "type": "local",
+      "command": ["npx", "-y", "@azure-devops/mcp"],
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,39 @@
+﻿---
+name: "Knowledge Auditor L1 — caso de erro: db ausente gera 'sem dados' sem inventar"
+description: >
+  Modo de erro warn (IMP — rdd-knowledge-auditor): db inexistente deve gerar
+  relatório com o erro declarado (DB_MISSING), contadores zerados explícitos,
+  métricas N/A — e NUNCA números inventados (nenhum percentual no relatório).
+  Nenhum merge no METRICS.md ocorre sem dados.
+inputs_required: []
+checks:
+  - type: file_exists
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "sem dados"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "DB_MISSING"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "Contadores zerados"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "Hit rate: N/A"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "Nenhum número foi estimado ou inventado"
+    severity: error
+  - type: not_contains
+    path: "KNOWLEDGE_AUDIT_golden-erro.md"
+    pattern: "%"
+    severity: error
+  - type: not_file_exists
+    path: "METRICS.md"
+    severity: error

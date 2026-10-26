@@ -1,0 +1,88 @@
+﻿---
+name: "Knowledge Auditor L1 — modo degradado: par de métricas de db sintético"
+description: >
+  Baseline da skill rdd-knowledge-auditor (Fase 3 do plano v5 — D12: modo
+  degradado é o caminho primário). Db sintético com 5 sessões exercitando
+  os proxies: sessão que precisava E acertou (S1 — read T4 + read T1),
+  precisou e NAO acertou (S2 — read analysis + grep delivery), hit fora de
+  contexto (S3 — reads T2; S5 — glob T1), só código (S4). Filtra status
+  running, dedupeia fork. Esperado: hit rate global 50% (1/2), por modelo
+  (modelA 100% / modelB 0%), tokens/tarefa 75, merge incremental no
+  METRICS.md preservando histórico.
+inputs_required: [knowledge-audit-fixture.db]
+checks:
+  - type: frontmatter_valid
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "Declaração PROXY"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "não medida calibrada"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "## Contadores brutos"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "Hit rate global"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "50% (1/2)"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "Janela: últimos 3650 dias"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "## Hit Rate por Modelo"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "| modelB | 1 | 0 | 0% |"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "## Tokens de Conhecimento por Tarefa"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "| Tokens de conhecimento por tarefa (média) | 75 |"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "| T2 | patterns/INDEX.md"
+    severity: error
+  - type: contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "Metodologia e Limitações"
+    severity: error
+  - type: not_contains
+    path: "KNOWLEDGE_AUDIT_golden.md"
+    pattern: "sem dados"
+    severity: error
+  - type: file_exists
+    path: "METRICS.md"
+    severity: error
+  - type: contains
+    path: "METRICS.md"
+    pattern: "## Knowledge Hit Rate"
+    severity: error
+  - type: contains
+    path: "METRICS.md"
+    pattern: "| 21/10/2026 | 3650 | 2 | 1 | 50% | 2 | 75 | 3 |"
+    severity: error
+  - type: contains
+    path: "METRICS.md"
+    pattern: "## Por Projeto"
+    severity: error
+  - type: line_count_range
+    path: "METRICS.md"
+    min: 15
+    max: 30
+    severity: warning

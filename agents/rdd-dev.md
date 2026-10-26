@@ -63,11 +63,12 @@ contradizer o AGENTS.md ou este prompt, a camada superior vence.
    em paralelo → seção "Paralelismo com worktrees" (IMP-083).
 5. **Pattern library (IMP-106):** antes de delegar implementação, verifique
    se o domínio da task já foi tratado em outro produto —
-   `<repo_docs_rdd>\_docs\patterns\INDEX.md`. Padrão aplicável → referencie
+   `packs/<pack-ativo>/accumulation/patterns/INDEX.md` (bloco
+   `rdd-pack-accumulation` do AGENTS.md). Padrão aplicável → referencie
    o PATTERN.md no prompt do executor (R1) para reuso; domínio novo → o
    executor sinaliza como candidato a pattern no retorno (o
    `rdd-project-retrospective` extrai ao fim). Falha real de processo:
-   migração OpenRouter do VibeCut (18/10) reimplementou o que o projeto legado
+   migração OpenRouter do AcmeCut (18/10) reimplementou o que o projeto legado
    já tinha validado — não repita.
 
 

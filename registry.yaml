@@ -101,6 +101,7 @@ primary_agents:
       - rdd-vps-troubleshoot
       - rdd-cicd-workflow
       - rdd-observability
+      - rdd-mcp-hostinger-setup
       - rdd-detect-onboarding
 
 # ----------------------------------------------
@@ -239,6 +240,7 @@ subagents:
       - rdd-subagent-creator
       - rdd-primary-agent-creator
       - rdd-skill-creator
+      - rdd-domain-research
       - rdd-perf-auditor
       - rdd-skill-evolution
 
@@ -475,6 +477,9 @@ skills:
   - id: rdd-perf-auditor
     domain: meta
     description: "Auditoria de performance do runtime OpenCode — latência por turno, context bloat, p50/p95"
+  - id: rdd-knowledge-auditor
+    domain: meta
+    description: "Auditoria do PAR de mtricas de conhecimento (P-09)  hit rate + tokens de conhecimento por tarefa, modo degradado (denominadores PROXY de globs) a partir do opencode.db; global/por store/por modelo; acumula no METRICS.md do pack"
   - id: rdd-skill-evolution
     domain: meta
     description: "Evolui skills baseado em aprendizados acumulados de múltiplos projetos"
@@ -579,6 +584,9 @@ skills:
   - id: rdd-skill-creator
     domain: meta
     description: "Cria nova skill do OpenCode"
+  - id: rdd-domain-research
+    domain: meta
+    description: "Pesquisa e registra a base de conhecimento de um domínio (ex: security/OWASP, qualidade/Clean Code, acessibilidade/WCAG) em knowledge/<dominio>/KNOWLEDGE.md + INDEX.md — fundação obrigatória (knowledge-first) antes da criação de camada/componente que consome o domínio"
   - id: rdd-core-update
     domain: meta
     description: "Atualiza config local via git pull"
@@ -636,6 +644,15 @@ skills:
   - id: rdd-mcp-figma-setup
     domain: transversal
     description: "Wizard de configuração do MCP Figma (figma-developer-mcp) — server, env var FIGMA_API_KEY (nunca impressa ou commitada) e validação de conexão"
+  - id: rdd-mcp-sqlite-setup
+    domain: transversal
+    description: "Wizard de configuração do MCP SQLite (rusq/mcp-sqlite, binário nativo Go) — download com verificação SHA256 do checksums.txt, bloco mcp.sqlite no opencode.jsonc global (sem banco fixo — open_database por sessão) e smoke test de handshake + banco descartável"
+  - id: rdd-mcp-codegraph-setup
+    domain: transversal
+    description: "Wizard de configuração do MCP codebase-memory-mcp (DeusData — grafo de conhecimento de código via tree-sitter + Hybrid LSP) — supply-chain obrigatório (SHA-256 + gh attestation SLSA L3 + Defender), config manual no opencode.jsonc global (escopo corrente — servidor agnóstico a repo; projeto só se pedido; install.ps1 NUNCA executado), smoke test index_repository + search_graph; grafo é complemento do grep (P-01)"
+  - id: rdd-aws-setup
+    domain: transversal
+    description: "Wizard de configuração do acesso AWS — AWS CLI v2 (winget Amazon.AWSCLI; path padrão documentado), presença do MCP server oficial aws-mcp (só valida — nunca edita o jsonc), credenciais via aws configure --profile interativo no terminal do operador (nunca recebe/imprime/grava segredo), validação sts get-caller-identity e higiene (MFA, rotação, ~/.aws fora de repo); thin wizard — conhecimento de domínio AWS fica nas skills do MCP oficial (ex.: signing-in-to-aws)"
 
   # DevOps
   - id: rdd-vps-setup
@@ -650,6 +667,9 @@ skills:
   - id: rdd-observability
     domain: devops
     description: "Observabilidade mínima de APIs em VPS — healthcheck no compose (start_period), watchdog com alerta no canal do perfil na transição de estado, cron e logs com rotação; modo guiado, escopo KISS; receitas validadas no pack da organização (IMP-105)"
+  - id: rdd-mcp-hostinger-setup
+    domain: devops
+    description: "Wizard de configuração do MCP oficial da Hostinger — servidor remote (https://mcp.hostinger.com) com OAuth, instalação via opencode mcp add --global (formato V2), sign-in pelo TUI /mcps (nunca token no chat/config) e smoke test billing; API completa (~410 ops em 13 grupos) via 3 tools; consumidor natural: rdd-devops"
 
 # ----------------------------------------------
 
@@ -779,6 +799,7 @@ domains:
       - rdd-subagent-creator
       - rdd-primary-agent-creator
       - rdd-skill-creator
+      - rdd-domain-research
       - rdd-core-update
       - rdd-core-publish
       - rdd-setup
@@ -787,6 +808,7 @@ domains:
       - rdd-prompt-gate
       - rdd-detect-onboarding
       - rdd-perf-auditor
+      - rdd-knowledge-auditor
       - rdd-skill-evolution
       - rdd-typesafe-ai
       - rdd-pack-update
@@ -801,6 +823,9 @@ domains:
       - rdd-mcp-playwright-setup
       - rdd-mcp-figma-setup
       - rdd-mcp-postgres-setup
+      - rdd-mcp-sqlite-setup
+      - rdd-mcp-codegraph-setup
+      - rdd-aws-setup
 
   compliance:
     description: "Verificação LGPD de produtos que tratam dado pessoal — checklist specs/COMPLIANCE.md, gatilho no intake (compliance: true), eixo compliance no rdd-dev-reviewer e finding no rdd-validate (IMP-102)"
@@ -816,6 +841,7 @@ domains:
       - rdd-vps-troubleshoot
       - rdd-cicd-workflow
       - rdd-observability
+      - rdd-mcp-hostinger-setup
   utilitarios:
     description: "Skills utilitarias do ambiente - fora do pipeline RDD; demanda direta do operador"
     orchestrator: null

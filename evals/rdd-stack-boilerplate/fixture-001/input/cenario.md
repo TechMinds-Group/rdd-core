@@ -1,3 +1,3 @@
-﻿Cenario: Repo vazio Acme-Group/Lumen-API (so README.md e .gitignore) e stack .NET detectada. O registry rules/stack-templates.yaml tem templates.dotnet.boilerplate = Acme-Group/Boilerplate.NET-API. Cenario de borda avaliado: e se o repo ja tivesse *.csproj (nao vazio)?
+Cenario: Repo vazio Acme-Group/Candela-API (so README.md e .gitignore) e stack .NET detectada. O registry rules/stack-templates.yaml tem templates.dotnet.boilerplate = Acme-Group/Boilerplate.NET-API. Cenario de borda avaliado: e se o repo ja tivesse *.csproj (nao vazio)?
 
-Tarefa: carregar o registry, clonar o boilerplate curado (depth 1), rodar rename-project.ps1 Lumen, copiar para o repo alvo sem .git, fazer o pos-clone (.env, dotnet restore, connection string) e gerar o relatorio - sem scaffold generico e sem editar o registry.
+Tarefa: carregar o registry, clonar o boilerplate curado (depth 1), rodar rename-project.ps1 Candela, copiar para o repo alvo sem .git, fazer o pos-clone (.env, dotnet restore, connection string) e gerar o relatorio - sem scaffold generico e sem editar o registry.

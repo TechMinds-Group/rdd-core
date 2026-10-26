@@ -1,4 +1,4 @@
-# DATA_MODEL — VibeCut
+# DATA_MODEL — AcmeCut
 
 ## Tabela USUARIO
 

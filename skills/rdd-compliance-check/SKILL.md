@@ -99,7 +99,7 @@ NUNCA decide base legal sozinha quando há dúvida razoável.
    (qual versão do ToU/PP o titular aceitou, com timestamp)? **Granular**
    (finalidades separadas, não pacote único)? **Revogável** (caminho tão
    fácil quanto dar)? Padrão de referência: aceite versionado com sync
-   offline (VibeCut/PEND-008).
+   offline (AcmeCut/PEND-008).
 4. **Minimização e finalidade** — cada campo coletado tem finalidade
    declarada? Há coleta "por se um dia precisar" (violação do Art. 6, I e III)?
 5. **Retenção e descarte** — prazo de retenção definido por dado? O que

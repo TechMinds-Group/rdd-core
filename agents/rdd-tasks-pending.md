@@ -65,8 +65,8 @@ issue ou commita — a saída textual na resposta é o único efeito.
 
 ## Lê (upstream)
 
-- `<repo-docs>` resolvido pelo bloco `rdd-docs-repo` do AGENTS.md global
-  (fallback: cwd) — nunca hardcode de caminho (IMP-016)
+- `<repo-docs>` resolvido pelo cwd (workspace de produtos da sessão) —
+  nunca hardcode de caminho (IMP-016)
 - `<sistema>/delivery/<YYYY-MM>/RN-NNN — <título>/RN-NNN — Analise-Tecnica.md`
   (features IMP-093: front matter `status` do arquivo `— Feature.md` (fallback `— Tasks.md` IMP-092), `## Resumo das tasks`, headings `### RN-NNN-M.`)
 - Legados: `<sistema>/delivery/<YYYY-MM>/TASKS*.md`, `delivery/TASKS.md`,

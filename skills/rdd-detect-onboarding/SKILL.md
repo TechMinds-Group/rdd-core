@@ -10,7 +10,8 @@ description: >-
 # rdd-detect-onboarding — Diagnóstico de Onboarding
 
 Skill read-only que diagnostica se o operador precisa de onboarding no primeiro
-turno da sessão. Substitui o bloco inline duplicado nos 3 primary agents.
+turno da sessão. Substitui o bloco inline duplicado nos 4 primary agents
+(rdd-req, rdd-doc, rdd-dev, rdd-devops).
 
 ## Lê (upstream)
 

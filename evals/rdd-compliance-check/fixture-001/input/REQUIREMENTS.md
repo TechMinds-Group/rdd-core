@@ -1,4 +1,4 @@
-# REQUIREMENTS — VibeCut
+# REQUIREMENTS — AcmeCut
 
 ## 6. Dados e Campos
 

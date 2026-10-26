@@ -10,8 +10,9 @@ description: >-
   subagents de dev (rdd-dev-backend, rdd-dev-frontend) no opencode.jsonc,
   instala os packs declarados no perfil (`packs:` — clone em `packs/<id>/`,
   instala `provides`, grava `.rdd/sources.yaml`),
-  delega para rdd-azure-setup e rdd-gh-setup e, quando presente na instalação
-  (skill de pack opcional — IMP-105), rdd-pia-connect-setup;
+  delega para rdd-azure-setup, rdd-gh-setup e rdd-aws-setup (opcional) e,
+  quando presente na instalação (skill de pack opcional — IMP-105),
+  rdd-pia-connect-setup;
   valida o ambiente conforme o **perfil de adoção** — **core-only** (só o
   workflow: sem tracker/infra, valida só gh/git) ou **completo** (tracker
   Azure + infra + packs + validações de stack).
@@ -32,7 +33,7 @@ artefatos locais:
 
 | Artefato | O que contém | Versionado? |
 |----------|-------------|-------------|
-| `AGENTS.md` (`~/.config/opencode/`) | blocos `<!-- azure-devops -->`, `<!-- org-pack -->` (quando o cliente tiver pack — IMP-105), `<!-- projeto-padrao -->`, `<!-- rdd-docs-repo -->` + Índice de Referências lazy (`rules/`, IMP-048) | ❌ gitignored — nasce do `AGENTS.template.md` versionado (IMP-105) |
+| `AGENTS.md` (`~/.config/opencode/`) | blocos `<!-- azure-devops -->`, `<!-- org-pack -->` (quando o cliente tiver pack — IMP-105), `<!-- projeto-padrao -->`, `<!-- rdd-pack-accumulation -->` + Índice de Referências lazy (`rules/`, IMP-048) | ❌ gitignored — nasce do `AGENTS.template.md` versionado (IMP-105) |
 | `opencode.jsonc` (`~/.config/opencode/`) | `permission.external_directory` + `agent.rdd-dev-*.permission` (overrides de path) | ❌ gitignored |
 | `rules/client-profile.md` (`rules/`) | defaults do cliente (org Azure, projeto, repos, usuário, diretório de projetos — IMP-103) | ❌ gitignore explícito (dado de cliente nunca versionado) |
 | `.secrets/` (`~/.config/opencode/.secrets/`) | credenciais (APM Keys, PATs, tokens) referenciadas via `{file:...}` | ❌ gitignored |
@@ -73,7 +74,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `edit`/`write` (editar os 2 artefatos locais)
   rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 - `bash` (validação de ambiente conforme o perfil de adoção: core-only valida só gh/git; completo valida Test-Path, java -version, mvn -version, node -v)
-- `skill` (delegar rdd-azure-setup / rdd-gh-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
+- `skill` (delegar rdd-azure-setup / rdd-gh-setup / rdd-aws-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 
 ## Modo de erro
 
@@ -96,7 +97,7 @@ de cada um antes de prosseguir. O usuário pode **pular** qualquer passo
 opcional, mas nunca executar dois passos em paralelo.
 
 ```
-Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
+Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 5c (AWS) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
     ↓          ↓           ↓           ↓                ↓              ↓
  [define]   [pular]     [pular]     [pular]          [pular]        [pular]
 ```
@@ -113,7 +114,7 @@ Uma única `question`: **"Qual o perfil de adoção?"** com duas opções:
   `<não configurado — core-only>`. **Passos pulados**: 4 (Azure), 5 (PIA) e
   validações de stack do Passo 7 — marcados "não aplicável" no relatório.
   **Passos mantidos**: 1, 2, 2b (apenas usuário + diretório + org_github),
-  3, 5b (gh, opcional), 6, 6b (Packs), 6c (hardening), 7.
+  3, 5b (gh, opcional), 5c (AWS, opcional), 6, 6b (Packs), 6c (hardening), 7.
 - **Completo** — fluxo integral (tracker Azure, infra, packs, validações).
 
 O modo é registrado no relatório final e no perfil (campo `modo` no
@@ -175,12 +176,12 @@ GitHub) leem o perfil em vez de hardcode.
      (versionado, neutro) para `AGENTS.md` e preencha os placeholders
      `<preenchido pelo rdd-setup>` com os valores do
      `rules/client-profile.md` (tracker, diretório de projetos,
-     `repo_docs_rdd`).
+     pack do acúmulo).
    - Bloco `<!-- org-pack -->`: preencha SOMENTE se o perfil do cliente
      tiver pack de organização (ex.: Acme → `rules/<pack-da-organizacao>.md`);
      cliente sem pack → mantenha o placeholder do template.
    - Se `AGENTS.md` já existe: apenas sincronize os blocos marcadores
-     (`<!-- projeto-padrao -->`, `<!-- rdd-docs-repo -->`, azure/org-pack)
+     (`<!-- projeto-padrao -->`, `<!-- rdd-pack-accumulation -->`, azure/org-pack)
      com o perfil (se já existe com valor igual, pule — idempotente; com
      valor diferente, confirme a troca antes).
 2. **AGENTS.md — índice lazy (IMP-048):** se a seção "Índice de
@@ -227,6 +228,18 @@ Se `gh auth status` falhar (ou `gh --version` ausente) → pergunte:
 - **Sim** → carregue `rdd-gh-setup` e **aguarde** a conclusão completa
   antes de prosseguir para o Passo 6.
 - **Pular** → registre como pendência no relatório e siga para o Passo 6.
+
+### Passo 5c — AWS (síncrono, opcional)
+
+Se a AWS CLI estiver ausente (`aws --version` falhar — fallback de path
+padrão `C:\Program Files\Amazon\AWSCLIV2\aws.exe`) ou nenhum perfil
+estiver configurado (`aws configure list-profiles` sem perfis) → pergunte:
+"Deseja configurar o acesso AWS agora?"
+
+- **Sim** → carregue `rdd-aws-setup` e **aguarde** a conclusão completa
+  antes de prosseguir para o Passo 6.
+- **Pular** → registre como pendência opcional no relatório e siga para
+  o Passo 6.
 
 ### Passo 6 — Validar ambiente
 
@@ -299,6 +312,7 @@ Instala o hook de neutralidade no core (bloqueia push de dado de cliente):
 ✅ Azure: completo | ⚠️ Configure via rdd-azure-setup
 ✅ PIA: configurado | ℹ️ Pendência opcional: rdd-pia-connect-setup
 ✅ GitHub (gh): autenticado | ⚠️ Pendência: rdd-gh-setup
+✅ AWS: configurado | ℹ️ Pendência opcional: rdd-aws-setup
 ✅ Packs: <N> instalado(s), pin em .rdd/sources.yaml | ℹ️ Sem `packs:` no perfil
 ✅ Hardening: hooks de neutralidade ativos | ⚠️ Pendência opcional: pre-push hook (IMP-110)
 
@@ -323,6 +337,9 @@ Próximo passo sugerido: @rdd-next no módulo em que vai trabalhar.
 - **`gh` ausente ou desautenticada:** não bloqueia o setup — registre
   pendência `rdd-gh-setup` no relatório; sem ela, `rdd-gh-issue-creator`/
   `rdd-gh-pr-creator` abortam na pré-condição.
+- **AWS CLI ausente ou sem perfil configurado:** não bloqueia o setup —
+  registre pendência `rdd-aws-setup` no relatório; sem ela, usos AWS
+  (infra/auditoria) orientam o wizard dedicado.
 - **Sem repos clonados:** normal em máquina nova; reporte os comandos
   `git clone` do REPOSITORIES.md e marque ⚠️.
 - **opencode.jsonc malformado (parse quebra após edição):** reverta a

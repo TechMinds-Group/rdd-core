@@ -5,6 +5,9 @@
 **Projetos que usaram:** CONTATOS (27/09/2026)
 **Stacks aplicáveis:** all
 **Maturidade:** novo
+**Última revisão:** 2026-09-27
+**Status:** ativo
+**Superado por:** —
 **Evidência:** Retrospectiva CONTATOS — `docs/projects/CONTATOS/RETROSPECTIVE.md`
 
 ## Cenário

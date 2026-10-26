@@ -70,6 +70,24 @@ resolvido via `packs:` do client-profile — IMP-111. Skills de negócio NUNCA
 gravam em ~/.config/opencode/.
 <!-- /rdd-pack-accumulation -->
 
+<!-- knowledge-routing -->
+Gatilho (P-01): aplicar este bloco apenas AO decidir onde gravar/consumir conhecimento novo OU ao fundar base de domínio (rdd-domain-research). Fora disso, ignore.
+
+### Roteamento de conhecimento novo (decidir na ordem)
+| # | Pergunta | Destino (tipo) | Escritor canônico |
+|---|----------|----------------|-------------------|
+| 1 | Padrão técnico cross-domínio que fundamenta componentes? | T1 `knowledge/<domínio>/` | rdd-domain-research |
+| 2 | Lição/métrica de projeto concluído da org? | T2 `packs/<pack>/accumulation/` | rdd-pattern-extractor · rdd-metrics-collector · rdd-reverse-orchestrator |
+| 3 | Config/contrato com gatilho de leitura claro? | T3 `rules/*.md` + índice lazy deste AGENTS.md | rdd-setup · packs |
+| 4 | Verdade sobre um produto específico? | T4 `<REPO_DOCS>/<Produto>/` (specs/, support/, glossaries/, quality/) | skills RDD do módulo |
+| 5 | Sobre o próprio workflow? | T5 registry.yaml · ARCHITECTURE.md · WORKFLOW_IMPROVEMENTS.md · evals/ | builder · improver · eval |
+
+- Nuance da org sobre domínio genérico → T2 `accumulation/knowledge/<dominio>-nuances.md` (nunca no core).
+
+### ROTA, NÃO REPLIQUE (P-04/AP-01)
+Este bloco é roteiro curto — cada tipo tem SEU índice: `knowledge/INDEX.md` (T1) · `packs/<pack>/accumulation/patterns/INDEX.md` (T2) · índice lazy de rules/ (T3, abaixo) · `INDEX.md` do módulo (T4 — IMP-011) · registry.yaml (T5). NUNCA criar meta-índice central nem copiar conteúdo entre stores.
+<!-- /knowledge-routing -->
+
 ## Índice de Referências — lazy loading
 CRITICAL: os arquivos abaixo NÃO são carregados automaticamente. Leia com o Read tool APENAS quando a tarefa atual exigir — nunca preventivamente. Quando lidos, trate como instruções obrigatórias que sobrescrevem defaults.
 
@@ -79,3 +97,5 @@ CRITICAL: os arquivos abaixo NÃO são carregados automaticamente. Leia com o Re
 - `rules/stack-templates.yaml` — Registry de boilerplates RDD por stack (.NET, React, Angular, Rust, Java). A org vem de `boilerplate_org` no client-profile. Carregado pelo rdd-stack-boilerplate antes de scaffold de novo projeto; editar para adicionar/atualizar templates e recomendar o PR no .config do workflow.
 - `rules/client-profile.md` — ANTES de qualquer operação Azure DevOps/tracker/GitHub org/deploy (org, projeto, repos, usuário, registry, DNS, canal — IMP-103/IMP-105). Gravado pelo rdd-setup; nunca versionado — template em `rules/client-profile.template.md`.
 - `packs/<pack-ativo>/accumulation/patterns/INDEX.md` (bloco `rdd-pack-accumulation` acima; pack ativo resolvido via `packs:` do client-profile) — AO levantar/desenhar/implementar feature de domínio já tratado em outro produto ou cenário recorrente (pattern library: processo/arquitetura/codigo/ui/teste/dados).
+- bloco `<!-- knowledge-routing -->` (neste arquivo) + `knowledge/INDEX.md` — AO decidir onde gravar/consumir conhecimento novo ou ao fundar base de domínio (rdd-domain-research).
+- skill `rdd-knowledge-auditor` — AO pedir auditoria de consumo de conhecimento, hit rate ou custo de tokens de conhecimento.

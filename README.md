@@ -116,6 +116,7 @@ seções manualmente. O campo `version` do registry é o schema do manifesto;
 conteúdo é versionado pelo git.
 
 Documentação neste repo: `PACK_SCHEMA.md` (contrato de packs),
+`MIGRATION.md` (migração da abordagem antiga para o open core),
 `BREAKING-CHANGES.md`, `CONTRIBUTING.md` (DCO + checklist de anonimização),
 `PUBLISH.md` (processo de release).
 

@@ -28,8 +28,9 @@ e o tracker de métricas.
 - `docs/projects/<nome>/RETROSPECTIVE.md` — documento da retrospectiva
 - Invoca `rdd-pattern-extractor` — extrai padrões automaticamente
 - Invoca `rdd-metrics-collector` — acumula métricas
-- Paths `_docs/patterns/` e `_docs/METRICS.md` = repo de docs do produto
-  (`repo_docs_rdd` no AGENTS.md — IMP-061); resolução feita pelas skills invocadas
+- Paths de patterns e METRICS = acúmulo do pack ativo
+  (`packs/<pack-ativo>/accumulation/` — bloco `rdd-pack-accumulation` do
+  AGENTS.md — IMP-061/IMP-112); resolução feita pelas skills invocadas
 
 ## Nunca edita
 

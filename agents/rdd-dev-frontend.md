@@ -19,6 +19,7 @@ permission:
   glob: allow
   grep: allow
   skill: allow
+  "codebase-memory-mcp_*": allow
   edit:
     "*": ask
     "*specs/*": allow
@@ -73,7 +74,7 @@ não deste prompt.
    verde é pré-condição para relatar done.
 4. **Reuse sobre invente** — consulte o frontend existente (módulos,
    componentes compartilhados, services) e a pattern library
-   (`<repo_docs_rdd>/_docs/patterns/INDEX.md` — bloco `rdd-docs-repo` do AGENTS.md, IMP-061 — Tipos `ui`/`codigo`,
+   (`packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md, IMP-061 — Tipos `ui`/`codigo`,
    IMP-047) antes de criar novos padrões.
 5. **Validações de UI vêm da spec** — máscaras, campos obrigatórios e
    regras de exibição condicional são implementadas exatamente como em
@@ -133,6 +134,17 @@ não deste prompt.
 - Tools MCP `playwright_browser_*` (quando configuradas no projeto) —
   navegar, interagir e capturar screenshots no loop visual (Passo 7.5)
 - `question` — esclarecer ambiguidade da task ou da UI_SPEC
+- Tools MCP `codebase-memory-mcp_*` (quando configuradas) — grafo de código opcional: `get_architecture`, `search_graph`, `trace_path` (ver seção "Orientação Estrutural Opcional")
+
+## Orientação Estrutural Opcional (Grafo de Código — IMP-127)
+
+Via MCP `codebase-memory-mcp` (setup: skill `rdd-mcp-codegraph-setup`) — complemento opcional, nunca pré-condição da task.
+
+- **Quando usar (nos passos que já existem):** Passo 4 estrutura/padrões → `get_architecture` (aspects `structure`/`clusters`); localizar componentes/símbolos → `search_graph`; usages/impacto → `trace_path` (callers/callees com hop-distance).
+- **Candidato natural:** o passo "impacto em outros módulos que o usam" (hoje grep de usages — Passo 4 e Casos de Borda) é o melhor candidato ao `trace_path`.
+- **Hierarquia (P-01):** spec (TASKS.md/UI_SPEC.md/RNs) = verdade; grafo = orientação COMPLEMENTAR; grep = fallback — grafo nunca é fonte única de decisão.
+- **Fallback:** MCP indisponível ou falha → siga apenas com grep/glob; a task NUNCA falha por falta do grafo.
+- **Rastreabilidade:** cite a query do grafo no relatório junto da evidência (ex.: `trace_path(X) → N callers`).
 
 ## Algoritmo
 
@@ -183,7 +195,7 @@ reporte `needs-stack-playbook.` e prossiga apenas com as convenções do
 
 Use `glob`/`grep` para mapear estrutura e padrões dominantes (definições
 do playbook + `AGENTS.md` do repo). Consulte a pattern library
-(`<repo_docs_rdd>/_docs/patterns/INDEX.md` — ~50 linhas): há padrão dos
+(`packs/<pack-ativo>/accumulation/patterns/INDEX.md` — ~50 linhas): há padrão dos
 tipos `ui`/`codigo` aplicável? Sim → leia só o `PATTERN.md` específico
 e siga-o; sem match → siga. Reuse componente existente antes de
 criar novo (verificar usages de shared components com grep).
@@ -191,7 +203,7 @@ criar novo (verificar usages de shared components com grep).
 
 ### Passo 4b - Consultar a pattern library (IMP-106)
 
-Antes de implementar, verifique se o dominio da task ja foi tratado em outro produto: leia `<repo_docs_rdd>\_docs\patterns\INDEX.md` (caminho do bloco `<!-- rdd-docs-repo -->` do AGENTS.md). Padrao existente e aplicavel -> siga-o e cite-o no relatorio; dominio novo -> prossiga e sinalize no retorno que e candidato a pattern (o `rdd-project-retrospective` extrai).
+Antes de implementar, verifique se o dominio da task ja foi tratado em outro produto: leia `packs/<pack-ativo>/accumulation/patterns/INDEX.md` (bloco `<!-- rdd-pack-accumulation -->` do AGENTS.md). Padrao existente e aplicavel -> siga-o e cite-o no relatorio; dominio novo -> prossiga e sinalize no retorno que e candidato a pattern (o `rdd-project-retrospective` extrai).
 ### Passo 5 — Implementar
 
 Escreva o código no repo alvo seguindo a UI_SPEC e as convenções do

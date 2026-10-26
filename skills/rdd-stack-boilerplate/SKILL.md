@@ -78,7 +78,7 @@ Boilerplate não encontrado ou repo privado sem acesso → orientar fallback a s
    ```
 
    O nome do projeto (`<ProjectName>`) é derivado do nome do repo alvo:
-   - Se o repo termina com `-API`, `-API` é extraído (ex.: `Lumen-API` → `Lumen`)
+   - Se o repo termina com `-API`, `-API` é extraído (ex.: `Candela-API` → `Candela`)
    - Caso contrário, usa o nome completo do repo.
    - Pergunte via `question` se a derivação não for clara.
 
@@ -105,10 +105,10 @@ Boilerplate não encontrado ou repo privado sem acesso → orientar fallback a s
 ```
 ═══ rdd-stack-boilerplate — .NET ═══
 Boilerplate: <boilerplate_org do perfil>/Boilerplate.NET-API (ex.: Acme-Group/Boilerplate.NET-API)
-Rename: <ProjectName> (Lumen)
+Rename: <ProjectName> (Candela)
 Steps executados:
   - git clone --depth 1
-  - rename-project.ps1 Lumen
+  - rename-project.ps1 Candela
   - Copiado para repo alvo
   - .env criado a partir de .env.example
   - dotnet restore (OK)
@@ -132,4 +132,4 @@ Pendências pós-setup:
 - **rename-project.ps1 falha:** reporte erro e pare; o conteúdo bruto do boilerplate fica no diretório, e o operador pode renomear manualmente.
 - **Multi-stack detectada (ex.: `*.csproj` + `angular.json` no mesmo repo):** pergunte via `question` qual stack usar.
 - **Stack sem boilerplate no registry:** reporte e encerre; não falhe (o executor faz scaffold genérico).
-- **Projeto sem nome claro (ex.: repo `Lumen` sem sufixo):** pergunte o nome do projeto para o rename. O nome do projeto .NET (solution name) pode ser diferente do nome do repo.
+- **Projeto sem nome claro (ex.: repo `Candela` sem sufixo):** pergunte o nome do projeto para o rename. O nome do projeto .NET (solution name) pode ser diferente do nome do repo.

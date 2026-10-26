@@ -7,7 +7,7 @@ description: >
   docs/patterns/dados/telefone-normalizado/PATTERN.md e
   docs/patterns/dados/remocao-explicita/PATTERN.md no template completo
   (Categoria, Tipo, Evidência, Cenário, Maturidade novo = 1 projeto) e
-  atualizar o INDEX.md com colunas Tipo/Maturidade e seções Por Tipo,
+  atualizar o INDEX.md com colunas Tipo/Maturidade, data_ultima_revisao, status (ativo|superado — P-05/MP-13) e nota de staleness (idade = gatilho de revisão), nas seções Por Tipo,
   preservando autenticacao-jwt (merge incremental).
 inputs_required: ["docs/projects/CONTATOS/RETROSPECTIVE.md", "docs/patterns/INDEX.md"]
 
@@ -61,12 +61,22 @@ checks:
 
   - type: contains
     path: "docs/patterns/INDEX.md"
-    pattern: "Maturidade"
+    pattern: "data_ultima_revisao"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "status"
     severity: error
 
   - type: contains
     path: "docs/patterns/INDEX.md"
     pattern: "### Dados"
+    severity: error
+
+  - type: contains
+    path: "docs/patterns/INDEX.md"
+    pattern: "Maturidade"
     severity: error
 
   - type: contains

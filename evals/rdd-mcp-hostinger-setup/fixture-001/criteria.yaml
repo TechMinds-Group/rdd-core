@@ -1,0 +1,53 @@
+---
+name: "MCP Hostinger — server remoto global via OAuth, zero token em arquivo"
+description: >
+  Operador pede a configuração do MCP oficial da Hostinger. A skill deve
+  instalar o server remote (https://mcp.hostinger.com) no escopo global via
+  CLI (mcp.servers.hostinger — formato V2), orientar o sign-in OAuth pelo TUI
+  /mcps e validar com smoke test billing — SEM escrever nenhum token ou
+  credencial em arquivo e SEM tocar nos outros servers do config.
+inputs_required: ["README.md", "opencode.jsonc"]
+
+checks:
+  - type: file_exists
+    path: "opencode.jsonc"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "hostinger"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "https://mcp.hostinger.com"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "remote"
+    severity: error
+
+  - type: contains
+    path: "opencode.jsonc"
+    pattern: "azure-devops"
+    severity: error
+
+  - type: not_contains
+    path: "opencode.jsonc"
+    pattern: "HOSTINGER_API_TOKEN"
+    severity: error
+
+  - type: not_contains
+    path: "opencode.jsonc"
+    pattern: "api_token"
+    severity: error
+
+  - type: file_exists
+    path: "AGENTS.md"
+    severity: error
+
+  - type: section_exists
+    path: "AGENTS.md"
+    section: "<!-- hostinger-mcp -->"
+    severity: error

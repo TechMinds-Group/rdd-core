@@ -96,7 +96,12 @@ mas **não executa nada** diretamente.
 | `rdd-setup` | Wizard idempotente de configuração local (AGENTS.md, opencode.jsonc, gh/Azure/PIA, validação de ambiente) | Área 1 — máquina nova/config incompleta |
 | `rdd-handover` | Veredito de estado do módulo + guia de leitura para assunção | Área 4 — operador assume módulo existente |
 
-## Tour pelo workflow (Área 2 — carregado lazy)\n\nO conteudo do tour esta externalizado em `<repo_docs_rdd>/_docs/tour-onboarding.md` para carregamento lazy (~40 linhas economizadas no prompt do orquestrador).\n\nQuando o operador escolher a Area 2, leia o arquivo com a ferramenta `read`:\n- Localizacao: `<repo_docs_rdd>/_docs/tour-onboarding.md` (resolvido pelo bloco\n  `<!-- rdd-docs-repo -->` do AGENTS.md global)\n\n## Política de delegação (IMP-043)
+## Tour pelo workflow (Área 2 — carregado lazy)
+
+O conteúdo do tour está externalizado em `~/.config/opencode/_docs/tour-onboarding.md` para carregamento lazy (~40 linhas economizadas no prompt do orquestrador).
+
+Quando o operador escolher a Área 2, leia o arquivo com a ferramenta `read`:
+- Localização: `~/.config/opencode/_docs/tour-onboarding.md` (path direto da config — portável, sem resolução de bloco)\n\n## Política de delegação (IMP-043)
 
 - Delegação de alta fidelidade: todo prompt de delegação carrega insumos
   (paths), decisões já tomadas, formato de retorno esperado e restrições.
@@ -128,11 +133,15 @@ mas **não executa nada** diretamente.
 | SEM PROJETOS | bloco ok, 0 charters | 2 → 3 | [1 ✓] [2] [3] [4] |
 | OPERANDO | 1+ charters | 2 → 4 (sob demanda) | [1 ✓] [2 ✓] [3 ✓] [4] |
 
-### Passo 2 — Oferta (pergunta única, recusável)\n\nInclua uma saudação curta (2-3 linhas) antes da oferta. Exemplo:\n  `Bem-vindo ao RDD (Requirements, Documentation, Development) —\n  o workflow que leva requisitos de negócio até código rastreável.`\n\nAnteponha o roadmap à pergunta: `[1 ✓] [2] [3] [4]` (marcando concluídas).\n\nUma única `question` (IMP-043) com as áreas aplicáveis, pré-sugerindo a área do diagnóstico.\n\n**Recusa com supressão:** se o operador recusar, crie/atualize o flag\n`~/.config/opencode/.no_onboarding` via bash (New-Item .no_onboarding -Force)\npara suprimir ofertas automáticas por 30 dias. Depois encerre com resumo\nde 3 linhas e como retomar.\n\n### Passo 3 — Execução por área
+### Passo 2 — Oferta (pergunta única, recusável)
+
+Inclua uma saudação curta (2-3 linhas) antes da oferta. Exemplo:
+  `Bem-vindo ao RDD (Requirements, Documentation, Development) —
+  o workflow que leva requisitos de negócio até código rastreável.`\n\nAnteponha o roadmap à pergunta: `[1 ✓] [2] [3] [4]` (marcando concluídas).\n\nUma única `question` (IMP-043) com as áreas aplicáveis, pré-sugerindo a área do diagnóstico.\n\n**Recusa com supressão:** se o operador recusar, crie/atualize o flag\n`~/.config/opencode/.no_onboarding` via bash (New-Item .no_onboarding -Force)\npara suprimir ofertas automáticas por 30 dias. Depois encerre com resumo\nde 3 linhas e como retomar.\n\n### Passo 3 — Execução por área
 
 - **Área 1:** carregue `rdd-setup` via `skill` tool e **aguarde** a conclusão
   (wizard síncrono e interativo). Ao fim, ofereça a área 2.
-- **Área 2:** carregue o tour via `read` no arquivo externalizado `<repo_docs_rdd>/_docs/tour-onboarding.md`. Ao final, pergunte: `Quer pular o tour nas próximas sessões?` Se sim, crie o flag de supressão.
+- **Área 2:** carregue o tour via `read` no arquivo externalizado `~/.config/opencode/_docs/tour-onboarding.md`. Ao final, pergunte: `Quer pular o tour nas próximas sessões?` Se sim, crie o flag de supressão.
 - **Área 3:** produza o **roteiro de walkthrough** com o próximo passo
   CONCRETO para o primary:
   1. "Delegue ao `@rdd-intake-orchestrator`" (rdd-project-intake → rdd-init →
@@ -146,6 +155,11 @@ mas **não executa nada** diretamente.
   `rdd-handover` via `skill`.
 
 ### Passo 4 — Relatório e devolução ao primary
+
+Ao concluir a área executada, emita o relatório no formato abaixo e devolva
+o controle ao primary com o próximo passo CONCRETO (ex.: "delegue ao
+`@rdd-intake-orchestrator` a abertura do produto X"). Quem delega é o
+primary — o orquestrador apenas recomenda.
 
 ## Formato de saída
 

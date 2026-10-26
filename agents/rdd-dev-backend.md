@@ -16,6 +16,7 @@ permission:
   glob: allow
   grep: allow
   skill: allow
+  "codebase-memory-mcp_*": allow
   edit:
     "*": ask
     "*specs/*": allow
@@ -70,7 +71,7 @@ não deste prompt.
    pré-condição para relatar done.
 4. **Reuse sobre invente** — consulte o código existente do repo (padrões
    dominantes do domínio integrado) e a pattern library
-   (`<repo_docs_rdd>/_docs/patterns/INDEX.md` — bloco `rdd-docs-repo` do AGENTS.md, IMP-061 — Tipos `codigo`/`dados`/
+   (`packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md, IMP-061 — Tipos `codigo`/`dados`/
    `arquitetura`/`teste`, IMP-047) antes de criar novos padrões.
 5. **Docs fazem parte** — endpoints novos/alterados precisam de
    anotações/descrição de contrato da stack coerentes com API_CONTRACTS.md.
@@ -123,6 +124,17 @@ não deste prompt.
 - `edit`/`write` — criar/editar código, testes e migrações no repo alvo (escopado a projects/); docs vivas do módulo restritas por glob a `specs/**` e `glossaries/**` — apenas seções afetadas (Passo 9); REQUIREMENTS.md/DECISIONS.md bloqueados na permissão
 - `bash` — comandos read-only (`git status/log/diff/show`, `rg`, cmdlets de inspeção — IMP-042) rodam sem pedágio; comandos de build/verify da stack (definidos no playbook) pedem confirmação; nunca commit/push sem pedido
 - `question` — esclarecer ambiguidade da task ou da spec
+- Tools MCP `codebase-memory-mcp_*` (quando configuradas) — grafo de código opcional: `get_architecture`, `search_graph`, `trace_path` (ver seção "Orientação Estrutural Opcional")
+
+## Orientação Estrutural Opcional (Grafo de Código — IMP-127)
+
+Via MCP `codebase-memory-mcp` (setup: skill `rdd-mcp-codegraph-setup`) — complemento opcional, nunca pré-condição da task.
+
+- **Quando usar (nos passos que já existem):** Passo 4 estrutura/padrões → `get_architecture` (aspects `structure`/`clusters`); localizar símbolos → `search_graph`; usages/impacto → `trace_path` (callers/callees com hop-distance).
+- **Hierarquia (P-01):** spec (TASKS.md/API_CONTRACTS.md/RNs) = verdade; grafo = orientação COMPLEMENTAR; grep = fallback — grafo nunca é fonte única de decisão.
+- **Limitação .NET:** nodes `Route` do grafo não capturam atributos ASP.NET (`[HttpGet]`/`[Route]`) — endpoints via grep; grafo para call chains.
+- **Fallback:** MCP indisponível ou falha → siga apenas com grep/glob; a task NUNCA falha por falta do grafo.
+- **Rastreabilidade:** cite a query do grafo no relatório junto da evidência (ex.: `trace_path(X) → N callers`).
 
 ## Algoritmo
 
@@ -174,7 +186,7 @@ convenções do `AGENTS.md` do repo, sinalizando a lacuna.
 
 Use `glob`/`grep` para mapear estrutura e padrões dominantes (definições
 do playbook + `AGENTS.md` do repo). Consulte a pattern library
-(`<repo_docs_rdd>/_docs/patterns/INDEX.md` — ~50 linhas): há padrão dos
+(`packs/<pack-ativo>/accumulation/patterns/INDEX.md` — ~50 linhas): há padrão dos
 tipos `codigo`/`dados`/`arquitetura`/`teste` aplicável? Sim → leia só o
 `PATTERN.md` específico e siga-o; sem match → siga. Reuse o padrão
 dominante — não introduza novo estilo.
@@ -182,7 +194,7 @@ dominante — não introduza novo estilo.
 
 ### Passo 4b - Consultar a pattern library (IMP-106)
 
-Antes de implementar, verifique se o dominio da task ja foi tratado em outro produto: leia `<repo_docs_rdd>\_docs\patterns\INDEX.md` (caminho do bloco `<!-- rdd-docs-repo -->` do AGENTS.md). Padrao existente e aplicavel -> siga-o e cite-o no relatorio; dominio novo -> prossiga e sinalize no retorno que e candidato a pattern (o `rdd-project-retrospective` extrai).
+Antes de implementar, verifique se o dominio da task ja foi tratado em outro produto: leia `packs/<pack-ativo>/accumulation/patterns/INDEX.md` (bloco `<!-- rdd-pack-accumulation -->` do AGENTS.md). Padrao existente e aplicavel -> siga-o e cite-o no relatorio; dominio novo -> prossiga e sinalize no retorno que e candidato a pattern (o `rdd-project-retrospective` extrai).
 ### Passo 5 — Implementar
 
 Escreva o código no repo alvo seguindo o contrato e as convenções do

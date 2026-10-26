@@ -120,7 +120,7 @@ DECISIONS.md, CHANGELOG.md, INDEX.md
 2. `glob` por artefatos mapeados na raiz dos módulos (ex:
    `<modulo>/<projeto>/DATA_MODEL.md`) → se existirem, **modo IMP-011**
 3. `glob` por pares de pastas com sufixo de camada (ex: `Salon-API/` e
-   `Salon-FE/`, ou `ZUMM.Motorista-FE/` e `ZUMM.Passageiro-FE/`) → se
+   `Salon-FE/`, ou `Mobilis.Motorista-FE/` e `Mobilis.Passageiro-FE/`) → se
    existirem, **modo merge** (unificar em pasta de produto)
 4. `glob` recursivo por `delivery/**/RN-NNN*/RN-NNN — Analise-Funcional.md`
    (pastas legado IMP-040) sem par no formato vigente (`analysis/RN-NNN*/` + `— Feature.md` +

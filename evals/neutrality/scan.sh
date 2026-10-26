@@ -36,7 +36,8 @@ cd "$REPO_ROOT"
 
 # Wordlist de neutralidade (ERE, case-insensitive): org, clientes, produtos e
 # identificadores que NÃO podem vazar para o open core.
-WORDLIST='techminds|procergs|rpg[-_ ]?maker|TM\.RDD\.DOCS|groom|\bPOL\.[0-9]|\bSDA\.[0-9]|\bsda-'
+# IMP-133: produtos reais da org adicionados (antes só org + 2 clientes/produtos).
+WORDLIST='techminds|procergs|rpg[-_ ]?maker|TM\.RDD\.DOCS|groom|\bPOL\.[0-9]|\bSDA\.[0-9]|\bsda-|vibecut|zumm|lumen|fasto|escola[-_ ]?conectada|assistente[-_ ]?ponto|lord[-_ ]?of[-_ ]?mysteries'
 
 LIST="$(mktemp)"
 trap 'rm -f "$LIST"' EXIT

@@ -1,0 +1,17 @@
+{
+  // OpenCode config — hostinger adicionado via: opencode mcp add hostinger --global --url https://mcp.hostinger.com
+  "mcp": {
+    "azure-devops": {
+      "type": "local",
+      "command": ["npx", "-y", "@azure-devops/mcp"],
+      "enabled": true
+    },
+    "servers": {
+      "hostinger": {
+        "type": "remote",
+        "url": "https://mcp.hostinger.com",
+        "enabled": true
+      }
+    }
+  }
+}

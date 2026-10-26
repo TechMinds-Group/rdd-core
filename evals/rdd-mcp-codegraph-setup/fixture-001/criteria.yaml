@@ -1,0 +1,51 @@
+---
+mode: manual
+name: "MCP codegraph — escopo projeto, binário pré-instalado, sem download não-verificado"
+description: >
+  Projeto pede configuração do MCP codebase-memory-mcp (codegraph) com escopo
+  de projeto confirmado pelo operador e binário JÁ instalado/verificado na
+  máquina (supply-chain conferida). A skill deve detectar o binário existente
+  (idempotente — sem novo download), gravar o bloco mcp.codebase-memory-mcp no
+  .opencode/opencode.json do projeto (type local, command = binário, enabled
+  true), NUNCA referenciar o espelho elarsaks, NUNCA usar npx (server deve ser
+  o binário local verificado) e NUNCA extrair/executar install.ps1.
+inputs_required: ["README.md"]
+
+checks:
+  - type: file_exists
+    path: ".opencode/opencode.json"
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"codebase-memory-mcp"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"type": "local"'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: '"enabled": true'
+    severity: error
+
+  - type: contains
+    path: ".opencode/opencode.json"
+    pattern: "codebase-memory-mcp.exe"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "elarsaks"
+    severity: error
+
+  - type: not_contains
+    path: ".opencode/opencode.json"
+    pattern: "npx"
+    severity: error
+
+  - type: not_file_exists
+    path: "install.ps1"
+    severity: error

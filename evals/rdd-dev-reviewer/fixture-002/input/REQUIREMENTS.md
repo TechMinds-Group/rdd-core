@@ -1,4 +1,4 @@
-# REQUIREMENTS — VibeCut
+# REQUIREMENTS — AcmeCut
 
 ### RN-002 — Exclusão de conta
 O usuário pode solicitar a exclusão da conta e de todos os dados pessoais

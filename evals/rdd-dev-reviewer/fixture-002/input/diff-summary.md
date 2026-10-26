@@ -1,6 +1,6 @@
 # Diff da task (fixture rdd-dev-reviewer — eixo compliance IMP-102)
 
-- **Repo:** VibeCut-APP — diff main...feature/rn-002-exclusao-conta (4 arquivos)
+- **Repo:** AcmeCut-APP — diff main...feature/rn-002-exclusao-conta (4 arquivos)
 - **Task:** RN-002-1 — Exclusão de conta
 - **RNs em escopo:** RN-002
 - **Charter:** compliance: true — specs/COMPLIANCE.md presente

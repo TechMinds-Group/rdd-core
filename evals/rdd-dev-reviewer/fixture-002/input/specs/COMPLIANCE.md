@@ -1,4 +1,4 @@
-# Compliance LGPD — VibeCut
+# Compliance LGPD — AcmeCut
 
 ## 6. Direitos do titular (Art. 18)
 

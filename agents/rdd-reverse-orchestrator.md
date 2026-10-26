@@ -12,6 +12,7 @@ permission:
   glob: allow
   grep: allow
   skill: allow
+  "codebase-memory-mcp_*": allow
   edit: deny
   write:
     "**/packs/<pack-ativo>/accumulation/reverses/REVERSE_REPORT_*.md": allow
@@ -81,6 +82,10 @@ oficiais sem sobrecarregar a sessão principal.
      seção de arquitetura — para rastreabilidade mesmo após o código avançar.
    - Se uma regra for deduzida sem evidência explícita em código ou schema,
      é PROIBIDO cravá-la como fato — classifique-a como pendência `PEND-XXX (Dúvida)`.
+   - **Verificação mecânica obrigatória (KNOWLEDGE.md P-03/AP-02):** antes de entregar,
+     TODAS as citações do relatório são checadas ferramenta a ferramenta (`read`/`grep`/`glob` —
+     ver "Verificação Final de Citações" no protocolo). Citação inválida é corrigida ou a
+     regra associada é rebaixada a `PEND-XXX (Dúvida)` — nunca se entrega citação quebrada.
 4. **DDD Pragmático (Filtro Estrutural):**
    - **Bounded Contexts:** Agrupe as descobertas pelos contextos delimitados do produto
      (ex.: se o produto tem Motorista e Passageiro, separe os dados e rotas por contexto).
@@ -129,12 +134,40 @@ oficiais sem sobrecarregar a sessão principal.
    - **Só sinalize** — não opine sobre tratamento, base legal, anonimização ou
      conformidade. A triagem cabe ao `rdd-req`/cliente depois.
 
+## Ferramenta Estrutural Opcional (Grafo de Código)
+
+Habilitada pela skill `rdd-mcp-codegraph-setup` (MCP `codebase-memory-mcp`) — o
+grafo de código NUNCA é pré-condição da análise.
+
+- **Quando usar:** após a mineração grep/glob de cada fatia, apenas para queries
+  estruturais que grep não resolve:
+  - call chains / propagação multi-arquivo → `trace_path`;
+  - clusters e boundaries de BCs (fan-in/fan-out real) → `get_architecture`
+    (aspects `clusters`/`boundaries`/`layers`);
+  - busca de símbolos por padrão em grande volume → `search_graph`.
+- **Hierarquia obrigatória (P-01):** a matriz de grep por stack (Princípio 2) é
+  FONTE PRIMÁRIA — especialmente a Fatia 3 (endpoints: nodes `Route` do grafo
+  não capturam atributos ASP.NET `[HttpGet]`/`[Route]`). O grafo é COMPLEMENTO
+  determinístico para validar/ampliar achados — nunca fonte única de uma
+  seção do relatório.
+- **MCP indisponível** (server não configurado, tool falha, binário ausente):
+  prossiga só com grep/glob — a análise NUNCA falha por falta do grafo;
+  registre em 1 linha na seção 1: `Grafo de código: indisponível — análise apenas com grep/glob`.
+- **Checkpoint de rastreabilidade:** ao usar o grafo, cite a query junto da
+  evidência (ex.: `trace_path(TelefonesCorrespondem) → 47 callers`) — a âncora
+  continua sendo `[arquivo:linha @hash]` verificável (Princípio 3).
+
 ## Lê (Upstream)
 
 - Código-fonte dos repositórios locais informados no prompt (via `glob`, `grep`, `read`).
 - Migrations de banco de dados, DDLs, schemas SQL.
 - Arquivos de configuração de entidades e mapeamentos ORM (EF Core, JPA/Panache, SQLx, etc.).
 - Playbooks de stack em `~/.config/opencode/skills/rdd-stack-*` para consultar comandos e padrões.
+- **Base de conhecimento do domínio:** `~/.config/opencode/knowledge/reverse-engineering/KNOWLEDGE.md`
+  (v1.1.0 — princípios P-01..P-09, anti-patterns AP-01..AP-07, checklist do domínio
+  e ferramenta validada codebase-memory-mcp;
+  critérios de ancoragem, verificação mecânica de citações, completude, autoverificação
+  em cadeia e sumarização hierárquica aplicados nesta análise).
 - **Modo delta (quando fornecido pelo `rdd-doc`):** relatório de engenharia reversa anterior,
   hashes de commit antigos e (opcionalmente) listas de arquivos alterados por repo.
 - **Checkpoint de retomada (se existir):** `packs/<pack-ativo>/accumulation/reverses/REVERSE_STATE.md`
@@ -171,7 +204,16 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
 - **Fixe a stack ANTES de mineração** e selecione a matriz de padrões correspondente
   (Princípio 2). Carregue o playbook `rdd-stack-*` correspondente via `skill` se disponível.
 - Identifique dependências externas (bancos de dados, filas, APIs terceiras).
-- Mapeie os subdomínios/Bounded Contexts evidentes na estrutura de pastas.
+- **Event storming simulado ANTES de declarar Bounded Contexts (KNOWLEDGE.md P-07):**
+  minere eventos/handlers/consumidores (`*Event*`, `*Handler*`, `*Listener*`, `*Consumer*`,
+  MediatR `INotificationHandler`, `@Observes`, consumers de fila) e clusterize os BCs a
+  partir dos clusters de eventos + vocabulário das classes. Estrutura de pastas é apenas
+  sinal auxiliar — nunca decisão final de BC (pastas de monólito misturam subdomínios).
+- **Repo grande (>~500 arquivos de código, estimativa via `glob`): sumarização hierárquica
+  (KNOWLEDGE.md P-05).** Construa primeiro um índice `arquivo → propósito` (1 linha por
+  arquivo, via `glob` + leituras superficiais) e só então faça deep-dive seletivo dos
+  arquivos relevantes por fatia — NUNCA varredura linear completa do repo grande.
+  Registre o uso do modo na seção 1 do relatório.
 
 ### Fatia 2 — Modelo de Dados & Agregados
 - Localize schemas, migrations ou classes de entidades.
@@ -196,6 +238,10 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
   `zod`/`yup`/`Joi` (Node), validações reativas `this.fb.group` (Angular/Ionic).
 - Busque classes de eventos de domínio: `*Event*`, `*Handler*`, `*Listener*`, `*Consumer*`
   (ou equivalente da stack: MediatR `INotificationHandler`, `@Observes`, `EventHandler` trait).
+- **Propagação da regra via grafo (quando disponível):** rode `trace_path` nos
+  validadores/handlers/eventos achados pelo grep para mapear a propagação
+  completa da regra (callers multi-arquivo com hop-distance); a evidência do
+  grafo ANEXA à evidência `[arquivo:linha @hash]` — nunca substitui.
 - Formule cada regra no padrão EARS/Gherkin simplificado com sua respectiva âncora de
   evidência **com hash** e atribua o **grau de confiança** (Princípio 8).
 
@@ -211,6 +257,33 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
 - **NÃO resolva a divergência por conta própria** — só sinalize, com evidência dos dois
   lados (API e FE), cada uma com seu `@hash`.
 
+### Autoverificação em Cadeia (CoVe — KNOWLEDGE.md P-06)
+- Após a Fatia 5 e ANTES de entregar, gere um checklist de perguntas de verificação do
+  próprio rascunho (mínimo inicial, ampliado conforme o caso):
+  - "toda candidata a RN tem evidência com hash?"
+  - "grau de confiança coerente com o tipo de evidência?"
+  - "endpoint listado existe mesmo no controller citado?"
+  - "campo PII marcado existe no schema/migration?"
+  - "contagens de completude (baseline) batem com a mineração das fatias?"
+  - "vocabulário do relatório uniformizado com o `domain_glossary` do checkpoint?"
+- Responda cada pergunta **relendo o código real** (nunca de memória do rascunho) e corrija
+  o relatório para cada resposta negativa.
+- Registre na seção 1: `Autoverificação: executada — N perguntas checadas, M correções aplicadas`.
+
+### Verificação Final de Citações (mecânica — KNOWLEDGE.md P-03)
+- Último passo antes de retornar: verifique **mecanicamente TODAS** as citações
+  `[repo/caminho/arquivo:linha @hash]` do relatório usando APENAS as ferramentas já
+  permitidas (`read`/`grep`/`glob`) — sem script novo, sem dependência externa:
+  1. **Arquivo existe?** `glob`/`read` no caminho citado abre o arquivo real do repo.
+  2. **Linha existe?** a linha citada é ≤ o número de linhas do arquivo (`read` até o fim do arquivo).
+  3. **Trecho confere?** o texto citado corresponde ao conteúdo real daquela linha (`grep`).
+  4. **Hash coerente?** o `@hash` é o hash de referência informado pelo `rdd-doc` para
+     aquele repo (ou `@hash-não-fornecido` — Princípios 3 e 6).
+- **Correção obrigatória:** citação inválida → releia o arquivo real e ajuste linha/trecho;
+  se a evidência não existir de fato, rebaixe/reclassifique a regra associada como
+  `PEND-XXX (Dúvida)` (Princípio 3). **Nunca entregue citação quebrada** (AP-02, severidade Crítica).
+- Declare o resultado na seção 1: `citações verificadas: N/N válidas`.
+
 ## Checkpoint por Contexto e Retomada (REVERSE_STATE.md)
 
 - **Ao final de cada fatia** (ou de cada Bounded Context varrido), atualize
@@ -223,10 +296,15 @@ Ao receber os caminhos dos repositórios do produto, execute a análise de forma
     "contexts_analyzed": ["Contexto A"],
     "contexts_pending": ["Contexto B"],
     "head_per_repo": { "repo-api": "abc1234" },
+    "domain_glossary": { "termo": { "def": "definição curta", "evidencia": "[repo-api src/Caminho/Arquivo.cs:12 @abc1234]" } },
     "report_path": "<pack-ativo>/accumulation/reverses/REVERSE_REPORT_2026-10-14-1530.md"
   }
   ```
 
+- **Glossário de domínio (`domain_glossary` — KNOWLEDGE.md P-09):** carregue o glossário
+  do checkpoint no INÍCIO da análise e use-o para uniformizar o vocabulário entre fatias e
+  contextos; acumule os termos novos descobertos de volta no campo a cada atualização do
+  checkpoint — ele alimenta os glossários downstream do `rdd-doc`.
 - **Relatório completo:** grave-o em `packs/<pack-ativo>/accumulation/reverses/REVERSE_REPORT_<timestamp>.md`, com
   as evidências `[arquivo:linha @hash]` — é o insumo oficial das skills da camada doc
   (o `rdd-doc` e as skills subsequentes LÊEM esse arquivo; o relatório inteiro não é colado
@@ -247,12 +325,16 @@ Retorne sempre o relatório seguindo esta estrutura:
 - **Δ Delta (somente modo delta):** repos pulados (hash inalterado): `...`; arquivos escopados: `...`
 - **Repositórios analisados:** `repo-api`, `repo-fe`, etc.
 - **Stacks detectadas:** [ex.: .NET 8 C# + Angular 17 + PostgreSQL]
+- **Indexação hierárquica (P-05):** `não usada` | `usada em repo-X (N arquivos >500) — índice arquivo→propósito antes do deep-dive`
+- **Citações verificadas:** N/N válidas
+- **Autoverificação (CoVe):** executada — N perguntas checadas, M correções aplicadas
 - **Bounded Contexts identificados:**
   - Contexto A: [descrição e repositórios envolvidos]
   - Contexto B: [descrição e repositórios envolvidos]
 
 ## 2. Modelo de Dados por Agregados (DDD)
 > Legenda PII: `⚠️ PII` = campo potencialmente sensível (LGPD) — sinalização para triagem posterior, sem juízo de tratamento.
+> **Baseline de completude (P-04):** Tabelas nas migrations detectadas: 42 · cobertas no relatório: 42/42 — quando `cobertas < detectadas`, liste explicitamente o que ficou de fora e o motivo. Fonte das contagens: mineração determinística (Fatia 2).
 ### Agregado: [Nome da Raiz]
 - **Tabela Principal:** `tb_nome` (PK: `id`)
 - **Tabelas Filhas / Value Objects:** `tb_filha` (FK: `tb_nome_id`)
@@ -260,11 +342,13 @@ Retorne sempre o relatório seguindo esta estrutura:
 - **Evidência:** `[repo-api src/Infrastructure/Data/Configurations/NomeConfiguration.cs:15 @abc1234]`
 
 ## 3. Contratos de API Mapeados
+> **Baseline de completude (P-04):** Endpoints em controllers/rotas detectados: 27 · mapeados: 27/27 — quando `mapeados < detectados`, liste explicitamente o que ficou de fora e o motivo. Fonte das contagens: mineração determinística (Fatia 3).
 | Método | Endpoint | DTO Request | DTO Response | Roles / Auth | Evidência |
 |---|---|---|---|---|---|
 | POST | `/api/v1/servicos` | `CriarServicoDto` | `ServicoResponseDto` | Admin | `[repo-api Controllers/ServicoController.cs:28 @abc1234]` |
 
 ## 4. Estrutura de Interface (Frontend)
+> **Baseline de completude (P-04):** Telas/rotas no roteador FE detectadas: 15 · mapeadas: 15/15 — quando `mapeadas < detectadas`, liste explicitamente o que ficou de fora e o motivo. Fonte das contagens: mineração determinística (Fatia 3).
 - **Telas / Rotas:**
   - `/servicos` -> Listagem (`ServicosListComponent`)
   - `/servicos/novo` -> Formulário com validações (`ServicoFormComponent`)

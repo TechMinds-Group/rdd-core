@@ -110,7 +110,7 @@ por glob, NUNCA construindo o nome exato, nesta ordem:
 - `specs/UI_SPEC.md` — telas, componentes, fluxos e validações de frontend
 - `support/LEGACY_CONTEXT.md` (se existir) — queries e tabelas do legado
 - `CONSTITUTION.md` do projeto — §9 (Organização de Delivery e Análise — IMP-092: `delivery_style`, `sprint_weeks`, `custom_template`, `tracker`), §13 (prefixos de título) e §14 (colunas de auditoria padrão)
-- `<repo_docs_rdd>/_docs/patterns/INDEX.md` — bloco `rdd-docs-repo` do AGENTS.md (condicional — IMP-047): para cenários recorrentes no lote, consultar padrões aplicáveis (Tipos `codigo`/`ui`/`dados`/`teste`) e citá-los na `Analise-Tecnica` das features afetadas
+- `packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md (condicional — IMP-047): para cenários recorrentes no lote, consultar padrões aplicáveis (Tipos `codigo`/`ui`/`dados`/`teste`) e citá-los na `Analise-Tecnica` das features afetadas
 
 ## Gera (downstream)
 

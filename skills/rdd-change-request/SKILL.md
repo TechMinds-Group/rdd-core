@@ -90,6 +90,7 @@ docs: add CR-XXX for <título>
 **Bloco 0 — Validação de Abordagem** (obrigatório antes de registrar o CR):
 - **Repositório/sistema alvo**: onde deve ser implementado? (ex: `<nome>.API`, sistema externo)
 - **Abordagem arquitetural**: endpoint novo, adaptação, serviço externo?
+- **Impacto visual (IMP-128)**: a mudança altera apresentação visual/UI (layout, copy de tela, componente, hierarquia visual)? Se sim e o front do módulo é derivado de design Figma (UI_SPEC/Figma prompts existentes), o CR ativa o **loop design-first** (ver passo 7.1) — design antes de código.
 - **Atores e permissões**: quem usa? autenticado, público, admin?
 - **Alternativas**: outras abordagens consideradas?
 - **Confirmação**: "A abordagem está correta? Posso prosseguir?"
@@ -125,6 +126,21 @@ docs: add CR-XXX for <título>
 5. Registre o CR em `support/CHANGE_REQUESTS.md` com status `pending` — todo CR inclui o campo `**Origem:**` (IMP-099). CR sem campo origem = registro incompleto (a agregação de métricas de resultado trata como N/A, nunca inventa)
 6. Pergunte ao usuário usando `question` — Bloco 2 (aprovação)
 7. Se aprovada, atualize status para `approved` e pergunte se deseja re-propagar para downstreams
+7.1. **LOOP DESIGN-FIRST para CR com impacto visual (IMP-128)** — se o CR
+     altera apresentação visual/UI e o front do módulo é derivado de design
+     Figma (existe UI_SPEC/FIGMA_PROMPTS ou o charter indica design Figma):
+     1. Roteie para `@rdd-figma-orchestrator` → `rdd-figma-prompt` (delta do
+        design: apenas a tela/seção afetada pelo CR) — o prompt alimenta o
+        agente do Figma; registre o prompt/frame resultante no campo
+        `Design Figma` do CR.
+     2. Após o operador **validar o design no Figma**, capture a nova versão
+        com `rdd-figma-tasks` (delta de UI_SPEC + handoff de features).
+     3. Só então a feature/código é especificada (`rdd-task-spec`) e
+        implementada (`rdd-dev`) a partir do design capturado — NUNCA
+        implemente mudança visual direto no código a partir do texto do CR.
+     - **Modo não-Figma (condicional):** módulo sem workflow Figma (sem
+        UI_SPEC, sem MCP Figma, front não derivado de design) segue o fluxo
+        normal — o gate não se aplica.
 8. Se rejeitada, registre a justificativa de rejeição
 
 ## Template — CHANGE_REQUESTS.md
@@ -148,6 +164,8 @@ status: draft
 **Solicitante:** [nome]
 **RN afetada:** RN-XXX, RN-YYY
 **Origem:** requisito-mal-capturado | evolucao | bug | decisao-cliente (IMP-099)
+**Impacto visual:** sim | não (IMP-128)
+**Design Figma:** [frame/URL do design validado ou "pré-requisito — prompt a gerar"; n/a quando impacto visual: não]
 **Descrição:** [mudança solicitada]
 **Justificativa:** [por que a mudança é necessária]
 **Downstreams afetados:** DATA_MODEL, API_CONTRACTS, UI_SPEC
@@ -165,3 +183,5 @@ status: draft
 - **Mudança originada de PEND (IMP-094 R2)**: quando a resolução de uma PEND aberta se revela alteração em RN já confirmada, registre o CR normalmente e informe a origem nos campos Descrição/Justificativa (`Promovida de PEND-NNN em <data>`); a PEND de origem deve ser marcada como resolvida no REQUIREMENTS.md com destino ao CR-XXX.
 
 - **CR sem campo `Origem` (IMP-099)**: é registro incompleto — não conclua o fluxo sem classificar a origem (via `question` ou inferência registrada). A skill de agregação de métricas trata CR sem origem como N/A; nunca invente a origem retroativamente.
+
+- **CR visual aprovado sem design (IMP-128)**: CR com `Impacto visual: sim` em módulo Figma-derived fica com `Design Figma: pré-requisito` até o loop 7.1 completar (prompt → validação no Figma → captura `rdd-figma-tasks`); a implementação em código não começa antes. O `rdd-cr-propagation-guard` sinaliza o delta de UI_SPEC pendente.

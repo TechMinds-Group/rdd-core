@@ -1,11 +1,11 @@
 ---
-project: VIBECUT
+project: ACMECUT
 module: compliance
 audience: [tecnica, negocio]
 status: final
 ---
 
-# Compliance LGPD — VibeCut
+# Compliance LGPD — AcmeCut
 
 > **Data:** 18/10/2026
 > **Gatilho:** charter `compliance: true`

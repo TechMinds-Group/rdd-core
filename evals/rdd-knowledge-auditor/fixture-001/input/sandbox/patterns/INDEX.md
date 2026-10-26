@@ -1,0 +1,2 @@
+# PATTERNS INDEX (120B = 30 tokens)
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

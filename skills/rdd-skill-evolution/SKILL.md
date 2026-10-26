@@ -17,9 +17,10 @@ e aplica melhorias validadas.
 ## Lê (upstream)
 
 - `docs/projects/*/RETROSPECTIVE.md` — ações de melhoria de cada projeto
-- `_docs/patterns/INDEX.md` — padrões acumulados (repo de docs:
-  `repo_docs_rdd` no AGENTS.md — IMP-061)
-- `_docs/METRICS.md` — tendências de qualidade (repo de docs: `repo_docs_rdd`)
+- `packs/<pack-ativo>/accumulation/patterns/INDEX.md` — padrões acumulados
+  (bloco `rdd-pack-accumulation` do AGENTS.md — IMP-061/IMP-112)
+- `packs/<pack-ativo>/accumulation/metrics/METRICS.md` — tendências de
+  qualidade (destino do `rdd-metrics-collector`)
 - Skills existentes (read-only) — para propor mudanças
 
 ## Gera (downstream)
