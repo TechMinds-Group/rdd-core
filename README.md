@@ -52,7 +52,7 @@ Pré-requisitos: [OpenCode](https://opencode.ai) instalado; `git`; `gh` CLI
 
 ```bash
 # 1. Clone o core no diretório global de config do OpenCode
-git clone https://github.com/TechMinds-Group/rdd-core.git ~/.config/opencode
+git clone https://github.com/victor-souza-dev/RDD-CORE.git ~/.config/opencode
 ```
 
 2. Abra o OpenCode no diretório dos seus projetos e selecione o primary com

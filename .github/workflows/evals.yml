@@ -40,3 +40,31 @@ jobs:
           name: eval-reports
           path: evals/reports/
           retention-days: 14
+
+  patterns:
+    name: patterns-validate (front matter do hub)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detectar mudancas em patterns/
+        id: delta
+        shell: bash
+        run: |
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- patterns/ | grep -q .; then
+            echo "rodar=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "rodar=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validar front matter dos patterns
+        if: steps.delta.outputs.rodar == 'true'
+        shell: bash
+        run: |
+          bash patterns/validate.sh

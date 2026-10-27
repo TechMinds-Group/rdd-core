@@ -6,7 +6,7 @@ O desenvolvimento acontece no repositório **privado** `TM.CORE.RDD` — é lá 
 internos criam skills, subagents e melhorias. As releases públicas são
 **snapshots limpos** do "subset essencial" (agents, skills, registry, templates,
 evals e docs de contribuição) publicados no repositório **público**
-`TechMinds-Group/rdd-core`.
+`victor-souza-dev/RDD-CORE`.
 
 Contribuições externas entram via **PR no `rdd-core`** (público). Os
 mantenedores portam a contribuição aceita para o `TM.CORE.RDD` (privado) e
@@ -53,6 +53,42 @@ você certifica que tem o direito de submeter a contribuição sob a licença do
 projeto, conforme o [Developer Certificate of Origin](https://developercertificate.org/).
 
 **Não usamos CLA** — a única barreira para contribuir é o sign-off DCO.
+
+## Promovendo patterns (pack → hub)
+
+Patterns validados em projetos reais podem ser promovidos da pattern library
+do pack (`accumulation/patterns/`) para o hub público `patterns/` do
+`rdd-core` — destino de patlets generalizados e anonimizados.
+
+**Fluxo de promoção:**
+
+1. **Generalizar + anonimizar** — aplique o checklist de anonimização acima.
+   O patlet não pode carregar conteúdo de cliente.
+2. **Neutrality scan** — `bash evals/neutrality/scan.sh` deve terminar com
+   `neutrality: OK` (pré-condição do PR).
+3. **PR com o patlet** — formato em `patterns/TEMPLATE.md`; o CI valida o
+   front matter com `bash patterns/validate.sh`. O PR traz o checklist de
+   anonimização e o aceite da warranty (item 5).
+4. **Shepherd** — um revisor de empresa **diferente da origem** avalia a
+   aplicabilidade e a generalização antes da validação (modelo PLoP).
+5. **Warranty de 30 dias** — no aceite, `warranty_ate = data do aceite +
+   30 dias`; a empresa de origem corrige regressões do pattern nesse período
+   (modelo InnerSource). O PR de promoção inclui o aceite explícito desse
+   compromisso.
+6. **Aceite** — gates verdes + shepherd OK → pattern entra no
+   `patterns/INDEX.md` com status `accepted`.
+
+**Ciclo de vida** (`proposed → validated → accepted → superseded`):
+documentado no `patterns/TEMPLATE.md`; validação local com
+`bash patterns/validate.sh`.
+
+**Decisões vigentes (proposta de 2026-10-26):**
+
+- **Mantenedor único no MVP** — merges no `rdd-core` aprovados pela TechMinds
+  (TC único; federação de TCs por domínio quando a 2ª empresa contribuir).
+- **Provenance nomeada com opt-in** — `origem` e `projetos_validacao`
+  identificam empresa e projetos de validação; `anonimo` é opção válida.
+- **Warranty fixa de 30 dias** — igual para todo pattern aceito.
 
 ---
 

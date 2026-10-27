@@ -1,7 +1,7 @@
 # PUBLISH — Processo de Release Pública do Open Core
 
 Como publicar um snapshot do `TM.CORE.RDD` (privado) no repositório público
-`TechMinds-Group/rdd-core`. O modelo é **snapshot**: o repo público nunca
+`victor-souza-dev/RDD-CORE`. O modelo é **snapshot**: o repo público nunca
 recebe o histórico interno — cada release substitui o conteúdo público pelo
 subset essencial limpo da HEAD atual do core.
 
@@ -42,6 +42,7 @@ arquivo fora dela **nunca** é publicado:
 | `PACK_SCHEMA.md` | schema de packs |
 | `BREAKING-CHANGES.md` | log de breaking changes |
 | `.github/workflows/evals.yml` | CI de evals |
+| `patterns/` | hub de patterns cross-empresa (TEMPLATE.md, INDEX.md e patterns aceites); `patterns/validate.sh` é gate do CI |
 
 ## Passos
 
