@@ -37,6 +37,7 @@ primary_agents:
       - rdd-handover
       - rdd-core-update
       - rdd-core-publish
+      - rdd-core-port
       - rdd-setup
       - rdd-agent-health-monitor
       - rdd-drift-detector
@@ -593,6 +594,9 @@ skills:
   - id: rdd-core-publish
     domain: meta
     description: "Publica melhorias da config local via git push"
+  - id: rdd-core-port
+    domain: meta
+    description: "Port automatizado publico -> core privado (snapshot do espelho rdd-core -> TM.CORE.RDD; bot de port da decisao D2 — IMP-137)"
   - id: rdd-setup
     domain: meta
     description: "Wizard de primeira configuração"
@@ -802,6 +806,7 @@ domains:
       - rdd-domain-research
       - rdd-core-update
       - rdd-core-publish
+      - rdd-core-port
       - rdd-setup
       - rdd-registry-render
       - rdd-skill-eval

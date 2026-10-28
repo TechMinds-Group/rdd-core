@@ -1,0 +1,22 @@
+mode: manual
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-core-port e description com triggers de port (portar snapshot, port do rdd-core, contribuiacao aceita)
+    expect: pass
+  - id: noop-idempotente
+    type: semantic
+    description: Sem snapshots novos no publico (HEAD do clone == origin/main) a skill termina em NO-OP com mensagem clara - zero comandos mutantes
+    expect: pass
+  - id: deteccao-por-sha
+    type: semantic
+    description: Snapshot incorporado = sha da mensagem release: snapshot TM.CORE.RDD@<sha> presente no historico do core (git cat-file -e); ausente = pendente
+    expect: pass
+  - id: nunca-push
+    type: semantic
+    description: Skill NUNCA faz push em nenhum dos repos - publicar e sempre decisao do operador via rdd-core-publish
+    expect: pass
+  - id: commit-port
+    type: semantic
+    description: Commit no padrao port: snapshot publico <short-sha> (<data UTC>) com git add de paths explicitos (nunca git add -A / git add .)
+    expect: pass

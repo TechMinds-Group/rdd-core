@@ -1,0 +1,22 @@
+mode: manual
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-core-port e description com triggers de port (portar snapshot, port do rdd-core, contribuiacao aceita)
+    expect: pass
+  - id: fronteira-obrigatoria
+    type: semantic
+    description: Patch tocando path fora do subset essencial ABORTA com relatorio ANTES de qualquer apply - nada e aplicado (patch entra inteiro ou nao entra)
+    expect: pass
+  - id: fonte-unica-subset
+    type: semantic
+    description: A lista de fronteira e lida do array SUBSET de publish/publish-core.sh (fonte unica) - nunca lista copiada/hardcoded na skill
+    expect: pass
+  - id: exclusoes-privadas
+    type: semantic
+    description: evals/reports, evals/trends, evals/golden-human, rules/client-profile.md e rules/operator-profile.md reais NUNCA passam na fronteira (so os .template.md saem)
+    expect: pass
+  - id: aborta-sem-sujar
+    type: semantic
+    description: Conflito de git apply --check ABORTA sem aplicar nada (tree limpo, nunca --3way); gate vermelho reverte com git apply -R e checkout residual
+    expect: pass

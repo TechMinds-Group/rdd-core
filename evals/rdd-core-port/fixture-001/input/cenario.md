@@ -1,0 +1,3 @@
+Cenario: Operador pede "portar snapshot do publico" numa maquina em dia: o clone ~/.config/rdd-core esta em HEAD == origin/main e o snapshot mais recente (8124977) referencia o sha fc0b9fe..., que e a propria HEAD do core TM.CORE.RDD (~/.config/opencode/). Working tree do core limpo.
+
+Tarefa: executar a deteccao (fetch, range HEAD..origin/main vazio, shas incorporados), concluir NO-OP com mensagem clara e NAO executar nenhum comando mutante (sem apply, sem add, sem commit, sem push).

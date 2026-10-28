@@ -119,6 +119,7 @@ No primeiro turno da sessão, antes do fluxo normal, carregue a skill
 - `rdd-handover` — invocar para gerar resumo executivo do estado do módulo para transição.
 - `rdd-core-update` — atualizar a configuração local do workflow RDD via `git pull`.
 - `rdd-core-publish` — publicar melhorias aprovadas da configuração via `git push`.
+- `rdd-core-port` — portar snapshots/PRs aceitos do espelho público (rdd-core) de volta ao core — bot de port da decisão D2 (IMP-137).
 - `rdd-setup` — wizard de primeira configuração da máquina.
 - `rdd-agent-health-monitor` — diagnóstico e conformidade das skills e agentes.
 - `rdd-drift-detector` — medir degradação temporal da qualidade dos artefatos.

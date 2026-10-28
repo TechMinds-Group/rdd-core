@@ -41,6 +41,11 @@ fica vazio e o perfil do cliente responde pelos defaults.
 ### Hierarquia de Convenções
 AGENTS.md Global → AGENTS.md do Projeto → Primary Agent → Subagent → Skill.
 Perguntas "o que fazer agora" / "próxima skill" → skill `rdd-next` (não analise o estado você mesmo).
+### Ciclo de vida da config (convenção `rdd-<repo>-<action>` — IMP-124)
+- **`rdd-core-update`**: traz do remote PRIVADO (`git pull --ff-only`; aborta com WIP local).
+- **`rdd-core-publish`**: publica ao remote PRIVADO (commit + push; gates + MANIFEST — IMP-103).
+- **`rdd-core-port`** (IMP-137): porta o espelho PÚBLICO (`rdd-core`, clone `~/.config/rdd-core`) de volta ao core — bot de port da decisão D2 (contribuição cross-empresa); valida subset + gates e commita; NUNCA push.
+Publicação no espelho público: `publish/publish-core.sh` (snapshot do subset). O port nunca empurra — publicar (privado ou público) é sempre decisão do operador.
 
 ## OUTPUT STYLE: concise
 - Bullet points over paragraphs

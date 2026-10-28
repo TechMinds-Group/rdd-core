@@ -1,0 +1,3 @@
+Cenario: Um snapshot novo apareceu no publico (HEAD..origin/main com 1 commit release: snapshot cujo sha NAO existe no core). O diff base..origin/main traz skills/rdd-core-port/SKILL.md (dentro do subset) MAS tambem evals/reports/EVAL_REPORT_x.md e rules/client-profile.md (FORA do subset - exclusao de evals e perfil real que nunca sai). Working tree do core limpo.
+
+Tarefa: rodar a verificacao de fronteira OBRIGATORIA contra o array SUBSET de publish/publish-core.sh, ABORTAR com relatorio listando os paths fora do subset e NAO aplicar nada (git apply nem chega a rodar; working tree permanece limpo).
