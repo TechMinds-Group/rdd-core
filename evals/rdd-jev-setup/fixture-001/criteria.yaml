@@ -1,0 +1,22 @@
+mode: manual
+checks:
+  - id: front-matter
+    type: structural
+    description: SKILL.md tem front matter com name == rdd-jev-setup e description com gatilhos (configurar o jev / setup jev / verificar o jev / jev_classify ausente)
+    expect: pass
+  - id: smoke-test
+    type: semantic
+    description: Passo de smoke test invoca jev_classify com input trivial (texto + questions TypeSafe choice) e trata resposta JSON tipada (model + choice + probabilities) como runtime funcional
+    expect: pass
+  - id: sem-rota-de-instalacao
+    type: semantic
+    description: A skill NÃO inventa rota de instalação (sem URL de MCP, sem comando de binário) — ground truth 28/10/2026 documentado (session-provided); remediação correta encaminha ao provedor do ambiente/harness da organização
+    expect: pass
+  - id: nunca-edita-config
+    type: semantic
+    description: Nunca edita opencode.jsonc nem instala binário/plugin — seção Nunca edita cobre os três
+    expect: pass
+  - id: sem-arquivo-persistido
+    type: structural
+    description: Wizard não persiste arquivo de artefato — saída é relatório textual compacto (status do runtime, smoke test, consumidores ok/degradados)
+    expect: pass

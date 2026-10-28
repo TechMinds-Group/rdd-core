@@ -33,7 +33,8 @@ arquivo fora dela **nunca** é publicado:
 | `registry.yaml` | manifesto canônico |
 | `rules/stack-templates.yaml` | registry de boilerplates |
 | `rules/client-profile.template.md` | template do perfil (o `client-profile.md` real **nunca** sai) |
-| `rules/operator-profile.template.md` | template do perfil do operador (o `operator-profile.md` real **nunca** sai — IMP-136) |
+| `rules/operator-profile.template.md` | template do perfil do operador (o `operator-profile.md` real **nunca** sai - IMP-136) |
+| `plugins/` | plugin `jev-tool.js` — tool `jev_classify` (Jev/TypeSafe; IMP-138). A `TYPESAFE_API_KEY` é env var do adotador e **nunca** sai |
 | `AGENTS.template.md` | template de AGENTS.md |
 | `evals/` | **exceto** `evals/reports/`, `evals/trends/`, `evals/golden-human/` |
 | `README.md` | visão do produto |

@@ -1,0 +1,18 @@
+mode: manual
+checks:
+  - id: pendencia-nao-bloqueante
+    type: semantic
+    description: Runtime ausente gera pendência NÃO bloqueante no relatório (padrão IMP-080) — não aborta, não vira erro strict, o fluxo segue
+    expect: pass
+  - id: remediacao-correta
+    type: semantic
+    description: Remediação registrada é o encaminhamento correto (runtime provisto pelo ambiente de sessão — verificar com o provedor do ambiente/harness da organização), NÃO instalação local inventada (sem URL/comando)
+    expect: pass
+  - id: consumidores-degradados
+    type: semantic
+    description: Relatório lista os consumidores afetados que degradam para fallback (rdd-decision-audit, rdd-quality-gates, rdd-prompt-gate)
+    expect: pass
+  - id: relatorio-compacto
+    type: structural
+    description: Relatório compacto cobre status do runtime, smoke test (não executável — tool ausente) e consumidores ok/degradados
+    expect: pass

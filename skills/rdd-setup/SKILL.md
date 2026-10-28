@@ -10,7 +10,7 @@ description: >-
   subagents de dev (rdd-dev-backend, rdd-dev-frontend) no opencode.jsonc,
   instala os packs declarados no perfil (`packs:` — clone em `packs/<id>/`,
   instala `provides`, grava `.rdd/sources.yaml`),
-  delega para rdd-azure-setup, rdd-gh-setup e rdd-aws-setup (opcional) e,
+  delega para rdd-azure-setup, rdd-gh-setup, rdd-aws-setup e rdd-jev-setup (opcionais) e,
   quando presente na instalação (skill de pack opcional — IMP-105),
   rdd-pia-connect-setup;
   valida o ambiente conforme o **perfil de adoção** — **core-only** (só o
@@ -53,6 +53,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `~/.config/opencode/skills/rdd-azure-setup/SKILL.md` — prerequisites de Azure
 - `<raiz-de-projetos>/REPOSITORIES.md` (ou o path do bloco `<!-- repositorios -->`) — inventário de repos para validação de clones — OPCIONAL: só no perfil **completo**; core-only não lê nem valida
 
+- Catálogo de tools da sessão — presença da tool `jev_classify` (runtime Jev provido pelo harness da sessão; Passo 5d delega ao `rdd-jev-setup`)
 ## Gera (downstream)
 
 - Edição em `~/.config/opencode/AGENTS.md` — bloco `<!-- projeto-padrao -->` e Índice de Referências lazy (merge, idempotente)
@@ -77,7 +78,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `edit`/`write` (editar os artefatos locais — AGENTS.md, opencode.jsonc e perfis de `rules/`)
   rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 - `bash` (validação de ambiente conforme o perfil de adoção: core-only valida só gh/git; completo valida Test-Path, java -version, mvn -version, node -v)
-- `skill` (delegar rdd-azure-setup / rdd-gh-setup / rdd-aws-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
+- `skill` (delegar rdd-azure-setup / rdd-gh-setup / rdd-aws-setup / rdd-jev-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 
 ## Modo de erro
 
@@ -100,7 +101,7 @@ de cada um antes de prosseguir. O usuário pode **pular** qualquer passo
 opcional, mas nunca executar dois passos em paralelo.
 
 ```
-Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil do cliente) → Passo 2c (perfil do operador) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 5c (AWS) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
+Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil do cliente) → Passo 2c (perfil do operador) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 5c (AWS) → Passo 5d (Jev) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
     ↓          ↓           ↓           ↓                ↓              ↓
  [define]   [pular]     [pular]     [pular]          [pular]        [pular]
 ```
@@ -117,7 +118,7 @@ Uma única `question`: **"Qual o perfil de adoção?"** com duas opções:
   `<não configurado — core-only>`. **Passos pulados**: 4 (Azure), 5 (PIA) e
   validações de stack do Passo 7 — marcados "não aplicável" no relatório.
   **Passos mantidos**: 1, 2, 2b (apenas usuário + diretório + org_github),
-  2c (perfil do operador), 3, 5b (gh, opcional), 5c (AWS, opcional), 6, 6b (Packs), 6c (hardening), 7.
+  2c (perfil do operador), 3, 5b (gh, opcional), 5c (AWS, opcional), 5d (Jev, opcional), 6, 6b (Packs), 6c (hardening), 7.
 - **Completo** — fluxo integral (tracker Azure, infra, packs, validações).
 
 O modo é registrado no relatório final e no perfil (campo `modo` no
@@ -267,6 +268,20 @@ estiver configurado (`aws configure list-profiles` sem perfis) → pergunte:
 - **Pular** → registre como pendência opcional no relatório e siga para
   o Passo 6.
 
+### Passo 5d — Jev (síncrono, opcional)
+
+Se a tool `jev_classify` estiver AUSENTE na sessão (o executor confirma no
+catálogo de tools da sessão — o runtime é provido pelo harness, não há
+binário nem config em arquivo) → pergunte: "Deseja configurar/verificar o
+Jev agora?"
+
+- **Sim** → carregue `rdd-jev-setup` e **aguarde** a conclusão completa
+  antes de prosseguir para o Passo 6.
+- **Pular** → registre como pendência opcional no relatório e siga para o
+  Passo 6.
+
+Presente → passe direto sem perguntar (idempotente, padrão dos irmãos).
+
 ### Passo 6 — Validar ambiente
 
 Use `bash` (read-only) para verificar e reporte em tabela:
@@ -281,14 +296,16 @@ Use `bash` (read-only) para verificar e reporte em tabela:
 | Node | `node -v` | repos frontend |
 | Angular CLI | `npx ng version` (opcional) | MFE Angular |
 | GitHub CLI | `gh --version` + `gh auth status` | pré-condição de `rdd-gh-issue-creator`/`rdd-gh-pr-creator` (issues/PRs) |
-| Jev runtime | tool `jev_classify` disponível na sessão (o executor confirma; não há binário nem config em arquivo) | camada semântica do RDD funcional (`rdd-jev-classifier`, calibração em `rdd-decision-audit`/`rdd-quality-gates`) |
+| Jev runtime | tool `jev_classify` disponível na sessão (executor confirma; mecanismo: plugin `plugins/jev-tool.js` + env `TYPESAFE_API_KEY` — detalhes no `rdd-jev-setup`) | camada semântica do RDD funcional (`rdd-jev-classifier`, calibração em `rdd-decision-audit`/`rdd-quality-gates`) |
 
 Repos ausentes: **não clone automaticamente** — liste os comandos
 `git clone` sugeridos no relatório para o usuário decidir.
 
 Jev ausente: **não bloqueia o setup** — registre como pendência no relatório
 ("runtime Jev indisponível — skills de calibração semântica degradam para
-opinião do modelo") e siga; as skills afetadas já possuem fallback sem Jev.
+opinião do modelo; remediação via rdd-jev-setup — runtime provisto pelo
+ambiente de sessão, verificar com o provedor do ambiente/harness da
+organização") e siga; as skills afetadas já possuem fallback sem Jev.
 
 ### Passo 6b — Packs (opcional)
 
@@ -340,6 +357,7 @@ Instala o hook de neutralidade no core (bloqueia push de dado de cliente):
 ✅ PIA: configurado | ℹ️ Pendência opcional: rdd-pia-connect-setup
 ✅ GitHub (gh): autenticado | ⚠️ Pendência: rdd-gh-setup
 ✅ AWS: configurado | ℹ️ Pendência opcional: rdd-aws-setup
+✅ Jev: runtime presente (smoke test ok) | ℹ️ Pendência opcional: rdd-jev-setup
 ✅ Packs: <N> instalado(s), pin em .rdd/sources.yaml | ℹ️ Sem `packs:` no perfil
 ✅ Hardening: hooks de neutralidade ativos | ⚠️ Pendência opcional: pre-push hook (IMP-110)
 
@@ -367,6 +385,7 @@ Próximo passo sugerido: @rdd-next no módulo em que vai trabalhar.
 - **AWS CLI ausente ou sem perfil configurado:** não bloqueia o setup —
   registre pendência `rdd-aws-setup` no relatório; sem ela, usos AWS
   (infra/auditoria) orientam o wizard dedicado.
+- **Tool `jev_classify` ausente na sessão:** não bloqueia o setup — registre pendência `rdd-jev-setup` no relatório; sem Jev, `rdd-decision-audit`/`rdd-quality-gates`/`rdd-prompt-gate` degradam para fallback (opinião do modelo); a remediação é do provedor do ambiente/harness, não local.
 - **Sem repos clonados:** normal em máquina nova; reporte os comandos
   `git clone` do REPOSITORIES.md e marque ⚠️.
 - **opencode.jsonc malformado (parse quebra após edição):** reverta a

@@ -12,7 +12,6 @@
 /cli.json
 /service.json
 /hooks/
-/plugins/
 /command/*
 /get-shit-done/*
 /.gsd-profile

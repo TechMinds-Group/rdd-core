@@ -600,6 +600,9 @@ skills:
   - id: rdd-setup
     domain: meta
     description: "Wizard de primeira configuração"
+  - id: rdd-jev-setup
+    domain: meta
+    description: "Setup/validação do runtime Jev (TypeSafe System One) — confirma a tool jev_classify no catálogo da sessão (runtime session-provided — sem rota de instalação local, ground truth 28/10/2026), smoke test com input trivial e, se ausente, pendência NÃO bloqueante (IMP-080) com remediação correta (provedor do ambiente/harness da organização); consumidores (rdd-decision-audit, rdd-quality-gates, rdd-prompt-gate) degradam para fallback"
   - id: rdd-registry-render
     domain: meta
     description: "Regenera views do ARCHITECTURE.md e tabelas dos primary agents a partir do registry.yaml"
@@ -808,6 +811,7 @@ domains:
       - rdd-core-publish
       - rdd-core-port
       - rdd-setup
+      - rdd-jev-setup
       - rdd-registry-render
       - rdd-skill-eval
       - rdd-prompt-gate

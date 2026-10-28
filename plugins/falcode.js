@@ -1,0 +1,644 @@
+/**
+ * OpenCode plugin (V2 API) for Zellij session status reporting.
+ *
+ * Install this file into ~/.config/opencode/plugins/falcode.js — the global
+ * plugins directory is auto-discovered by OpenCode V2. Do NOT list the file
+ * in the `plugins` array of opencode.jsonc: loose file entries emit
+ * "configured plugin path must be a directory" warnings and cause duplicate
+ * load attempts.
+ *
+ * API: OpenCode V2 — Plugin.define({ id, setup(ctx) }) with hooks registered
+ * through the plugin context (ctx.permission.hook, ctx.tool.hook,
+ * ctx.event.subscribe). The V1 form (default export as an async function
+ * returning hooks) fails to load on the V2 server with "Plugin must export a
+ * default definition with an id and an effect or setup function"
+ * (ref err_d19444b4).
+ */
+
+import {
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import { Plugin } from "@opencode/plugin";
+
+const DETECTION_SCRIPT_NAME = "detect-active-opencode.sh";
+const DETECTION_SCRIPT_DEFAULT_NAME = "detect-active-opencode.default.sh";
+const DETECTION_SCRIPT = `#!/bin/sh
+
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+STATE_DIR=\${FALCODE_STATE_DIR:-$SCRIPT_DIR}
+SNAPSHOT_FILE=\${FALCODE_SNAPSHOT_FILE:-$STATE_DIR/detect-active-opencode.snapshot.tsv}
+CACHE_FILE=\${FALCODE_CACHE_FILE:-$STATE_DIR/popup-cache.json}
+CURRENT_SESSION=\${FALCODE_CURRENT_SESSION:-}
+NOW_MS=\${FALCODE_NOW_MS:-$(python3 -c 'import time; print(int(time.time() * 1000))')}
+MAX_AGE_MS=\${FALCODE_MAX_PANE_STATE_AGE_MS:-180000}
+
+if [ ! -f "$SNAPSHOT_FILE" ] && [ -f "$CACHE_FILE" ]; then
+  if python3 - "$CACHE_FILE" "$NOW_MS" "$MAX_AGE_MS" <<'PY'
+import json
+import sys
+
+cache_file = sys.argv[1]
+now_ms = int(sys.argv[2])
+max_age_ms = int(sys.argv[3])
+
+try:
+    with open(cache_file, encoding="utf-8") as fh:
+        payload = json.load(fh)
+except Exception:
+    raise SystemExit(1)
+
+entries = payload.get("entries")
+generated_at_ms = int(payload.get("generated_at_ms") or 0)
+if not isinstance(entries, list):
+    raise SystemExit(1)
+if generated_at_ms and now_ms - generated_at_ms > max_age_ms:
+    raise SystemExit(1)
+
+json.dump(entries, sys.stdout, separators=(",", ":"))
+sys.stdout.write("\\n")
+PY
+  then
+    exit 0
+  fi
+fi
+
+tmp_input=$(mktemp "\${TMPDIR:-/tmp}/falcode-detect.XXXXXX")
+cleanup() {
+  rm -f "$tmp_input"
+}
+trap cleanup EXIT HUP INT TERM
+
+has_snapshot=0
+if [ -f "$SNAPSHOT_FILE" ]; then
+  has_snapshot=1
+  cp "$SNAPSHOT_FILE" "$tmp_input"
+fi
+
+python3 - "$STATE_DIR" "$tmp_input" <<'PY'
+import json
+import pathlib
+import sys
+
+state_dir = pathlib.Path(sys.argv[1])
+output_path = pathlib.Path(sys.argv[2])
+
+def clean(value):
+    if value is None:
+        return ""
+    return str(value).replace("\\t", " ").replace("\\n", " ").replace("\\r", " ")
+
+def append_tracked(pane):
+    session_name = clean(pane.get("session_name"))
+    pane_id = pane.get("pane_id")
+    status = clean(pane.get("status"))
+    agent = clean(pane.get("agent"))
+    if not session_name or pane_id is None or not status or not agent:
+        return None
+    cwd = clean(pane.get("cwd"))
+    updated_at_ms = pane.get("updated_at_ms", 0)
+    return f"tracked\\t{session_name}\\t{pane_id}\\t{status}\\t{agent}\\t{cwd}\\t{updated_at_ms}\\n"
+
+records = []
+seen_sessions = set()
+
+panes_dir = state_dir / "panes"
+if panes_dir.is_dir():
+    for pane_file in sorted(panes_dir.glob("*.json")):
+        try:
+            pane = json.loads(pane_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        record = append_tracked(pane)
+        if record is None:
+            continue
+        session_name = clean(pane.get("session_name"))
+        if session_name and session_name not in seen_sessions:
+            records.append(f"session\\t{session_name}\\n")
+            seen_sessions.add(session_name)
+        records.append(record)
+
+legacy_state = state_dir / "opencode-sessions.json"
+if legacy_state.is_file() and not records:
+    try:
+        data = json.loads(legacy_state.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    for pane in (data.get("panes") or {}).values():
+        record = append_tracked(pane)
+        if record is None:
+            continue
+        session_name = clean(pane.get("session_name"))
+        if session_name and session_name not in seen_sessions:
+            records.append(f"session\\t{session_name}\\n")
+            seen_sessions.add(session_name)
+        records.append(record)
+
+if records:
+    with output_path.open("a", encoding="utf-8") as fh:
+        for record in records:
+            fh.write(record)
+PY
+
+awk -F '\t' -v current_session="$CURRENT_SESSION" -v now_ms="$NOW_MS" -v max_age_ms="$MAX_AGE_MS" -v has_snapshot="$has_snapshot" '
+  function decode_field(value) {
+    gsub(/\r/, " ", value)
+    gsub(/\n/, " ", value)
+    return value
+  }
+
+  function json_escape(value) {
+    gsub(/\\/, "\\\\", value)
+    gsub(/"/, "\\\"", value)
+    gsub(/\t/, " ", value)
+    gsub(/\r/, " ", value)
+    gsub(/\n/, " ", value)
+    return value
+  }
+
+  function command_program(command, parts, first) {
+    command = decode_field(command)
+    sub(/^[[:space:]]+/, "", command)
+    if (command == "") {
+      return ""
+    }
+    split(command, parts, /[[:space:]]+/)
+    first = parts[1]
+    sub(/^.*\//, "", first)
+    return tolower(first)
+  }
+
+  function is_pi_command(lower_command) {
+    return lower_command == "pi" || lower_command ~ /^pi[[:space:]]/ || lower_command ~ /\/pi$/ || lower_command ~ /\/pi[[:space:]]/ || index(lower_command, "pi-coding-agent")
+  }
+
+  function agent_name(agent) {
+    return agent == "claude" ? "Claude" : agent == "pi" ? "Pi" : "OpenCode"
+  }
+
+  function is_supported_agent(agent) {
+    return agent == "opencode" || agent == "claude" || agent == "pi"
+  }
+
+  function is_agent_pane(title, command, lower_command, program) {
+    lower_command = tolower(command)
+    program = command_program(command)
+    return program == "opencode" || program == "claude" || program == "pi" || program == "pi-coding-agent" || index(lower_command, "opencode") || index(lower_command, "claude") || is_pi_command(lower_command)
+  }
+
+  function print_entry(session_name, pane_id, pane_title, tab_position, tab_name, status, cwd, updated_at_ms, cwd_json) {
+    if (!first_entry) {
+      printf(",\\n")
+    }
+    printf("  {\\\"session_name\\\":\\\"%s\\\",\\\"pane_id\\\":%d,\\\"pane_title\\\":\\\"%s\\\",\\\"tab_position\\\":%d,\\\"tab_name\\\":\\\"%s\\\",\\\"status\\\":\\\"%s\\\",\\\"cwd\\\":",
+      json_escape(session_name), pane_id + 0, json_escape(pane_title), tab_position + 0, json_escape(tab_name), json_escape(status))
+    if (cwd == "") {
+      cwd_json = "null"
+    } else {
+      cwd_json = sprintf("\\\"%s\\\"", json_escape(cwd))
+    }
+    printf("%s,\\\"updated_at_ms\\\":%d}", cwd_json, updated_at_ms + 0)
+    first_entry = 0
+  }
+
+  BEGIN {
+    print "["
+    first_entry = 1
+  }
+
+  {
+    record_type = $1
+
+    if (record_type == "session" && NF >= 2) {
+      known_sessions[decode_field($2)] = 1
+      next
+    }
+
+    if (record_type == "pane" && NF >= 7) {
+      session_name = decode_field($2)
+      pane_id = $3 + 0
+      key = session_name SUBSEP pane_id
+      session_has_panes[session_name] = 1
+      pane_exists[key] = 1
+      pane_order[++pane_count] = key
+      pane_tab_position[key] = $4 + 0
+      pane_tab_name[key] = decode_field($5)
+      pane_title[key] = decode_field($6)
+      pane_command[key] = decode_field($7)
+      next
+    }
+
+    if (record_type == "tracked" && NF >= 7) {
+      session_name = decode_field($2)
+      pane_id = $3 + 0
+      status = decode_field($4)
+      agent = decode_field($5)
+      cwd = decode_field($6)
+      updated_at_ms = $7 + 0
+      key = session_name SUBSEP pane_id
+
+      if (!is_supported_agent(agent)) {
+        next
+      }
+
+      if (!(key in tracked_updated_at_ms) || updated_at_ms > tracked_updated_at_ms[key]) {
+        tracked_keys[key] = 1
+        tracked_updated_at_ms[key] = updated_at_ms
+        tracked_status[key] = status
+        tracked_agent[key] = agent
+        tracked_cwd[key] = cwd
+      }
+      next
+    }
+  }
+
+  END {
+    for (key in tracked_keys) {
+      split(key, parts, SUBSEP)
+      session_name = parts[1]
+      pane_id = parts[2]
+
+      if (!(session_name in known_sessions)) {
+        continue
+      }
+
+      if (tracked_updated_at_ms[key] != 0 && (now_ms - tracked_updated_at_ms[key]) > max_age_ms) {
+        continue
+      }
+
+      if (has_snapshot == 1 && (session_name in session_has_panes)) {
+        if (!(key in pane_exists)) {
+          continue
+        }
+      }
+
+      seen_panes[key] = 1
+
+      if (key in pane_exists) {
+        print_entry(session_name, pane_id, pane_title[key], pane_tab_position[key], pane_tab_name[key], tracked_status[key], tracked_cwd[key], tracked_updated_at_ms[key])
+      } else {
+        print_entry(session_name, pane_id, agent_name(tracked_agent[key]), 0, "", tracked_status[key], tracked_cwd[key], tracked_updated_at_ms[key])
+      }
+    }
+
+    for (i = 1; i <= pane_count; i++) {
+      key = pane_order[i]
+      if (seen_panes[key]) {
+        continue
+      }
+
+      split(key, parts, SUBSEP)
+      session_name = parts[1]
+      pane_id = parts[2]
+
+      if (session_name != current_session) {
+        continue
+      }
+      if (!is_agent_pane(pane_title[key], pane_command[key])) {
+        continue
+      }
+
+      print_entry(session_name, pane_id, pane_title[key], pane_tab_position[key], pane_tab_name[key], "waiting_user_input", "", 0)
+    }
+
+    if (!first_entry) {
+      printf("\\n")
+    }
+    print "]"
+  }
+' "$tmp_input"
+`;
+
+function ensureDetectionScript(stateRoot) {
+  const scriptPath = path.join(stateRoot, DETECTION_SCRIPT_NAME);
+  const defaultScriptPath = path.join(stateRoot, DETECTION_SCRIPT_DEFAULT_NAME);
+  writeFileSync(defaultScriptPath, DETECTION_SCRIPT, {
+    encoding: "utf8",
+    mode: 0o755,
+  });
+  try {
+    readFileSync(scriptPath, "utf8");
+    return;
+  } catch {
+    writeFileSync(scriptPath, DETECTION_SCRIPT, {
+      encoding: "utf8",
+      mode: 0o755,
+    });
+  }
+}
+
+function stableSessionKey() {
+  const paneId = process.env.ZELLIJ_PANE_ID ?? "unknown-pane";
+  const sessionName = process.env.ZELLIJ_SESSION_NAME ?? "unknown-session";
+  return `${sessionName}:${paneId}`;
+}
+
+/**
+ * Resolve the path to scripts/oc-notify.sh relative to this plugin file.
+ * install.py symlinks the plugin into ~/.config/opencode/plugins, so we
+ * follow the symlink to find the real repo location. Falls back to the
+ * FALCODE_NOTIFY_SCRIPT env var if resolution fails.
+ */
+function resolveNotifyScript(stateRoot) {
+  const override = process.env.FALCODE_NOTIFY_SCRIPT;
+  if (override) return override;
+
+  const stateScript = path.join(stateRoot, "oc-notify.sh");
+  try {
+    readFileSync(stateScript, "utf8");
+    return stateScript;
+  } catch {
+    // Fall through.
+  }
+
+  try {
+    const pluginFile = realpathSync(fileURLToPath(import.meta.url));
+    return path.resolve(path.dirname(pluginFile), "..", "scripts", "oc-notify.sh");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Map internal pane status → notification status accepted by oc-notify.sh.
+ * Returns null if the status shouldn't trigger a notification.
+ */
+function notificationStatusFor(newStatus, prevStatus) {
+  const ACTIVE = new Set([
+    "working",
+    "asking_permissions",
+    "waiting_user_answers",
+  ]);
+  if (newStatus === "asking_permissions") return "permission";
+  if (newStatus === "waiting_user_answers") return "question";
+  if (newStatus === "waiting_user_input" && ACTIVE.has(prevStatus)) return "idle";
+  return null;
+}
+
+const ATTENTION_ACTIVE_STATES = new Set([
+  "working",
+  "asking_permissions",
+  "waiting_user_answers",
+]);
+
+/**
+ * Send a zellij-attention pipe so the tab name gets an icon appended.
+ * Icons themselves are configured in the zellij-attention plugin kdl block
+ * (waiting_icon / completed_icon). Event names can be remapped via
+ * FALCODE_ATTENTION_ENTER_EVENT / FALCODE_ATTENTION_EXIT_EVENT.
+ * Disabled entirely with FALCODE_DISABLE_ATTENTION=1.
+ */
+function sendAttentionPipe(event, paneId) {
+  if (process.env.FALCODE_DISABLE_ATTENTION === "1") return;
+  if (!event || paneId == null) return;
+  try {
+    const child = spawn(
+      "zellij",
+      ["pipe", "--name", `zellij-attention::${event}::${paneId}`],
+      { detached: true, stdio: "ignore" },
+    );
+    child.unref();
+  } catch {
+    // Best-effort: zellij-attention plugin may not be installed.
+  }
+}
+
+function attentionEventFor(newStatus, prevStatus) {
+  const wasActive = ATTENTION_ACTIVE_STATES.has(prevStatus);
+  const isActive = ATTENTION_ACTIVE_STATES.has(newStatus);
+  if (!wasActive && isActive) {
+    return process.env.FALCODE_ATTENTION_ENTER_EVENT ?? "waiting";
+  }
+  if (wasActive && !isActive) {
+    return process.env.FALCODE_ATTENTION_EXIT_EVENT ?? "completed";
+  }
+  return null;
+}
+
+function fireNotification({ notifyScript, agent, status, sessionName, paneId, cwd }) {
+  if (!notifyScript) return;
+  const displayName = cwd ? path.basename(cwd) : agent === "pi" ? "Pi" : "OpenCode";
+  try {
+    const child = spawn(
+      notifyScript,
+      [
+        "--agent",
+        agent,
+        "--pane-name",
+        displayName,
+        "--status",
+        status,
+        "--session",
+        sessionName,
+        "--pane-id",
+        String(paneId),
+      ],
+      { detached: true, stdio: "ignore" },
+    );
+    child.unref();
+  } catch {
+    // Notification is best-effort; never break the plugin if the script is
+    // missing or not executable.
+  }
+}
+
+const MAX_PANE_STATE_AGE_MS = 180_000; // 3 minutes
+
+/** Remove state files whose updated_at_ms is older than MAX_PANE_STATE_AGE_MS. */
+function cleanupStalePanes(panesDir) {
+  const now = Date.now();
+  try {
+    for (const file of readdirSync(panesDir)) {
+      if (!file.endsWith(".json")) continue;
+      const filePath = path.join(panesDir, file);
+      try {
+        const data = JSON.parse(readFileSync(filePath, "utf8"));
+        const age = now - (data.updated_at_ms ?? 0);
+        if (age > MAX_PANE_STATE_AGE_MS) {
+          rmSync(filePath, { force: true });
+        }
+      } catch {
+        // Corrupt or partial JSON — safe to remove.
+        rmSync(filePath, { force: true });
+      }
+    }
+  } catch {
+    // panes directory doesn't exist or can't be read — nothing to clean.
+  }
+}
+
+/**
+ * V2 setup. When OpenCode does not run inside a Zellij pane there is no
+ * pane/session to report on, so the plugin stays dormant and registers
+ * nothing.
+ * @param ctx OpenCode V2 plugin context.
+ */
+async function setup(ctx) {
+  const paneId = process.env.ZELLIJ_PANE_ID;
+  const sessionName = process.env.ZELLIJ_SESSION_NAME;
+  if (!paneId || !sessionName) {
+    return;
+  }
+
+  const stateRoot =
+    process.env.FALCODE_STATE_DIR ??
+    path.join(process.env.HOME ?? ".", ".local", "state", "falcode-zellij");
+  const panesDir = path.join(stateRoot, "panes");
+  const notifyScript = resolveNotifyScript(stateRoot);
+  const stateFile = path.join(
+    panesDir,
+    `${sessionName.replace(/[^a-zA-Z0-9_-]/g, "_")}_${paneId}.json`,
+  );
+  mkdirSync(panesDir, { recursive: true });
+  ensureDetectionScript(stateRoot);
+  cleanupStalePanes(panesDir);
+
+  const cwd = process.env.PWD ?? process.cwd();
+  let lastStatus = "waiting_user_input";
+  let stableId = stableSessionKey();
+  let initialized = false;
+
+  function writeState(status) {
+    const prevStatus = lastStatus;
+    lastStatus = status;
+    const payload = {
+      agent: "opencode",
+      cwd,
+      stable_id: stableId,
+      pane_id: Number.parseInt(paneId, 10),
+      session_name: sessionName,
+      status,
+      updated_at_ms: Date.now(),
+    };
+    writeFileSync(stateFile, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+
+    // Only notify on genuine transitions after initial plugin setup.
+    // Initial state bootstrap and heartbeat re-writes must stay silent.
+    if (!initialized || status === prevStatus) return;
+    const attentionEvent = attentionEventFor(status, prevStatus);
+    if (attentionEvent) {
+      sendAttentionPipe(attentionEvent, Number.parseInt(paneId, 10));
+    }
+    const notifyStatus = notificationStatusFor(status, prevStatus);
+    if (!notifyStatus) return;
+    fireNotification({
+      notifyScript,
+      agent: "opencode",
+      status: notifyStatus,
+      sessionName,
+      paneId: Number.parseInt(paneId, 10),
+      cwd,
+    });
+  }
+
+  function handleEvent(evt) {
+    switch (evt.type) {
+      case "permission":
+        writeState("asking_permissions");
+        break;
+      case "question":
+        writeState("waiting_user_answers");
+        break;
+      case "idle":
+        writeState("waiting_user_input");
+        break;
+      case "status": {
+        const status = evt.status;
+        if (status === "busy" || status === "running") {
+          writeState("working");
+        } else if (status === "idle") {
+          writeState("waiting_user_input");
+        }
+        break;
+      }
+    }
+  }
+
+  try {
+    const existing = JSON.parse(readFileSync(stateFile, "utf8"));
+    if (existing?.session_name === sessionName) {
+      stableId = existing?.stable_id ?? stableId;
+    }
+    writeState(existing?.status ?? "waiting_user_input");
+  } catch {
+    writeState("waiting_user_input");
+  }
+  initialized = true;
+
+  // Re-write the state file periodically so the WASM plugin knows the
+  // OpenCode process is still alive even when the user hasn't interacted.
+  const heartbeat = setInterval(() => {
+    writeState(lastStatus);
+  }, 60_000);
+
+  // Hook: a permission decision with effect "ask" publishes a prompt; an
+  // "allow" decision while a prompt is pending means the user replied and
+  // the agent resumed work. (Replaces the V1 `permission.ask` hook and the
+  // `permission.replied` event handling.)
+  await ctx.permission.hook("evaluate", (event) => {
+    if (event.effect === "ask") {
+      handleEvent({ type: "permission" });
+    } else if (lastStatus === "asking_permissions") {
+      handleEvent({ type: "status", status: "busy" });
+    }
+  });
+
+  // Hook: the question tool is about to run. (Replaces the V1
+  // `tool.execute.before` hook.)
+  await ctx.tool.hook("execute.before", (event) => {
+    if (event.tool === "question") {
+      handleEvent({ type: "question" });
+    }
+  });
+
+  // Event subscription (replaces the V1 `event` hook). The session.status
+  // payload is read from both known shapes (V1 `properties`, V2 `data`).
+  const controller = new AbortController();
+  void (async () => {
+    try {
+      for await (const event of ctx.event.subscribe({
+        signal: controller.signal,
+      })) {
+        switch (event.type) {
+          case "session.status": {
+            const status =
+              event.properties?.status?.type ?? event.data?.status?.type;
+            if (typeof status === "string") {
+              handleEvent({ type: "status", status });
+            }
+            break;
+          }
+          case "session.idle":
+            handleEvent({ type: "idle" });
+            break;
+          case "permission.replied":
+            handleEvent({ type: "status", status: "busy" });
+            break;
+        }
+      }
+    } catch {
+      // Stream aborted during cleanup — status reporting stops silently.
+    }
+  })();
+
+  // V2 cleanup function (replaces the V1 `process.on("exit")` hook).
+  return () => {
+    controller.abort();
+    clearInterval(heartbeat);
+    rmSync(stateFile, { force: true });
+  };
+}
+
+export default Plugin.define({
+  id: "falcode",
+  setup,
+});

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo-rdd.png" alt="Logo RDD — pipeline Requisitos → Documentação → Desenvolvimento" width="480">
+</p>
+
 # RDD — Workflow RDD (Open Core)
 
 **RDD (Requisitos, Documentação e Desenvolvimento)** é um workflow open core de
