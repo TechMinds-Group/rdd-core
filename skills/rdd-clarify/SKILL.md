@@ -28,6 +28,7 @@ determina se vira RN direto ou entra como PEND-XXX com follow-up.
 
 - `<module-root>/meetings/` (checkpoints anteriores, para reavaliação incremental de PENDs)
 - `<module-root>/REQUIREMENTS.md` (se existir, para detectar conflitos com RNs/PENDs existentes)
+- `~/.config/opencode/rules/operator-profile.md` (IMP-136) — perfil do operador: fonte do campo **Responsável** na triagem de PENDs; arquivo ausente → pergunte ao operador (fallback manual)
 - `docs/CONSTITUTION.md` (para as categorias)
 - `packs/<pack-ativo>/accumulation/patterns/INDEX.md` — bloco `rdd-pack-accumulation` do AGENTS.md (condicional — IMP-047): antes de propor RNs para feature de domínio já tratado em outro produto, consultar padrões aplicáveis (Tipo `processo`)
 
@@ -444,7 +445,10 @@ alternativo em vez do Workflow principal.
    de finalizar.
 6. Registre a classificação no checkpoint com:
    - Timestamp da classificação
-   - Responsável pela decisão (nome do usuário/PO)
+   - Responsável pela decisão — preenchido automaticamente a partir do
+     campo **Nome** de `~/.config/opencode/rules/operator-profile.md`
+     (IMP-136); se o perfil não existir nesta máquina, pergunte o nome ao
+     operador e registre o valor informado (fallback manual)
    - Para PENDs "Aguarda decisão": a pergunta específica que precisa ser respondida
    - Para PENDs "Dev direto": a ação técnica resumida
    - Para PENDs "Já resolvido": o desfecho e data
@@ -458,8 +462,11 @@ alternativo em vez do Workflow principal.
 2. **Individualidade:** Cada PEND é apresentado individualmente ou em lotes
    de no máximo 3, com opções individuais. Nunca agrupe PENDs em uma única
    pergunta onde a não-seleção implica classificação.
+
 3. **Rastreabilidade:** A classificação de cada PEND é registrada com
-   timestamp e responsável, permitindo auditoria posterior.
+   timestamp e responsável (fonte: `rules/operator-profile.md` — IMP-136;
+   fallback manual se o perfil estiver ausente), permitindo auditoria
+   posterior.
 4. **Re-triagem:** Se o usuário já triou PENDs anteriormente, apresente
    apenas os PENDs ainda não classificados ou cuja classificação mudou.
 5. **PEND não ancora feature (IMP-094 R1):** nenhuma classificação gera

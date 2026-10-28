@@ -3,7 +3,7 @@ name: rdd-setup
 description: >-
   Wizard de primeira configuração do RDD numa máquina nova — idempotente e
   executado por demanda. Pergunta o diretório padrão de projetos, coleta os
-  defaults do cliente (org Azure, projeto, repos, usuário) e grava `rules/client-profile.md` (IMP-103), cria/repara o AGENTS.md
+  defaults do cliente (org Azure, projeto, repos, usuário) e grava `rules/client-profile.md` (IMP-103), coleta a identidade do operador (nome, e-mail, papel, contas git/GitHub) e grava `rules/operator-profile.md` (IMP-136), cria/repara o AGENTS.md
   local A PARTIR do `AGENTS.template.md` versionado (neutro — IMP-105),
   repõe o índice lazy de `rules/` (IMP-048),
   aplica os overrides de permissão dos
@@ -36,6 +36,7 @@ artefatos locais:
 | `AGENTS.md` (`~/.config/opencode/`) | blocos `<!-- azure-devops -->`, `<!-- org-pack -->` (quando o cliente tiver pack — IMP-105), `<!-- projeto-padrao -->`, `<!-- rdd-pack-accumulation -->` + Índice de Referências lazy (`rules/`, IMP-048) | ❌ gitignored — nasce do `AGENTS.template.md` versionado (IMP-105) |
 | `opencode.jsonc` (`~/.config/opencode/`) | `permission.external_directory` + `agent.rdd-dev-*.permission` (overrides de path) | ❌ gitignored |
 | `rules/client-profile.md` (`rules/`) | defaults do cliente (org Azure, projeto, repos, usuário, diretório de projetos — IMP-103) | ❌ gitignore explícito (dado de cliente nunca versionado) |
+| `rules/operator-profile.md` (`rules/`) | identidade do operador desta máquina (nome, e-mail, papel, contas git/GitHub — IMP-136) | ❌ gitignore explícito (dado pessoal nunca versionado) |
 | `.secrets/` (`~/.config/opencode/.secrets/`) | credenciais (APM Keys, PATs, tokens) referenciadas via `{file:...}` | ❌ gitignored |
 
 Este wizard preenche/repõe esses artefatos e valida o ambiente. O template
@@ -47,6 +48,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `~/.config/opencode/AGENTS.md` — blocos existentes (azure, projeto-padrao, repositorios) e índice lazy
 - `~/.config/opencode/rules/*.md` — arquivos de referência lazy existentes (IMP-048)
 - `rules/client-profile.md` / `rules/client-profile.template.md` — perfil do cliente (IMP-103)
+- `rules/operator-profile.md` / `rules/operator-profile.template.md` — perfil do operador (IMP-136)
 - `~/.config/opencode/opencode.jsonc` — permission e agent overrides existentes
 - `~/.config/opencode/skills/rdd-azure-setup/SKILL.md` — prerequisites de Azure
 - `<raiz-de-projetos>/REPOSITORIES.md` (ou o path do bloco `<!-- repositorios -->`) — inventário de repos para validação de clones — OPCIONAL: só no perfil **completo**; core-only não lê nem valida
@@ -58,6 +60,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - Edição em `~/.config/opencode/opencode.jsonc` — `permission.external_directory` + `agent.rdd-dev-backend/frontend.permission` com os paths da máquina
 - Relatório textual de validação de ambiente (não persiste arquivo)
 - Criação/atualização de `~/.config/opencode/rules/client-profile.md` — defaults do cliente (gitignored; IMP-103)
+- Criação/atualização de `~/.config/opencode/rules/operator-profile.md` — identidade do operador (gitignored; IMP-136)
 
 ## Nunca edita
 
@@ -71,7 +74,7 @@ gerado dele + client-profile; nunca invente conteúdo fora dos blocos marcadores
 - `read` (AGENTS.md, opencode.jsonc, REPOSITORIES.md)
 - `glob` (detectar módulos/repos no filesystem)
 - `question` (perguntar paths e opções — 1 pergunta por bloco)
-- `edit`/`write` (editar os 2 artefatos locais)
+- `edit`/`write` (editar os artefatos locais — AGENTS.md, opencode.jsonc e perfis de `rules/`)
   rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
 - `bash` (validação de ambiente conforme o perfil de adoção: core-only valida só gh/git; completo valida Test-Path, java -version, mvn -version, node -v)
 - `skill` (delegar rdd-azure-setup / rdd-gh-setup / rdd-aws-setup; rdd-pia-connect-setup somente se existir na instalação — skill de pack opcional, IMP-105)
@@ -97,7 +100,7 @@ de cada um antes de prosseguir. O usuário pode **pular** qualquer passo
 opcional, mas nunca executar dois passos em paralelo.
 
 ```
-Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 5c (AWS) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
+Passo 0 → Passo 1 → Passo 2 → Passo 2b (perfil do cliente) → Passo 2c (perfil do operador) → Passo 3 → Passo 4 (Azure) → Passo 5 (PIA) → Passo 5b (gh) → Passo 5c (AWS) → Passo 6 → Passo 6b (Packs) → Passo 6c (hardening) → Passo 7
     ↓          ↓           ↓           ↓                ↓              ↓
  [define]   [pular]     [pular]     [pular]          [pular]        [pular]
 ```
@@ -114,7 +117,7 @@ Uma única `question`: **"Qual o perfil de adoção?"** com duas opções:
   `<não configurado — core-only>`. **Passos pulados**: 4 (Azure), 5 (PIA) e
   validações de stack do Passo 7 — marcados "não aplicável" no relatório.
   **Passos mantidos**: 1, 2, 2b (apenas usuário + diretório + org_github),
-  3, 5b (gh, opcional), 5c (AWS, opcional), 6, 6b (Packs), 6c (hardening), 7.
+  2c (perfil do operador), 3, 5b (gh, opcional), 5c (AWS, opcional), 6, 6b (Packs), 6c (hardening), 7.
 - **Completo** — fluxo integral (tracker Azure, infra, packs, validações).
 
 O modo é registrado no relatório final e no perfil (campo `modo` no
@@ -167,6 +170,29 @@ GitHub) leem o perfil em vez de hardcode.
    o perfil — nunca contra valores hardcoded.
 4. Reexecutável: se o perfil já existe, mostre os valores e pergunte se
    deseja atualizar (stale = atualizar).
+
+### Passo 2c — Perfil do operador (rules/operator-profile.md — IMP-136)
+
+Coleta a identidade do operador DESTA máquina e grava em
+`~/.config/opencode/rules/operator-profile.md`, a partir do template
+versionado `rules/operator-profile.template.md`. O perfil é a FONTE DE
+VERDADE do operador: rdd-clarify (triagem de PENDs — campo Responsável),
+rdd-decision-log (campo Decisor) e o registro de IMPs (campo Autor) leem o
+perfil em vez de perguntar a cada sessão.
+
+1. Via `question` (pergunta consolidada), colete:
+   - nome e e-mail do operador
+   - papel (ex.: arquiteto, dev, PO)
+   - identidade git de commit (user.name / user.email — sugira os valores
+     atuais de `git config` como default)
+   - conta GitHub (username — sugira o login ativo de `gh auth status` como
+     default)
+2. Grave `rules/operator-profile.md` preenchendo o template. O arquivo é
+   gitignored — NUNCA versionar dado pessoal; se o `.gitignore` não
+   contiver `rules/operator-profile.md`, adicione a linha.
+3. Reexecutável (idempotente): se o perfil já existe, mostre os valores e
+   pergunte se deseja atualizar (stale = atualizar). 1 operador por
+   máquina — trocar de operador = editar o arquivo.
 
 ### Passo 3 — Aplicar config local
 
@@ -308,6 +334,7 @@ Instala o hook de neutralidade no core (bloqueia push de dado de cliente):
 ✅ Config local aplicada:
    AGENTS.md: projeto-padrao = <dir> | índice lazy rules/ = <N> refs OK
    opencode.jsonc: external_directory + overrides rdd-dev-backend/frontend
+   Perfis: rules/client-profile.md (cliente — IMP-103) | rules/operator-profile.md (operador — IMP-136)
 
 ✅ Azure: completo | ⚠️ Configure via rdd-azure-setup
 ✅ PIA: configurado | ℹ️ Pendência opcional: rdd-pia-connect-setup
@@ -349,4 +376,5 @@ Próximo passo sugerido: @rdd-next no módulo em que vai trabalhar.
   resolvido via `rdd-core-update` (versionado no remote) — o wizard
   não inventa conteúdo de regras.
 - **Perfil do cliente ausente ou stale (IMP-103):** reexecute o Passo 2b antes do Passo 4 (Azure) — nunca rode tracker com defaults hardcoded.
+- **Perfil do operador ausente (IMP-136):** skills consumidoras (rdd-clarify, rdd-decision-log, registro de IMPs) caem no fallback manual — pedem os dados ao operador na hora; reexecute o Passo 2c para eliminar o fallback.
 - **Blocos `azure-devops` no AGENTS.md (legado):** continuam suportados por compatibilidade, mas a fonte de verdade do wizard passa a ser `rules/client-profile.md` (IMP-103); sincronize o bloco a partir do perfil quando divergirem.

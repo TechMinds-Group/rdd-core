@@ -45,6 +45,7 @@ continuam legíveis durante a transição.
 - `<modulo>/<projeto>/REQUIREMENTS.md` (RNs existentes, PENDs)
 - `<modulo>/<projeto>/DECISIONS.md` (decisões existentes — merge incremental)
 - `<modulo>/<projeto>/support/CHANGE_REQUESTS.md` (se existir — verificar CRs vinculados)
+- `~/.config/opencode/rules/operator-profile.md` (IMP-136) — perfil do operador: fonte default do campo **Decisor**; arquivo ausente → pergunte ao operador (fallback manual)
 
 ## Gera (downstream)
 
@@ -105,7 +106,10 @@ Use `question` para coletar:
 3. **RN ou PEND vinculado** (ex: RN-015, PEND-003 — opcional)
 4. **Alternativas consideradas** (mínimo 2, se aplicável)
 5. **Decisão tomada** (o que foi decidido)
-6. **Decisor** (quem decidiu)
+6. **Decisor** (quem decidiu) — default: campo **Nome** de
+   `~/.config/opencode/rules/operator-profile.md` (IMP-136); permita
+   informar outro decisor quando a decisão for de terceiros (ex.: PO ou
+   cliente). Perfil ausente → pergunte o nome (fallback manual)
 7. **Justificativa** (por que esta alternativa venceu)
 
 ### Passo 4 — Gerar entrada

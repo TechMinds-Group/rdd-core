@@ -29,6 +29,9 @@
 # perfil do cliente (IMP-103) — nunca versionado
 /rules/client-profile.md
 
+# perfil do operador (IMP-136) — nunca versionado
+/rules/operator-profile.md
+
 # packs instalados e lockfile (gerado pelo rdd-setup — IMP-111/112)
 /packs/
 /rules/packs/

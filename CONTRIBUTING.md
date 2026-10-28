@@ -171,7 +171,10 @@ Todo componente novo deve ser registrado em:
 
 ### 6. Publicar
 
-1. Registre a melhoria em `WORKFLOW_IMPROVEMENTS.md` (formato IMP-XXX)
+1. Registre a melhoria em `WORKFLOW_IMPROVEMENTS.md` (formato IMP-XXX) —
+   inclua o campo `**Autor:** <operador>` com o valor do campo Nome de
+   `rules/operator-profile.md` (IMP-136; perfil ausente → informe quem
+   registrou)
 2. Use `rdd-core-publish` para commit + push
 3. Informe outros usuários (se aplicável)
 
